@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="flamingo.onemovil.menu">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
+
+        <Button
+            android:id="@+id/obtn_conf"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="CONFIGURAR" />
+
+        <Button
+            android:id="@+id/obtn_upd"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="CARGAR DATOS BASICOS" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15dp" />
+
+        <Button
+            android:id="@+id/obtn_cte"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="SELECCIONAR CLIENTE" />
+
+        <Button
+            android:id="@+id/obtn_maq"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="SELECCIONAR MAQUINA" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15dp" />
+
+        <Button
+            android:id="@+id/obtn_capt"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="REGISTRAR METROS MAQUINAS" />
+
+        <Button
+            android:id="@+id/obtn_repo"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="REPORTES" />
+
+        <Button
+            android:id="@+id/obtn_descar"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="DESCARGAR ENTRADAS" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15dp" />
+
+        <Button
+            android:id="@+id/obtn_exit"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="SALIR" />
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
