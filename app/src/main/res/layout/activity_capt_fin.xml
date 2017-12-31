@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="flamingo.onemovil.capt_fin">
+
+         <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="314dp"
+            tools:layout_editor_absoluteY="26dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/obtn_totfin_hide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="QUITAR TECLADO" />
+
+                <Button
+                    android:id="@+id/obtn_totfin_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="PROCESAR" />
+
+                <Button
+                    android:id="@+id/obtn_totfin_canc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="CANCELAR" />
+            </LinearLayout>
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+             <TextView
+                 android:id="@+id/olab_cte"
+                 style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:text="CLIENTE:"
+                 android:textSize="14sp"
+                 android:textStyle="bold" />
+
+             <TextView
+                 android:id="@+id/olab_cha"
+                 style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:text="CHAPA:"
+                 android:textSize="14sp"
+                 android:textStyle="bold" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+             <TextView
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:autoText="false"
+                 android:background="@color/colorPrimaryDark"
+                 android:text="----------------------------"
+                 android:textAlignment="center"
+                 android:textSize="14sp"
+                 android:textStyle="bold" />
+
+             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                 <TextView
+                     style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                     android:layout_width="133dp"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1"
+                     android:text="+BRUTO FACTURADO:"
+                     android:textSize="18sp" />
+
+                 <EditText
+                     android:id="@+id/ototfin_bruto"
+                     android:layout_width="105dp"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1"
+                     android:ems="10"
+                     android:enabled="true"
+                     android:inputType="number|numberDecimal"
+                     android:text="0.00"
+                     android:textSize="18sp"
+                     tools:layout_editor_absoluteX="182dp"
+                     tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="-PAGOS DE PREMIOS:"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/ototfin_prem"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="false"
+                    android:inputType="number|numberDecimal"
+                    android:text="0.00"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+
+            </LinearLayout>
+
+              <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+             <LinearLayout
+                 android:id="@+id/olayoutb_eact"
+                 android:layout_width="match_parent"
+                 android:layout_height="40dp"
+                 android:layout_weight="0"
+                 android:orientation="horizontal">
+
+                 <TextView
+                     style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                     android:layout_width="133dp"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1"
+                     android:text="DEVOLUCIONES"
+                     android:textSize="18sp" />
+
+                 <EditText
+                     android:id="@+id/ototfin_devo"
+                     android:layout_width="105dp"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1"
+                     android:ems="10"
+                     android:enabled="true"
+                     android:inputType="number|numberDecimal"
+                     android:text="0.00"
+                     android:textSize="18sp"
+                     tools:layout_editor_absoluteX="182dp"
+                     tools:layout_editor_absoluteY="147dp" />
+             </LinearLayout>
+
+             <LinearLayout
+                 android:id="@+id/olayoutb_edif"
+                 android:layout_width="match_parent"
+                 android:layout_height="40dp"
+                 android:layout_weight="0"
+                 android:orientation="horizontal">
+
+                 <TextView
+                     style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                     android:layout_width="133dp"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1"
+                     android:text="-OTROS:"
+                     android:textSize="18sp" />
+
+                 <EditText
+                     android:id="@+id/ototfin_otros"
+                     android:layout_width="105dp"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1"
+                     android:ems="10"
+                     android:inputType="number|numberDecimal"
+                     android:text="0.00"
+                     android:textSize="18sp"
+                     tools:layout_editor_absoluteX="182dp"
+                     tools:layout_editor_absoluteY="147dp" />
+             </LinearLayout>
+
+              <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="40dp"
+                 android:layout_weight="0"
+                 android:orientation="horizontal">
+
+                 <TextView
+                     style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                     android:layout_width="133dp"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1"
+                     android:text="TOTAL:"
+                     android:textSize="18sp"
+                     android:textStyle="bold" />
+
+                  <EditText
+                      android:id="@+id/ototfin_total"
+                      android:layout_width="105dp"
+                      android:layout_height="wrap_content"
+                      android:layout_weight="1"
+                      android:ems="10"
+                      android:enabled="false"
+                      android:inputType="number|numberDecimal"
+                      android:text="0.00"
+                      android:textSize="18sp"
+                      android:textStyle="bold"
+                      tools:layout_editor_absoluteX="182dp"
+                      tools:layout_editor_absoluteY="147dp" />
+
+             </LinearLayout>
+
+             <Space
+                 android:layout_width="match_parent"
+                 android:layout_height="15dp"
+                 android:layout_weight="0" />
+
+             <TextView
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:autoText="false"
+                 android:background="@color/colorPrimaryDark"
+                 android:text="----------------------------"
+                 android:textAlignment="center"
+                 android:textSize="14sp"
+                 android:textStyle="bold" />
+
+             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                 <TextView
+                     style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                     android:layout_width="133dp"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1"
+                     android:text="FACTURA DE GASTOS"
+                     android:textSize="18sp" />
+
+                 <EditText
+                     android:id="@+id/ototfin_gast"
+                     android:layout_width="105dp"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1"
+                     android:ems="10"
+                     android:inputType="number|numberDecimal"
+                     android:text="0.00"
+                     android:textSize="18sp"
+                     tools:layout_editor_absoluteX="182dp"
+                     tools:layout_editor_absoluteY="147dp" />
+
+            </LinearLayout>
+
+             <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TOTAL NETO RECIBIDO:"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                 <EditText
+                     android:id="@+id/ototfin_neto"
+                     android:layout_width="105dp"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1"
+                     android:ems="10"
+                     android:inputType="number|numberDecimal"
+                     android:text="0.00"
+                     android:textSize="18sp"
+                     android:textStyle="bold"
+                     tools:layout_editor_absoluteX="182dp"
+                     tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+              <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:layout_weight="0"
+                 android:orientation="horizontal">
+
+                 <TextView
+                     style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                     android:layout_width="11dp"
+                     android:layout_height="wrap_content"
+                     android:layout_weight="1"
+                     android:text="OBSERVACIONES:"
+                     android:textSize="18sp"
+                     android:textStyle="bold" />
+
+                 <EditText
+                     android:id="@+id/ototfin_notas"
+                     android:layout_width="wrap_content"
+                     android:layout_height="246dp"
+                     android:layout_weight="1"
+                     android:ems="10"
+                     android:inputType="textMultiLine"
+                     android:tooltipText="ESCRIBA EL DETALLE AQUI" />
+
+             </LinearLayout>
+
+
+        </LinearLayout>
+
+    </android.support.constraint.ConstraintLayout>
+

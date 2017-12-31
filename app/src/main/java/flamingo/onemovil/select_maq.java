@@ -61,14 +61,14 @@ public class select_maq extends AppCompatActivity {
         //dialogBox("EMRPRESA["+cId_emp+"] / CLIENTE["+cId_Cte+"] / SQL["+cSqlLn+"]");
 
         cSqlLn = cSqlLn + "SELECT ";
-        cSqlLn = cSqlLn + "	(SUBSTR(maq.maqtc_chapa || '                    ', 1, 20) || maq.maqtc_modelo) AS expr1 ";
+        cSqlLn = cSqlLn + "	(SUBSTR(trim(maq.maqtc_chapa) || '                    ', 1, 20) || trim(maq.maqtc_modelo)) AS expr1 ";
         //cSqlLn = cSqlLn + "	maq.maqtc_id,(maq.maqtc_chapa||' - '||maq.maqtc_modelo) as cList ";
         cSqlLn = cSqlLn + "FROM maquinastc maq ";
         cSqlLn = cSqlLn + "INNER JOIN maquinas_lnk maql ON (maq.maqtc_id = maql.maqtc_id) ";
         cSqlLn = cSqlLn + "WHERE  maq.maqtc_tipomaq = 1 ";
         cSqlLn = cSqlLn + "AND    maql.cte_id='" + cId_Cte + "' ";
         cSqlLn = cSqlLn + "AND    maql.emp_id='" + cId_emp + "' ";
-
+        cSqlLn = cSqlLn + "ORDER BY UPPER(trim(maq.maqtc_chapa))";
 
         data = db4.rawQuery(cSqlLn, null);
 

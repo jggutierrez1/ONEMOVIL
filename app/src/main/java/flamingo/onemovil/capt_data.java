@@ -1,41 +1,73 @@
 package flamingo.onemovil;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.hardware.Camera;
+import android.net.Uri;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.provider.Settings;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.os.Bundle;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class capt_data extends AppCompatActivity {
 
+    private Button btn_hide_capt, btn_save_capt, btn_canc_capt, btn_foto_cape, btn_foto_caps;
 
-    private Button btn_save_capt, btn_canc_capt;
     private EditText ea_act, ea_ant, ea_dif;
     private EditText eb_act, eb_ant, eb_dif;
+
     private EditText sa_act, sa_ant, sa_dif;
     private EditText sb_act, sb_ant, sb_dif;
     private EditText tot_cole, tot_cred;
+
+    private EditText semanas;
+
     private TextView ltot_cole, ltot_cred;
-    private TextView lab_cte,lab_cha;
+    private TextView lab_cte, lab_cha;
+
+    private TextView leb_act, leb_ant, leb_dif;
+    private TextView lsb_act, lsb_ant, lsb_dif;
+
+    private LinearLayout layoutb_eact, layoutb_eant, layoutb_edif, layoutb_sact, layoutb_sant, layoutb_sdif;
+    private Space Spaceb_esep, Spaceb_ssep;
 
     private SQLiteDatabase db4;
     private Cursor data;
     private String cId_emp, cId_Cte, cId_Maq;
     private String cSqlLn = "";
 
-    private String op_chapa, op_modelo, cte_nombre_loc, cte_nombre_com,
+    private String op_chapa, op_modelo, op_serie, maqlnk_id, cte_nombre_loc, cte_nombre_com,
             maqtc_denom_e, maqtc_denom_s;
     private double op_cal_colect, op_cal_cred, op_cporc_Loc, Op_tot_impjcj, Op_tot_impmunic, den_valore, den_valors;
     private int op_emp_id, den_fact_e, den_fact_s, maqtc_tipomaq, Op_ea_metroac, Op_ea_metroan, Op_sa_metroac, Op_sa_metroan;
@@ -46,14 +78,53 @@ public class capt_data extends AppCompatActivity {
     //private double ftot_cole, ftot_prem;
     private int iMetroA_EntDif, iMetroB_EntDif, iMetroA_SalDif, iMetroB_SalDif;
 
+    private static final int CAMERA_REQUEST = 1888;
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private Bitmap mImageBitmap;
+    private String mCurrentPhotoPath;
+    private ImageView mImageView;
+    private static final String TAG = capt_data.class.getSimpleName();
+    private String cid_device2 = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capt_data);
 
+        cid_device2 = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        this.btn_hide_capt = (Button) findViewById(R.id.obtn_hide_capt);
         this.btn_save_capt = (Button) findViewById(R.id.obtn_save_capt);
         this.btn_canc_capt = (Button) findViewById(R.id.obtn_canc_capt);
+        this.btn_foto_cape = (Button) findViewById(R.id.obtn_foto_cape);
+        this.btn_foto_caps = (Button) findViewById(R.id.obtn_foto_caps);
+
+        /*-------------------ETIQUETAS------------------------*/
+        this.leb_act = (TextView) findViewById(R.id.oleb_act);
+        this.leb_ant = (TextView) findViewById(R.id.oleb_ant);
+        this.leb_dif = (TextView) findViewById(R.id.oleb_dif);
+
+        this.lsb_act = (TextView) findViewById(R.id.olsb_act);
+        this.lsb_ant = (TextView) findViewById(R.id.olsb_ant);
+        this.lsb_dif = (TextView) findViewById(R.id.olsb_dif);
+        /*-------------------------------------------------------*/
+
+       /*-------------------LAYOUTS------------------------*/
+        this.layoutb_eact = (LinearLayout) findViewById(R.id.olayoutb_eact);
+        this.layoutb_eant = (LinearLayout) findViewById(R.id.olayoutb_eant);
+        this.layoutb_edif = (LinearLayout) findViewById(R.id.olayoutb_edif);
+        this.Spaceb_esep = (Space) findViewById(R.id.oSpaceb_esep);
+
+
+        this.layoutb_sact = (LinearLayout) findViewById(R.id.olayoutb_sact);
+        this.layoutb_sant = (LinearLayout) findViewById(R.id.olayoutb_sant);
+        this.layoutb_sdif = (LinearLayout) findViewById(R.id.olayoutb_sdif);
+        this.Spaceb_ssep = (Space) findViewById(R.id.oSpaceb_ssep);
+
+        /*-------------------------------------------------------*/
+
+        this.semanas = (EditText) findViewById(R.id.osemanas);
+        this.semanas.setSelectAllOnFocus(true);
 
         this.ea_act = (EditText) findViewById(R.id.oea_act);
         this.ea_act.setSelectAllOnFocus(true);
@@ -105,7 +176,7 @@ public class capt_data extends AppCompatActivity {
         this.ltot_cole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(v.getContext(), "Factor de Conversión [" + Denom_Ent_Fac + "/ $" +fDenom_Ent_Val + "]", Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "Factor de Conversión [" + Denom_Ent_Fac + "/ $" + fDenom_Ent_Val + "]", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -132,10 +203,18 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
+        this.semanas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (semanas.getText().toString() == "")
+                    semanas.setText("1");
+            }
+        });
+
         this.ea_act.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ea_act.getText().toString()=="" )
+                if (ea_act.getText().toString() == "")
                     ea_act.setText("0");
             }
         });
@@ -158,7 +237,7 @@ public class capt_data extends AppCompatActivity {
         this.eb_act.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (eb_act.getText().toString()=="" )
+                if (eb_act.getText().toString() == "")
                     eb_act.setText("0");
             }
         });
@@ -181,7 +260,7 @@ public class capt_data extends AppCompatActivity {
         this.sa_act.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sa_act.getText().toString()=="" )
+                if (sa_act.getText().toString() == "")
                     sa_act.setText("0");
             }
         });
@@ -204,7 +283,7 @@ public class capt_data extends AppCompatActivity {
         this.sb_act.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (sb_act.getText().toString()=="" )
+                if (sb_act.getText().toString() == "")
                     sb_act.setText("0");
             }
         });
@@ -213,6 +292,83 @@ public class capt_data extends AppCompatActivity {
 
             @Override
             public void onClick(View arg0) {
+
+                android.text.format.DateFormat cNow = new android.text.format.DateFormat();
+                cNow.format("yyyy-MM-dd hh:mm:ss", new java.util.Date());
+                String cSql_Ln = "";
+
+                cSql_Ln = cSql_Ln + "DELETE FROM operacion WHERE id_device='" + cid_device2 + "' and  op_chapa='" + op_chapa + "'";
+                db4.execSQL(cSql_Ln);
+
+                cSql_Ln = cSql_Ln + "INSERT INTO operacion ( ";
+                cSql_Ln = cSql_Ln + "cte_nombre_loc, cte_nombre_com, op_cporc_Loc";
+                cSql_Ln = cSql_Ln + "cte_pag_jcj, cte_pag_spac, cte_pag_impm,";
+                cSql_Ln = cSql_Ln + "maqtc_denom_e, maqtc_denom_s,";
+                cSql_Ln = cSql_Ln + "den_valore, den_valors,";
+                cSql_Ln = cSql_Ln + "den_fact_e, den_fact_s,";
+                cSql_Ln = cSql_Ln + "MaqLnk_Id,maqtc_tipomaq,op_serie,op_chapa,op_modelo";
+                cSql_Ln = cSql_Ln + "op_fecha,";
+                cSql_Ln = cSql_Ln + "op_e_pantalla,";
+                cSql_Ln = cSql_Ln + "op_ea_metroan,op_ea_metroac,op_ea_met,";
+                cSql_Ln = cSql_Ln + "op_sa_metroan,op_sa_metroac,op_sa_met,";
+                cSql_Ln = cSql_Ln + "op_eb_metroan,op_eb_metroac,op_eb_met,";
+                cSql_Ln = cSql_Ln + "op_sb_metroan,op_sb_metroac,op_sb_met,";
+                cSql_Ln = cSql_Ln + "op_s_pantalla,";
+                cSql_Ln = cSql_Ln + "op_cal_colect,op_tot_colect,";
+                cSql_Ln = cSql_Ln + "op_tot_cred,op_cal_cred,";
+                cSql_Ln = cSql_Ln + "op_fecha_alta,op_fecha_modif,";
+                cSql_Ln = cSql_Ln + "op_emp_id,id_device) VALUES (";
+                cSql_Ln = cSql_Ln + "'" + cte_nombre_loc + "',";
+                cSql_Ln = cSql_Ln + "'" + cte_nombre_com + "',";
+                cSql_Ln = cSql_Ln + "'" + op_cporc_Loc + "',";
+                cSql_Ln = cSql_Ln + "'" + cte_pag_jcj + "',";
+                cSql_Ln = cSql_Ln + "'" + cte_pag_spac + "',";
+                cSql_Ln = cSql_Ln + "'" + cte_pag_impm + "',";
+                cSql_Ln = cSql_Ln + "'" + maqtc_denom_e + "',";
+                cSql_Ln = cSql_Ln + "'" + maqtc_denom_s + "',";
+                cSql_Ln = cSql_Ln + "'" + den_valore + "',";
+                cSql_Ln = cSql_Ln + "'" + den_valors + "',";
+                cSql_Ln = cSql_Ln + "'" + Denom_Ent_Fac + "',";
+                cSql_Ln = cSql_Ln + "'" + Denom_Sal_Fac + "',";
+                cSql_Ln = cSql_Ln + "'" + maqlnk_id + "',";
+                cSql_Ln = cSql_Ln + "'" + maqtc_tipomaq + "',";
+                cSql_Ln = cSql_Ln + "'" + op_serie + "',";
+                cSql_Ln = cSql_Ln + "'" + op_chapa + "',";
+                cSql_Ln = cSql_Ln + "'" + op_modelo + "',";
+                cSql_Ln = cSql_Ln + "'" + cNow + "',";
+                cSql_Ln = cSql_Ln + "'0',";
+
+                cSql_Ln = cSql_Ln + "'" + ea_ant + "',";
+                cSql_Ln = cSql_Ln + "'" + ea_act + "',";
+                cSql_Ln = cSql_Ln + "'" + ea_dif + "',";
+
+                cSql_Ln = cSql_Ln + "'" + sa_ant + "',";
+                cSql_Ln = cSql_Ln + "'" + sa_act + "',";
+                cSql_Ln = cSql_Ln + "'" + sa_dif + "',";
+
+                cSql_Ln = cSql_Ln + "'" + eb_ant + "',";
+                cSql_Ln = cSql_Ln + "'" + eb_act + "',";
+                cSql_Ln = cSql_Ln + "'" + eb_dif + "',";
+
+                cSql_Ln = cSql_Ln + "'" + sb_ant + "',";
+                cSql_Ln = cSql_Ln + "'" + sb_act + "',";
+                cSql_Ln = cSql_Ln + "'" + eb_dif + "',";
+                cSql_Ln = cSql_Ln + "'0',";
+
+                cSql_Ln = cSql_Ln + "'" + op_cal_colect + "',";
+                cSql_Ln = cSql_Ln + "'" + tot_cole + "',";
+
+                cSql_Ln = cSql_Ln + "'" + op_cal_cred + "',";
+                cSql_Ln = cSql_Ln + "'" + tot_cred + "',";
+                cSql_Ln = cSql_Ln + "'" + cNow + "',";
+                cSql_Ln = cSql_Ln + "'" + cNow + "',";
+
+                cSql_Ln = cSql_Ln + "'" + op_emp_id + "',";
+                cSql_Ln = cSql_Ln + "'" + cid_device2 + "')";
+                //db4.execSQL(cSql_Ln);
+
+
+
 
             }
         });
@@ -232,6 +388,81 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
+        btn_hide_capt.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
+                        .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+            }
+        });
+
+        btn_foto_cape.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                dispatchTakePictureIntent();
+            }
+        });
+
+        btn_foto_caps.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                //dispatchTakePictureIntent();
+            }
+        });
+
+    }
+
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // check if the request code is same as what is passed  here it is 2
+
+        /*if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            //imageView.setImageBitmap(photo);
+        }
+        */
+
+        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
+            try {
+                mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentPhotoPath));
+                mImageView.setImageBitmap(mImageBitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date());
+        String imageFileName = "_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+        System.out.println(storageDir);
+        System.out.println(image);
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        System.out.println(mCurrentPhotoPath);
+
+        return image;
     }
 
     private void Calc_Dif_Ent(boolean A) {
@@ -244,11 +475,10 @@ public class capt_data extends AppCompatActivity {
         ieb_act = Integer.valueOf(eb_act.getText().toString()).intValue();
         ieb_ant = Integer.valueOf(eb_ant.getText().toString()).intValue();
 
-        if (A == true){
+        if (A == true) {
             iMetroA_EntDif = (iea_act - iea_ant);
             ea_dif.setText(String.valueOf(iMetroA_EntDif).toString());
-        }
-        else{
+        } else {
             iMetroB_EntDif = (ieb_act - ieb_ant);
             eb_dif.setText(String.valueOf(iMetroB_EntDif).toString());
         }
@@ -265,11 +495,10 @@ public class capt_data extends AppCompatActivity {
         isb_act = Integer.valueOf(sb_act.getText().toString()).intValue();
         isb_ant = Integer.valueOf(sb_ant.getText().toString()).intValue();
 
-        if (A == true){
+        if (A == true) {
             iMetroA_SalDif = (isa_act - isa_ant);
             sa_dif.setText(String.valueOf(iMetroA_SalDif).toString());
-        }
-        else{
+        } else {
             iMetroB_SalDif = (isb_act - isb_ant);
             sb_dif.setText(String.valueOf(iMetroB_SalDif).toString());
         }
@@ -281,7 +510,7 @@ public class capt_data extends AppCompatActivity {
         double ftot_cole = 0.00;
         DecimalFormat REAL_FORMATTER = new DecimalFormat("##########0.00");
 
-        ipFac_e =(this.Denom_Ent_Fac == 0 ? 1 : this.Denom_Ent_Fac);
+        ipFac_e = (this.Denom_Ent_Fac == 0 ? 1 : this.Denom_Ent_Fac);
 
         iTot = (this.iMetroA_EntDif + this.iMetroB_EntDif) / ipFac_e;
 
@@ -289,7 +518,7 @@ public class capt_data extends AppCompatActivity {
             this.tot_cole.setText(REAL_FORMATTER.format(iTot));
             this.Calc_Sub_Tot();
         } else {
-            ftot_cole =  Double.valueOf(tot_cole.getText().toString()).doubleValue();
+            ftot_cole = Double.valueOf(tot_cole.getText().toString()).doubleValue();
             if (ftot_cole <= 0.00) {
                 this.tot_cole.setText(REAL_FORMATTER.format(iTot));
                 this.Calc_Sub_Tot();
@@ -304,7 +533,7 @@ public class capt_data extends AppCompatActivity {
         double ftot_prem = 0.00;
         DecimalFormat REAL_FORMATTER = new DecimalFormat("##########0.00");
 
-        ipFac_s =(this.Denom_Sal_Fac == 0 ? 1 : this.Denom_Sal_Fac);
+        ipFac_s = (this.Denom_Sal_Fac == 0 ? 1 : this.Denom_Sal_Fac);
 
         iTot = ((this.iMetroA_SalDif + this.iMetroB_SalDif) / ipFac_s) * (this.fDenom_Sal_Val == 0 ? 1 : this.fDenom_Sal_Val);
 
@@ -422,6 +651,7 @@ public class capt_data extends AppCompatActivity {
 
     private void MaquinaValid(Boolean bIsNew) {
         data.moveToFirst();
+        op_serie = "0";
 
         this.lab_cte.setText("CLIENTE: " + data.getString(data.getColumnIndex("cte_nombre_loc")));
         this.lab_cha.setText("CHAPA  : " + data.getString(data.getColumnIndex("maqtc_chapa")));
@@ -429,6 +659,7 @@ public class capt_data extends AppCompatActivity {
         op_chapa = data.getString(data.getColumnIndex("maqtc_chapa"));
 
         op_emp_id = data.getInt(data.getColumnIndex("emp_id"));
+        maqlnk_id = data.getString(data.getColumnIndex("MaqLnk_Id"));
 
         Denom_Ent_Fac = data.getInt(data.getColumnIndex("den_fact_e"));
         Denom_Sal_Fac = data.getInt(data.getColumnIndex("den_fact_s"));
@@ -518,6 +749,38 @@ public class capt_data extends AppCompatActivity {
                 this.sb_act.setText("0");
                 this.sb_ant.setText("0");
                 this.sb_dif.setText("0");
+
+                // Entradas B
+                this.eb_act.setVisibility(View.GONE);
+                this.leb_act.setVisibility(View.GONE);
+
+                this.eb_ant.setVisibility(View.GONE);
+                this.leb_ant.setVisibility(View.GONE);
+
+                // Salida B
+                this.sb_act.setVisibility(View.GONE);
+                this.lsb_act.setVisibility(View.GONE);
+
+                this.sb_ant.setVisibility(View.GONE);
+                this.lsb_ant.setVisibility(View.GONE);
+
+                // Diferencia B
+                this.eb_dif.setVisibility(View.GONE);
+                this.leb_dif.setVisibility(View.GONE);
+
+                this.sb_dif.setVisibility(View.GONE);
+                this.lsb_dif.setVisibility(View.GONE);
+
+                this.layoutb_eact.setVisibility(View.GONE);
+                this.layoutb_eant.setVisibility(View.GONE);
+                this.layoutb_edif.setVisibility(View.GONE);
+                this.Spaceb_esep.setVisibility(View.GONE);
+
+                this.layoutb_sact.setVisibility(View.GONE);
+                this.layoutb_sant.setVisibility(View.GONE);
+                this.layoutb_sdif.setVisibility(View.GONE);
+                this.Spaceb_ssep.setVisibility(View.GONE);
+
                 break;
             case 2:
                 if (bIsNew == true) {

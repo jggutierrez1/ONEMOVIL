@@ -25,7 +25,7 @@ public class select_cte extends AppCompatActivity {
     private ListView olst_cte2;
     private SQLiteDatabase db3;
     private Cursor data;
-    private String cId_Cte;
+    private String cId_Cte, cId_Des;
     private String cSqlLn;
 
 
@@ -50,7 +50,7 @@ public class select_cte extends AppCompatActivity {
         //populate an ArrayList<String> from the database and then view it
         ArrayList<String> theList = new ArrayList<>();
 
-        data = db3.rawQuery("SELECT ( SUBSTR(cte_id || '                    ', 1, 20) || cte_nombre_loc) AS expr1 FROM clientes ORDER BY cte_nombre_loc", null);
+        data = db3.rawQuery("SELECT ( SUBSTR(trim(cte_id) || '                    ', 1, 20) || trim(cte_nombre_loc)) AS expr1 FROM clientes ORDER BY UPPER(trim(cte_nombre_loc))", null);
 
         if (data.getCount() == 0) {
             Toast.makeText(this, "There are no contents in this list!", Toast.LENGTH_LONG).show();
@@ -70,6 +70,7 @@ public class select_cte extends AppCompatActivity {
 
                 Intent i = getIntent();
                 i.putExtra("CTE_ID", "");
+                i.putExtra("CTE_DE", "");
                 setResult(RESULT_CANCELED, i);
 
                 db3.close();
@@ -86,6 +87,8 @@ public class select_cte extends AppCompatActivity {
 
                 Intent i = getIntent();
                 i.putExtra("CTE_ID", cId_Cte);
+                i.putExtra("CTE_DE", cId_Des);
+
                 setResult(RESULT_OK, i);
 
                 db3.close();
@@ -102,8 +105,11 @@ public class select_cte extends AppCompatActivity {
                 // Realiza lo que deseas, al recibir clic en el elemento de tu listView determinado por su posicion.
                 String selectedFromList = (olst_cte2.getItemAtPosition(position).toString());
                 cId_Cte = selectedFromList.substring(0, 19).trim();
+                cId_Des = selectedFromList.substring(20, selectedFromList.length()).trim();
                 Intent i = getIntent();
                 i.putExtra("CTE_ID", cId_Cte);
+                i.putExtra("CTE_DE", cId_Des);
+
                 btn_sele_cte.setEnabled(true);
             }
         });

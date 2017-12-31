@@ -1,35 +1,103 @@
 package flamingo.onemovil;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.lang.reflect.Method;
+import java.util.Set;
+import java.util.UUID;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Handler;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.provider.Settings.Secure;
+import android.content.Context;
+
+import java.io.FileInputStream;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.ini4j.InvalidFileFormatException;
+import org.ini4j.Wini;
 
 public class menu extends AppCompatActivity {
 
-    private Button btn_conf, btn_upd, btn_cte, btn_maq, btn_capt, btn_repo, btn_exit;
+    private Button btn_conf, btn_upd, btn_cte, btn_maq, btn_capt, btn_repo, btn_exit, btn_canc_colec, btn_fin_colec;
     private ImageView mImageView;
+    private TextView DeviceId;
     private SQLiteDatabase db;
     private String cSql_Ln;
-    private String cId_emp, cId_Cte, cId_Maq;
+    private String cId_emp, cId_Cte, cId_Des, cId_Maq;
     private String mCurrentPhotoPath;
+    private String cdevice_id;
 
-    public final static int REQUEST_CTE = 1;
-    public final static int REQUEST_MAQ = 2;
-    public final static int REQUEST_CAP = 3;
+    private final static int REQUEST_CTE = 1;
+    private final static int REQUEST_MAQ = 2;
+    private final static int REQUEST_CAP = 3;
+    private final static int REQUEST_CAPF=4;
+    private int iGlobalRes = 0;
+
+    // android built in classes for bluetooth operations
+    BluetoothAdapter mBluetoothAdapter;
+    BluetoothSocket mmSocket;
+    BluetoothDevice mmDevice;
+
+    // needed for communication to bluetooth device / network
+    OutputStream mmOutputStream;
+    InputStream mmInputStream;
+    Thread workerThread;
+
+    byte[] readBuffer;
+    int readBufferPosition;
+    volatile boolean stopWorker;
+
+    // will show the statuses like bluetooth open, close or data sent
+    TextView myLabel;
+
+    // will enable user to enter any text to be printed
+    EditText myTextbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
+        cdevice_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+/*
+        try {
+            Wini oini = new Wini(new FileReader("config.ini"));
 
+            Wini oini;
+            oini = new Wini(new File("config.ini"));
+            cdevice_id = oini.get("DEVICE", "ID", String.class);
+
+            if (cdevice_id==""){
+                oini.put("DEVICE", "ID", cdevice_id);
+                oini.store();
+              }
+
+        } catch (InvalidFileFormatException e) {
+            System.out.println("Invalid file format.");
+        } catch (IOException e) {
+            System.out.println("Problem reading file.");
+        }
+*/
         cId_emp = "1";
         cId_Cte = "";
         cId_Maq = "";
@@ -41,9 +109,18 @@ public class menu extends AppCompatActivity {
         btn_capt = (Button) findViewById(R.id.obtn_capt);
         btn_repo = (Button) findViewById(R.id.obtn_repo);
         btn_exit = (Button) findViewById(R.id.obtn_exit);
+        btn_canc_colec = (Button) findViewById(R.id.obtn_canc_colec);
+        btn_fin_colec = (Button) findViewById(R.id.obtn_fin_colec);
+
+
+        DeviceId = (TextView) findViewById(R.id.oDeviceId);
+        DeviceId.setText("ID EQUIPO:" + cdevice_id.toUpperCase());
+        myLabel = (TextView) findViewById(R.id.oLabel);
+        myTextbox = (EditText) findViewById(R.id.oEntry);
 
         createDatabase();
         Create_Sql_Tables();
+        findBT();
         btn_exit.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -75,6 +152,7 @@ public class menu extends AppCompatActivity {
                 //startActivity(Int_CteScreen);
                 Int_CteScreen.putExtra("EMP_ID", cId_emp);
                 Int_CteScreen.putExtra("CTE_ID", "");
+                Int_CteScreen.putExtra("CTE_DE", "");
                 startActivityForResult(Int_CteScreen, REQUEST_CTE);
             }
         });
@@ -103,6 +181,33 @@ public class menu extends AppCompatActivity {
             }
         });
 
+        btn_canc_colec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogBox("ESTA SEGURO QUE DESEA DESCARTAR TODAS LAS ENTRADAS REALIZADAS EN EL EQUIPO.");
+                if (iGlobalRes == 1) {
+                    String cSql_Ln = "DELETE FROM operacion WHERE id_device='" + cdevice_id + "'";
+                    db.execSQL(cSql_Ln);
+                    Toast.makeText(getApplicationContext(), "LOS DATOS FUERON ELIMINADOS.", Toast.LENGTH_SHORT).show();
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "SE CANCELO LA ACCION.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        btn_fin_colec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent Capf_MaqScreen = new Intent(getApplicationContext(), capt_fin.class);
+                startActivityForResult(Capf_MaqScreen, REQUEST_CAPF);
+
+
+                Toast.makeText(getApplicationContext(), "FINALIZO.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
     }
 
     @Override
@@ -117,6 +222,8 @@ public class menu extends AppCompatActivity {
                 switch (resultCode) {
                     case RESULT_OK:
                         cId_Cte = data.getStringExtra("CTE_ID");
+                        cId_Des = data.getStringExtra("CTE_DE");
+
                         Toast.makeText(this, "Aceptó las condiciones [" + cId_Cte + "]", Toast.LENGTH_SHORT).show();
                         break;
                     case RESULT_CANCELED:
@@ -136,6 +243,20 @@ public class menu extends AppCompatActivity {
                     case RESULT_CANCELED:
                         cId_Maq = "";
                         Toast.makeText(this, "Rechazó las condiciones", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+
+            if (requestCode == REQUEST_CAPF) {
+                //Se procesa la devolución
+                switch (resultCode) {
+                    case RESULT_OK:
+                        //cId_Maq = data.getStringExtra("MAQ_ID");
+                        //Toast.makeText(this, "Aceptó las condiciones [" + cId_Maq + "]", Toast.LENGTH_SHORT).show();
+                        break;
+                    case RESULT_CANCELED:
+                        //cId_Maq = "";
+                        //Toast.makeText(this, "Rechazó las condiciones", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -378,6 +499,9 @@ public class menu extends AppCompatActivity {
         db.execSQL(cSql_Ln);
         // -------------------------------FIN RUTAS --------------------------------------------------------//
 
+        cSql_Ln = "DROP TABLE IF EXISTS operacion;";
+        //db.execSQL(cSql_Ln);
+
         cSql_Ln = "";
         cSql_Ln = cSql_Ln + "CREATE TABLE IF NOT EXISTS operacion (";
         cSql_Ln = cSql_Ln + "id_op  INTEGER NOT NULL,";
@@ -439,11 +563,20 @@ public class menu extends AppCompatActivity {
         cSql_Ln = cSql_Ln + "u_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln = cSql_Ln + "u_usuario_modif  CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln = cSql_Ln + "op_emp_id  INTEGER NULL DEFAULT 0,";
+        cSql_Ln = cSql_Ln + "id_device VARCHAR(30) NOT NULL DEFAULT 'MANUAL',";
         cSql_Ln = cSql_Ln + "CONSTRAINT  operacion_PRIMARY PRIMARY KEY(id_op))";
         db.execSQL(cSql_Ln);
     }
 
-    private void dialogBox(String cMessage) {
+    private void myFunction(int result) {
+        // Now the data has been "returned" (as pointed out, that's not
+        // the right terminology)
+        iGlobalRes = result;
+    }
+
+    private int dialogBox(String cMessage) {
+        int iresp = 0;
+
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setMessage(cMessage);
         alertDialogBuilder.setPositiveButton("Ok",
@@ -451,18 +584,171 @@ public class menu extends AppCompatActivity {
 
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
+                        myFunction(1);
                     }
+
                 });
 
         alertDialogBuilder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {
+                myFunction(0);
 
             }
         });
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+        return 1;
     }
+
+    // this will find a bluetooth printer device
+    void findBT() {
+
+        try {
+            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+            if (mBluetoothAdapter == null) {
+                myLabel.setText("No bluetooth adapter available");
+            }
+
+            if (!mBluetoothAdapter.isEnabled()) {
+                Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                startActivityForResult(enableBluetooth, 0);
+            }
+
+            Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
+
+            if (pairedDevices.size() > 0) {
+                for (BluetoothDevice device : pairedDevices) {
+
+                    // BlueTooth Printer is the name of the bluetooth printer device
+                    // we got this name from the list of paired devices
+                    if (device.getName().equals("BlueTooth Printer")) {
+                        mmDevice = device;
+                        break;
+                    }
+                }
+            }
+
+            myLabel.setText("Bluetooth device found.[" + mmDevice + "]");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // tries to open a connection to the bluetooth printer device
+    void openBT() throws IOException {
+        try {
+
+            // Standard SerialPortService ID
+            UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+            mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
+            mmSocket.connect();
+            mmOutputStream = mmSocket.getOutputStream();
+            mmInputStream = mmSocket.getInputStream();
+
+            beginListenForData();
+
+            myLabel.setText("Bluetooth Opened");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+ * after opening a connection to bluetooth printer device,
+ * we have to listen and check if a data were sent to be printed.
+ */
+    void beginListenForData() {
+        try {
+            final Handler handler = new Handler();
+
+            // this is the ASCII code for a newline character
+            final byte delimiter = 10;
+
+            stopWorker = false;
+            readBufferPosition = 0;
+            readBuffer = new byte[1024];
+
+            workerThread = new Thread(new Runnable() {
+                public void run() {
+
+                    while (!Thread.currentThread().isInterrupted() && !stopWorker) {
+
+                        try {
+
+                            int bytesAvailable = mmInputStream.available();
+
+                            if (bytesAvailable > 0) {
+
+                                byte[] packetBytes = new byte[bytesAvailable];
+                                mmInputStream.read(packetBytes);
+
+                                for (int i = 0; i < bytesAvailable; i++) {
+
+                                    byte b = packetBytes[i];
+                                    if (b == delimiter) {
+
+                                        byte[] encodedBytes = new byte[readBufferPosition];
+                                        System.arraycopy(
+                                                readBuffer, 0,
+                                                encodedBytes, 0,
+                                                encodedBytes.length
+                                        );
+
+                                        // specify US-ASCII encoding
+                                        final String data = new String(encodedBytes, "US-ASCII");
+                                        readBufferPosition = 0;
+
+                                        // tell the user data were sent to bluetooth printer device
+                                        handler.post(new Runnable() {
+                                            public void run() {
+                                                myLabel.setText(data);
+                                            }
+                                        });
+
+                                    } else {
+                                        readBuffer[readBufferPosition++] = b;
+                                    }
+                                }
+                            }
+
+                        } catch (IOException ex) {
+                            stopWorker = true;
+                        }
+
+                    }
+                }
+            });
+
+            workerThread.start();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // this will send text data to be printed by the bluetooth printer
+    void sendData() throws IOException {
+        try {
+
+            // the text typed by the user
+            String msg = myTextbox.getText().toString();
+            msg += "\n";
+
+            mmOutputStream.write(msg.getBytes());
+
+            // tell the user data were sent
+            myLabel.setText("Data sent.");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

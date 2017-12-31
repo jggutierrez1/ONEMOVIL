@@ -13,6 +13,26 @@
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
 
+        <TextView
+            android:id="@+id/oDeviceId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ID. DISPOSITIVO:" />
+
+        <TextView
+            android:id="@+id/oLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="." />
+
+        <EditText
+            android:id="@+id/oEntry"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:inputType="textPersonName"
+            android:text="Name" />
+
         <Button
             android:id="@+id/obtn_conf"
             android:layout_width="match_parent"
@@ -33,7 +53,7 @@
             android:id="@+id/obtn_cte"
             android:layout_width="match_parent"
             android:layout_height="65dp"
-            android:text="SELECCIONAR CLIENTE" />
+            android:text="INICIAR COLECTA" />
 
         <Button
             android:id="@+id/obtn_maq"
@@ -41,15 +61,27 @@
             android:layout_height="65dp"
             android:text="SELECCIONAR MAQUINA" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
-
         <Button
             android:id="@+id/obtn_capt"
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:text="REGISTRAR METROS MAQUINAS" />
+
+        <Button
+            android:id="@+id/obtn_canc_colec"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="DESCARTAR COLECTA" />
+
+        <Button
+            android:id="@+id/obtn_fin_colec"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="FINALIZAR COLECTA" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15dp" />
 
         <Button
             android:id="@+id/obtn_repo"
