@@ -25,7 +25,6 @@ public class select_cte extends AppCompatActivity {
     private ListView olst_cte2;
     private SQLiteDatabase db3;
     private Cursor data;
-    private String cId_Cte, cId_Des;
     private String cSqlLn;
 
 
@@ -69,9 +68,10 @@ public class select_cte extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "regresando:..", Toast.LENGTH_LONG).show();
 
                 Intent i = getIntent();
-                i.putExtra("CTE_ID", "");
-                i.putExtra("CTE_DE", "");
                 setResult(RESULT_CANCELED, i);
+
+                Global.cCte_Id = "";
+                Global.cCte_De = "";
 
                 db3.close();
                 finish();
@@ -83,12 +83,7 @@ public class select_cte extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
 
-                Toast.makeText(getApplicationContext(), "Selecciono[" + cId_Cte + "]:..", Toast.LENGTH_LONG).show();
-
                 Intent i = getIntent();
-                i.putExtra("CTE_ID", cId_Cte);
-                i.putExtra("CTE_DE", cId_Des);
-
                 setResult(RESULT_OK, i);
 
                 db3.close();
@@ -104,11 +99,9 @@ public class select_cte extends AppCompatActivity {
                 //Object o = listView.getItemAtPosition(position);
                 // Realiza lo que deseas, al recibir clic en el elemento de tu listView determinado por su posicion.
                 String selectedFromList = (olst_cte2.getItemAtPosition(position).toString());
-                cId_Cte = selectedFromList.substring(0, 19).trim();
-                cId_Des = selectedFromList.substring(20, selectedFromList.length()).trim();
-                Intent i = getIntent();
-                i.putExtra("CTE_ID", cId_Cte);
-                i.putExtra("CTE_DE", cId_Des);
+
+                Global.cCte_Id = selectedFromList.substring(0, 19).trim();
+                Global.cCte_De = selectedFromList.substring(20, selectedFromList.length()).trim();
 
                 btn_sele_cte.setEnabled(true);
             }

@@ -16,6 +16,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -39,20 +40,20 @@ import org.ini4j.Wini;
 
 public class menu extends AppCompatActivity {
 
-    private Button btn_conf, btn_upd, btn_cte, btn_maq, btn_capt, btn_repo, btn_exit, btn_canc_colec, btn_fin_colec;
+    private Button btn_conf, btn_upd, btn_start, btn_maq, btn_capt, btn_repo, btn_exit, btn_canc_colec, btn_fin_colec;
     private ImageView mImageView;
     private TextView DeviceId;
     private SQLiteDatabase db;
     private String cSql_Ln;
-    private String cId_emp, cId_Cte, cId_Des, cId_Maq;
     private String mCurrentPhotoPath;
     private String cdevice_id;
 
-    private final static int REQUEST_CTE = 1;
-    private final static int REQUEST_MAQ = 2;
-    private final static int REQUEST_CAP = 3;
-    private final static int REQUEST_CAPF=4;
+    private final static int REQUEST_SEL_CTE = 1;
+    private final static int REQUEST_SEL_MAQ = 2;
+    private final static int REQUEST_INI_CAP = 3;
+    private final static int REQUEST_END_CAP = 4;
     private int iGlobalRes = 0;
+    boolean exist = false;
 
     // android built in classes for bluetooth operations
     BluetoothAdapter mBluetoothAdapter;
@@ -98,20 +99,22 @@ public class menu extends AppCompatActivity {
             System.out.println("Problem reading file.");
         }
 */
-        cId_emp = "1";
-        cId_Cte = "";
-        cId_Maq = "";
+
+        if (android.os.Environment.getExternalStorageState().equals(
+                android.os.Environment.MEDIA_MOUNTED)) {
+            File appFolder = new File(Environment.getExternalStorageDirectory() + File.separator + "fotos_metros");
+            exist = appFolder.exists();
+        }
 
         btn_conf = (Button) findViewById(R.id.obtn_conf);
         btn_upd = (Button) findViewById(R.id.obtn_upd);
-        btn_cte = (Button) findViewById(R.id.obtn_cte);
+        btn_start = (Button) findViewById(R.id.obtn_start);
         btn_maq = (Button) findViewById(R.id.obtn_maq);
         btn_capt = (Button) findViewById(R.id.obtn_capt);
         btn_repo = (Button) findViewById(R.id.obtn_repo);
         btn_exit = (Button) findViewById(R.id.obtn_exit);
         btn_canc_colec = (Button) findViewById(R.id.obtn_canc_colec);
         btn_fin_colec = (Button) findViewById(R.id.obtn_fin_colec);
-
 
         DeviceId = (TextView) findViewById(R.id.oDeviceId);
         DeviceId.setText("ID EQUIPO:" + cdevice_id.toUpperCase());
@@ -128,7 +131,6 @@ public class menu extends AppCompatActivity {
                 Intent i = getIntent();
                 setResult(RESULT_CANCELED, i);
 
-                // TODO Auto-generated method stub
                 db.close();
                 finish();
                 System.exit(0);
@@ -139,21 +141,16 @@ public class menu extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                // TODO Auto-generated method stub
                 Intent Int_SyncScreen = new Intent(getApplicationContext(), sync_data.class);
                 startActivity(Int_SyncScreen);
             }
         });
 
-        btn_cte.setOnClickListener(new View.OnClickListener() {
+        btn_start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent Int_CteScreen = new Intent(getApplicationContext(), select_cte.class);
-                //startActivity(Int_CteScreen);
-                Int_CteScreen.putExtra("EMP_ID", cId_emp);
-                Int_CteScreen.putExtra("CTE_ID", "");
-                Int_CteScreen.putExtra("CTE_DE", "");
-                startActivityForResult(Int_CteScreen, REQUEST_CTE);
+                startActivityForResult(Int_CteScreen, REQUEST_SEL_CTE);
             }
         });
 
@@ -161,23 +158,25 @@ public class menu extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent Int_MaqScreen = new Intent(getApplicationContext(), select_maq.class);
-                //startActivity(Int_MaqScreen);
-                Int_MaqScreen.putExtra("EMP_ID", cId_emp);
-                Int_MaqScreen.putExtra("CTE_ID", cId_Cte);
-                Int_MaqScreen.putExtra("MAQ_ID", "");
-                startActivityForResult(Int_MaqScreen, REQUEST_MAQ);
+                startActivityForResult(Int_MaqScreen, REQUEST_SEL_MAQ);
             }
         });
 
         btn_capt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent Int_MaqScreen = new Intent(getApplicationContext(), capt_data.class);
-                //startActivity(Int_MaqScreen);
-                Int_MaqScreen.putExtra("EMP_ID", cId_emp);
-                Int_MaqScreen.putExtra("CTE_ID", cId_Cte);
-                Int_MaqScreen.putExtra("MAQ_ID", cId_Maq);
-                startActivityForResult(Int_MaqScreen, REQUEST_CAP);
+                Intent Int_CapScreen = new Intent(getApplicationContext(), capt_data.class);
+                startActivityForResult(Int_CapScreen, REQUEST_INI_CAP);
+            }
+        });
+        btn_fin_colec.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent Capf_MaqScreen = new Intent(getApplicationContext(), capt_fin.class);
+                startActivityForResult(Capf_MaqScreen, REQUEST_END_CAP);
+
+
+                Toast.makeText(getApplicationContext(), "FINALIZO.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -196,18 +195,6 @@ public class menu extends AppCompatActivity {
             }
         });
 
-        btn_fin_colec.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent Capf_MaqScreen = new Intent(getApplicationContext(), capt_fin.class);
-                startActivityForResult(Capf_MaqScreen, REQUEST_CAPF);
-
-
-                Toast.makeText(getApplicationContext(), "FINALIZO.", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-
     }
 
     @Override
@@ -217,42 +204,50 @@ public class menu extends AppCompatActivity {
 
         {
             //Se no ha habido fallo:
-            if (requestCode == REQUEST_CTE) {
-                //Se procesa la devolución
+            if (requestCode == REQUEST_SEL_CTE) {
+                //Valida la seleccion del cliente.
                 switch (resultCode) {
                     case RESULT_OK:
-                        cId_Cte = data.getStringExtra("CTE_ID");
-                        cId_Des = data.getStringExtra("CTE_DE");
-
-                        Toast.makeText(this, "Aceptó las condiciones [" + cId_Cte + "]", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Aceptó el cliente:[" + Global.cCte_Id.trim() + "]/" + Global.cCte_De.trim(), Toast.LENGTH_SHORT).show();
+                        btn_start.setEnabled(false);
                         break;
                     case RESULT_CANCELED:
-                        cId_Cte = "";
-                        Toast.makeText(this, "Rechazó las condiciones", Toast.LENGTH_SHORT).show();
+
+                        Global.cCte_Id = "";
+                        Global.cCte_De = "";
+
+                        Toast.makeText(this, "Rechazó el cliente.", Toast.LENGTH_SHORT).show();
+                        btn_start.setEnabled(true);
                         break;
                 }
             }
 
-            if (requestCode == REQUEST_MAQ) {
+            if (requestCode == REQUEST_SEL_MAQ)
+            {
                 //Se procesa la devolución
-                switch (resultCode) {
+                switch (resultCode)
+                {
                     case RESULT_OK:
-                        cId_Maq = data.getStringExtra("MAQ_ID");
-                        Toast.makeText(this, "Aceptó las condiciones [" + cId_Maq + "]", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Aceptó la máquina: [" + Global.cMaq_Id + "]/[" + Global.cMaq_De + "]", Toast.LENGTH_SHORT).show();
+                        btn_start.setEnabled(false);
+                        btn_maq.setEnabled(false);
                         break;
                     case RESULT_CANCELED:
-                        cId_Maq = "";
-                        Toast.makeText(this, "Rechazó las condiciones", Toast.LENGTH_SHORT).show();
+                        Global.cMaq_Id = "";
+                        Global.cMaq_De = "";
+
+                        Toast.makeText(this, "Rechazó la máquina.", Toast.LENGTH_SHORT).show();
+                        btn_capt.setEnabled(true);
                         break;
                 }
             }
 
-            if (requestCode == REQUEST_CAPF) {
+            if (requestCode == REQUEST_INI_CAP) {
                 //Se procesa la devolución
                 switch (resultCode) {
                     case RESULT_OK:
                         //cId_Maq = data.getStringExtra("MAQ_ID");
-                        //Toast.makeText(this, "Aceptó las condiciones [" + cId_Maq + "]", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Aceptó las condiciones [" + data.getStringExtra("SUC_ID") + "]+[" + data.getStringExtra("MAQ_ID") + "]+[" + data.getStringExtra("MAQ_ID") + "]", Toast.LENGTH_SHORT).show();
                         break;
                     case RESULT_CANCELED:
                         //cId_Maq = "";
@@ -261,20 +256,21 @@ public class menu extends AppCompatActivity {
                 }
             }
 
-            if (requestCode == REQUEST_CAP) {
+            if (requestCode == REQUEST_END_CAP) {
                 //Se procesa la devolución
                 switch (resultCode) {
                     case RESULT_OK:
-                        //cId_Maq = data.getStringExtra("MAQ_ID");
                         //Toast.makeText(this, "Aceptó las condiciones [" + cId_Maq + "]", Toast.LENGTH_SHORT).show();
+                        btn_start.setEnabled(true);
+                        btn_maq.setEnabled(true);
                         break;
                     case RESULT_CANCELED:
-                        //cId_Maq = "";
+                        btn_start.setEnabled(true);
+                        btn_maq.setEnabled(true);
                         //Toast.makeText(this, "Rechazó las condiciones", Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
-
 
         }
     }

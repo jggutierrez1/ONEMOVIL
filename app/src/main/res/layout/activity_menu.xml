@@ -50,7 +50,7 @@
             android:layout_height="15dp" />
 
         <Button
-            android:id="@+id/obtn_cte"
+            android:id="@+id/obtn_start"
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:text="INICIAR COLECTA" />

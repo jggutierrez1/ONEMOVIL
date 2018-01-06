@@ -28,7 +28,6 @@ public class select_maq extends AppCompatActivity {
     private ListView lst_maq;
     private SQLiteDatabase db4;
     private Cursor data;
-    private String cId_emp, cId_Cte, cId_Maq;
     private String cSqlLn;
 
     @Override
@@ -53,10 +52,6 @@ public class select_maq extends AppCompatActivity {
         ArrayList<String> theList = new ArrayList<>();
 
 
-        Intent i = getIntent();
-        cId_emp =  i.getStringExtra("EMP_ID");
-        cId_Cte =i.getStringExtra("CTE_ID");
-
         cSqlLn = "";
         //dialogBox("EMRPRESA["+cId_emp+"] / CLIENTE["+cId_Cte+"] / SQL["+cSqlLn+"]");
 
@@ -66,8 +61,8 @@ public class select_maq extends AppCompatActivity {
         cSqlLn = cSqlLn + "FROM maquinastc maq ";
         cSqlLn = cSqlLn + "INNER JOIN maquinas_lnk maql ON (maq.maqtc_id = maql.maqtc_id) ";
         cSqlLn = cSqlLn + "WHERE  maq.maqtc_tipomaq = 1 ";
-        cSqlLn = cSqlLn + "AND    maql.cte_id='" + cId_Cte + "' ";
-        cSqlLn = cSqlLn + "AND    maql.emp_id='" + cId_emp + "' ";
+        cSqlLn = cSqlLn + "AND    maql.cte_id='" + Global.cCte_Id + "' ";
+        cSqlLn = cSqlLn + "AND    maql.emp_id='" + Global.cEmp_Id + "' ";
         cSqlLn = cSqlLn + "ORDER BY UPPER(trim(maq.maqtc_chapa))";
 
         data = db4.rawQuery(cSqlLn, null);
@@ -89,8 +84,10 @@ public class select_maq extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "regresando:..", Toast.LENGTH_LONG).show();
 
                 Intent i = getIntent();
-                i.putExtra("MAQ_ID", "");
                 setResult(RESULT_CANCELED, i);
+
+                Global.cMaq_Id = "";
+                Global.cMaq_De = "";
 
                 db4.close();
                 finish();
@@ -102,11 +99,9 @@ public class select_maq extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
 
-                Toast.makeText(getApplicationContext(), "Selecciono[" + cId_Maq + "]:..", Toast.LENGTH_LONG).show();
-
                 Intent i = getIntent();
-                i.putExtra("MAQ_ID", cId_Maq);
                 setResult(RESULT_OK, i);
+
 
                 db4.close();
                 finish();
@@ -121,15 +116,15 @@ public class select_maq extends AppCompatActivity {
                 //Object o = listView.getItemAtPosition(position);
                 // Realiza lo que deseas, al recibir clic en el elemento de tu listView determinado por su posicion.
                 String selectedFromList = (lst_maq.getItemAtPosition(position).toString());
-                cId_Maq = selectedFromList.substring(0, 19).trim();
-                Intent i = getIntent();
-                i.putExtra("CTE_ID", cId_Maq);
+
+                Global.cMaq_Id = selectedFromList.substring(0, 19).trim();
+                Global.cMaq_De = selectedFromList.substring(20, selectedFromList.length()).trim();
+
                 btn_sele_maq.setEnabled(true);
             }
         });
 
     }
-
 
     private void dialogBox(String cMessage) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
@@ -142,7 +137,7 @@ public class select_maq extends AppCompatActivity {
                     }
                 });
 
-        alertDialogBuilder.setNegativeButton("cancel",  new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setNegativeButton("cancel", new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface arg0, int arg1) {

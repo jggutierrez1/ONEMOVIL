@@ -39,19 +39,6 @@
                 android:layout_weight="1"
                 android:text="CANCELAR" />
 
-            <Button
-                android:id="@+id/obtn_foto_cape"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:layout_weight="1"
-                android:text="FOTO ENTRADA" />
-
-            <Button
-                android:id="@+id/obtn_foto_caps"
-                android:layout_width="wrap_content"
-                android:layout_height="35dp"
-                android:layout_weight="1"
-                android:text="FOTO SALIDA" />
         </LinearLayout>
 
         <TextView
@@ -60,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="CLIENTE:"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <TextView
@@ -69,7 +56,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="CHAPA:"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
         <!--                             ETIQUETA ENTRADA                                    -->
@@ -554,8 +541,8 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:enabled="false"
-                android:inputType="numberDecimal"
-                android:text="0.00"
+                android:inputType="number"
+                android:text="0"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:layout_editor_absoluteX="182dp"
@@ -586,8 +573,8 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:enabled="false"
-                android:inputType="numberDecimal"
-                android:text="0.00"
+                android:inputType="number"
+                android:text="0"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:layout_editor_absoluteX="182dp"

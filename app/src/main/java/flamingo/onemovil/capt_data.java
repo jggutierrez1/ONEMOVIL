@@ -2,26 +2,40 @@ package flamingo.onemovil;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+
 import android.hardware.Camera;
 import android.net.Uri;
+
 import android.os.Environment;
+import android.os.Build;
+import android.os.Bundle;
+
 import android.provider.MediaStore;
 import android.provider.Settings;
+
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
+
 import android.text.Editable;
 import android.text.TextWatcher;
+
 import android.util.Log;
+
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,75 +43,61 @@ import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.os.Bundle;
+import android.widget.VideoView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+
 import java.util.Date;
 import java.util.Locale;
 
 public class capt_data extends AppCompatActivity {
 
-    private Button btn_hide_capt, btn_save_capt, btn_canc_capt, btn_foto_cape, btn_foto_caps;
-
+    public final static int REQUEST_CAMERA = 1;
+    private static final String TAG = capt_data.class.getSimpleName();
+    private Button btn_hide_capt, btn_save_capt, btn_canc_capt;
     private EditText ea_act, ea_ant, ea_dif;
     private EditText eb_act, eb_ant, eb_dif;
-
     private EditText sa_act, sa_ant, sa_dif;
     private EditText sb_act, sb_ant, sb_dif;
     private EditText tot_cole, tot_cred;
-
     private EditText semanas;
-
     private TextView ltot_cole, ltot_cred;
     private TextView lab_cte, lab_cha;
-
     private TextView leb_act, leb_ant, leb_dif;
     private TextView lsb_act, lsb_ant, lsb_dif;
-
     private LinearLayout layoutb_eact, layoutb_eant, layoutb_edif, layoutb_sact, layoutb_sant, layoutb_sdif;
     private Space Spaceb_esep, Spaceb_ssep;
-
     private SQLiteDatabase db4;
     private Cursor data;
-    private String cId_emp, cId_Cte, cId_Maq;
+    //private String cId_emp, cId_Cte, cId_Maq;
     private String cSqlLn = "";
-
     private String op_chapa, op_modelo, op_serie, maqlnk_id, cte_nombre_loc, cte_nombre_com,
             maqtc_denom_e, maqtc_denom_s;
-    private double op_cal_colect, op_cal_cred, op_cporc_Loc, Op_tot_impjcj, Op_tot_impmunic, den_valore, den_valors;
+    private double op_colect, op_cred, op_cal_colect, op_cal_cred, op_cporc_Loc, Op_tot_impjcj, Op_tot_impmunic, den_valore, den_valors;
     private int op_emp_id, den_fact_e, den_fact_s, maqtc_tipomaq, Op_ea_metroac, Op_ea_metroan, Op_sa_metroac, Op_sa_metroan;
     private boolean bFoundMach;
     private int cte_pag_jcj, cte_pag_spac, cte_pag_impm, Denom_Ent_Fac, Denom_Sal_Fac;
     private double fDenom_Ent_Val, fDenom_Sal_Val, Porc_Loc;
-
     //private double ftot_cole, ftot_prem;
     private int iMetroA_EntDif, iMetroB_EntDif, iMetroA_SalDif, iMetroB_SalDif;
-
-    private static final int CAMERA_REQUEST = 1888;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    private Bitmap mImageBitmap;
-    private String mCurrentPhotoPath;
-    private ImageView mImageView;
-    private static final String TAG = capt_data.class.getSimpleName();
     private String cid_device2 = "";
+    private int iSemanas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capt_data);
-
         cid_device2 = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
         this.btn_hide_capt = (Button) findViewById(R.id.obtn_hide_capt);
         this.btn_save_capt = (Button) findViewById(R.id.obtn_save_capt);
         this.btn_canc_capt = (Button) findViewById(R.id.obtn_canc_capt);
-        this.btn_foto_cape = (Button) findViewById(R.id.obtn_foto_cape);
-        this.btn_foto_caps = (Button) findViewById(R.id.obtn_foto_caps);
 
         /*-------------------ETIQUETAS------------------------*/
         this.leb_act = (TextView) findViewById(R.id.oleb_act);
@@ -114,7 +114,6 @@ public class capt_data extends AppCompatActivity {
         this.layoutb_eant = (LinearLayout) findViewById(R.id.olayoutb_eant);
         this.layoutb_edif = (LinearLayout) findViewById(R.id.olayoutb_edif);
         this.Spaceb_esep = (Space) findViewById(R.id.oSpaceb_esep);
-
 
         this.layoutb_sact = (LinearLayout) findViewById(R.id.olayoutb_sact);
         this.layoutb_sant = (LinearLayout) findViewById(R.id.olayoutb_sant);
@@ -161,15 +160,10 @@ public class capt_data extends AppCompatActivity {
 
         this.Clear_Screen();
 
-        Intent i = getIntent();
-        this.cId_emp = i.getStringExtra("EMP_ID");
-        this.cId_Cte = i.getStringExtra("CTE_ID");
-        this.cId_Maq = i.getStringExtra("MAQ_ID");
-
         String databasePath = getDatabasePath("one2009.db").getPath();
         this.db4 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
 
-        this.bFoundMach = this.Buscar_Maquina(cId_emp, cId_Cte, cId_Maq);
+        this.bFoundMach = this.Buscar_Maquina(Global.cEmp_Id, Global.cCte_Id, Global.cMaq_Id);
 
         this.MaquinaValid(true);
 
@@ -288,6 +282,15 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
+        btn_hide_capt.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
+                        .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+            }
+        });
+
         btn_save_capt.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -295,81 +298,109 @@ public class capt_data extends AppCompatActivity {
 
                 android.text.format.DateFormat cNow = new android.text.format.DateFormat();
                 cNow.format("yyyy-MM-dd hh:mm:ss", new java.util.Date());
+
+                String cNow2 = getNow();
+
                 String cSql_Ln = "";
 
-                cSql_Ln = cSql_Ln + "DELETE FROM operacion WHERE id_device='" + cid_device2 + "' and  op_chapa='" + op_chapa + "'";
+                cSql_Ln = "";
+                cSql_Ln += "DELETE FROM operacion WHERE id_device='" + cid_device2 + "' and  op_chapa='" + op_chapa + "';";
+                Log.e("SQL", cSql_Ln);
+                //System.out.print(cSql_Ln);
                 db4.execSQL(cSql_Ln);
+                iSemanas = Integer.parseInt(semanas.getText().toString());
 
-                cSql_Ln = cSql_Ln + "INSERT INTO operacion ( ";
-                cSql_Ln = cSql_Ln + "cte_nombre_loc, cte_nombre_com, op_cporc_Loc";
-                cSql_Ln = cSql_Ln + "cte_pag_jcj, cte_pag_spac, cte_pag_impm,";
-                cSql_Ln = cSql_Ln + "maqtc_denom_e, maqtc_denom_s,";
-                cSql_Ln = cSql_Ln + "den_valore, den_valors,";
-                cSql_Ln = cSql_Ln + "den_fact_e, den_fact_s,";
-                cSql_Ln = cSql_Ln + "MaqLnk_Id,maqtc_tipomaq,op_serie,op_chapa,op_modelo";
-                cSql_Ln = cSql_Ln + "op_fecha,";
-                cSql_Ln = cSql_Ln + "op_e_pantalla,";
-                cSql_Ln = cSql_Ln + "op_ea_metroan,op_ea_metroac,op_ea_met,";
-                cSql_Ln = cSql_Ln + "op_sa_metroan,op_sa_metroac,op_sa_met,";
-                cSql_Ln = cSql_Ln + "op_eb_metroan,op_eb_metroac,op_eb_met,";
-                cSql_Ln = cSql_Ln + "op_sb_metroan,op_sb_metroac,op_sb_met,";
-                cSql_Ln = cSql_Ln + "op_s_pantalla,";
-                cSql_Ln = cSql_Ln + "op_cal_colect,op_tot_colect,";
-                cSql_Ln = cSql_Ln + "op_tot_cred,op_cal_cred,";
-                cSql_Ln = cSql_Ln + "op_fecha_alta,op_fecha_modif,";
-                cSql_Ln = cSql_Ln + "op_emp_id,id_device) VALUES (";
-                cSql_Ln = cSql_Ln + "'" + cte_nombre_loc + "',";
-                cSql_Ln = cSql_Ln + "'" + cte_nombre_com + "',";
-                cSql_Ln = cSql_Ln + "'" + op_cporc_Loc + "',";
-                cSql_Ln = cSql_Ln + "'" + cte_pag_jcj + "',";
-                cSql_Ln = cSql_Ln + "'" + cte_pag_spac + "',";
-                cSql_Ln = cSql_Ln + "'" + cte_pag_impm + "',";
-                cSql_Ln = cSql_Ln + "'" + maqtc_denom_e + "',";
-                cSql_Ln = cSql_Ln + "'" + maqtc_denom_s + "',";
-                cSql_Ln = cSql_Ln + "'" + den_valore + "',";
-                cSql_Ln = cSql_Ln + "'" + den_valors + "',";
-                cSql_Ln = cSql_Ln + "'" + Denom_Ent_Fac + "',";
-                cSql_Ln = cSql_Ln + "'" + Denom_Sal_Fac + "',";
-                cSql_Ln = cSql_Ln + "'" + maqlnk_id + "',";
-                cSql_Ln = cSql_Ln + "'" + maqtc_tipomaq + "',";
-                cSql_Ln = cSql_Ln + "'" + op_serie + "',";
-                cSql_Ln = cSql_Ln + "'" + op_chapa + "',";
-                cSql_Ln = cSql_Ln + "'" + op_modelo + "',";
-                cSql_Ln = cSql_Ln + "'" + cNow + "',";
-                cSql_Ln = cSql_Ln + "'0',";
+                double Op_tot_impjcj2 = 0.00;
+                double Op_tot_impmunic2 = 0.00;
 
-                cSql_Ln = cSql_Ln + "'" + ea_ant + "',";
-                cSql_Ln = cSql_Ln + "'" + ea_act + "',";
-                cSql_Ln = cSql_Ln + "'" + ea_dif + "',";
+                if (cte_pag_jcj == 0) {
+                    Op_tot_impjcj2 = (Op_tot_impjcj * iSemanas);
+                }
 
-                cSql_Ln = cSql_Ln + "'" + sa_ant + "',";
-                cSql_Ln = cSql_Ln + "'" + sa_act + "',";
-                cSql_Ln = cSql_Ln + "'" + sa_dif + "',";
+                if (cte_pag_impm == 0) {
+                    Op_tot_impmunic2 = (Op_tot_impmunic * iSemanas);
+                }
 
-                cSql_Ln = cSql_Ln + "'" + eb_ant + "',";
-                cSql_Ln = cSql_Ln + "'" + eb_act + "',";
-                cSql_Ln = cSql_Ln + "'" + eb_dif + "',";
+                cSql_Ln = "";
+                cSql_Ln += "INSERT INTO operacion ( ";
+                cSql_Ln += "cte_nombre_loc, cte_nombre_com, op_cporc_Loc,";
+                cSql_Ln += "cte_pag_jcj, cte_pag_spac, cte_pag_impm,";
+                cSql_Ln += "maqtc_denom_e, maqtc_denom_s,";
+                cSql_Ln += "den_valore, den_valors,";
+                cSql_Ln += "den_fact_e, den_fact_s,";
+                cSql_Ln += "MaqLnk_Id,maqtc_tipomaq,op_serie,op_chapa,op_modelo,";
+                cSql_Ln += "op_fecha,";
+                cSql_Ln += "op_e_pantalla,";
+                cSql_Ln += "op_ea_metroan,op_ea_metroac,op_ea_met,";
+                cSql_Ln += "op_sa_metroan,op_sa_metroac,op_sa_met,";
+                cSql_Ln += "op_eb_metroan,op_eb_metroac,op_eb_met,";
+                cSql_Ln += "op_sb_metroan,op_sb_metroac,op_sb_met,";
+                cSql_Ln += "op_s_pantalla,";
+                cSql_Ln += "op_cal_colect,op_tot_colect,";
+                cSql_Ln += "op_tot_cred,op_cal_cred,";
+                cSql_Ln += "op_fecha_alta,op_fecha_modif,";
+                cSql_Ln += "op_tot_impmunic,op_tot_impjcj,";
+                cSql_Ln += "op_emp_id,id_device) VALUES (";
+                cSql_Ln += "'" + cte_nombre_loc + "',";
+                cSql_Ln += "'" + cte_nombre_com + "',";
+                cSql_Ln += "'" + op_cporc_Loc + "',";
+                cSql_Ln += "'" + cte_pag_jcj + "',";
+                cSql_Ln += "'" + cte_pag_spac + "',";
+                cSql_Ln += "'" + cte_pag_impm + "',";
+                cSql_Ln += "'" + maqtc_denom_e + "',";
+                cSql_Ln += "'" + maqtc_denom_s + "',";
+                cSql_Ln += "'" + den_valore + "',";
+                cSql_Ln += "'" + den_valors + "',";
+                cSql_Ln += "'" + Denom_Ent_Fac + "',";
+                cSql_Ln += "'" + Denom_Sal_Fac + "',";
+                cSql_Ln += "'" + maqlnk_id + "',";
+                cSql_Ln += "'" + maqtc_tipomaq + "',";
+                cSql_Ln += "'" + op_serie + "',";
+                cSql_Ln += "'" + op_chapa + "',";
+                cSql_Ln += "'" + op_modelo + "',";
+                cSql_Ln += "'" + cNow2 + "',";
+                cSql_Ln += "'0',";
 
-                cSql_Ln = cSql_Ln + "'" + sb_ant + "',";
-                cSql_Ln = cSql_Ln + "'" + sb_act + "',";
-                cSql_Ln = cSql_Ln + "'" + eb_dif + "',";
-                cSql_Ln = cSql_Ln + "'0',";
+                cSql_Ln += "'" + String.format("%d", Integer.parseInt(ea_ant.getText().toString())) + "',";
+                cSql_Ln += "'" + String.format("%d", Integer.parseInt(ea_act.getText().toString())) + "',";
+                cSql_Ln += "'" + String.format("%d", Integer.parseInt(ea_dif.getText().toString())) + "',";
 
-                cSql_Ln = cSql_Ln + "'" + op_cal_colect + "',";
-                cSql_Ln = cSql_Ln + "'" + tot_cole + "',";
+                cSql_Ln += "'" + String.format("%d", Integer.parseInt(sa_ant.getText().toString())) + "',";
+                cSql_Ln += "'" + String.format("%d", Integer.parseInt(sa_act.getText().toString())) + "',";
+                cSql_Ln += "'" + String.format("%d", Integer.parseInt(sa_dif.getText().toString())) + "',";
 
-                cSql_Ln = cSql_Ln + "'" + op_cal_cred + "',";
-                cSql_Ln = cSql_Ln + "'" + tot_cred + "',";
-                cSql_Ln = cSql_Ln + "'" + cNow + "',";
-                cSql_Ln = cSql_Ln + "'" + cNow + "',";
+                cSql_Ln += "'" + String.format("%d", Integer.parseInt(eb_ant.getText().toString())) + "',";
+                cSql_Ln += "'" + String.format("%d", Integer.parseInt(eb_act.getText().toString())) + "',";
+                cSql_Ln += "'" + String.format("%d", Integer.parseInt(eb_dif.getText().toString())) + "',";
 
-                cSql_Ln = cSql_Ln + "'" + op_emp_id + "',";
-                cSql_Ln = cSql_Ln + "'" + cid_device2 + "')";
-                //db4.execSQL(cSql_Ln);
+                cSql_Ln += "'" + String.format("%d", Integer.parseInt(sb_ant.getText().toString())) + "',";
+                cSql_Ln += "'" + String.format("%d", Integer.parseInt(sb_act.getText().toString())) + "',";
+                cSql_Ln += "'" + String.format("%d", Integer.parseInt(eb_dif.getText().toString())) + "',";
+                cSql_Ln += "'0',";
 
+                cSql_Ln += "'" + op_cal_colect + "',";
+                cSql_Ln += "'" + String.format("%d", Integer.parseInt(tot_cole.getText().toString())) + "',";
 
+                cSql_Ln += "'" + op_cal_cred + "',";
+                cSql_Ln += "'" + String.format("%d", Integer.parseInt(tot_cred.getText().toString())) + "',";
+                cSql_Ln += "'" + cNow2 + "',";
+                cSql_Ln += "'" + cNow2 + "',";
+                cSql_Ln += "'" + Op_tot_impjcj2 + "',";
+                cSql_Ln += "'" + Op_tot_impmunic2 + "',";
 
+                cSql_Ln += "'" + op_emp_id + "',";
+                cSql_Ln += "'" + cid_device2 + "');";
+                Log.e("SQL", cSql_Ln);
+                //System.out.print(cSql_Ln);
+                db4.execSQL(cSql_Ln);
+                db4.close();
 
+                Clear_Screen();
+
+                Intent i = getIntent();
+                setResult(RESULT_OK, i);
+
+                finish();
             }
         });
 
@@ -380,89 +411,31 @@ public class capt_data extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(), "regresando:..", Toast.LENGTH_LONG).show();
 
                 Intent i = getIntent();
-                i.putExtra("CTE_ID", "");
                 setResult(RESULT_CANCELED, i);
 
                 db4.close();
                 finish();
             }
         });
-
-        btn_hide_capt.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
-                        .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
-            }
-        });
-
-        btn_foto_cape.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                dispatchTakePictureIntent();
-            }
-        });
-
-        btn_foto_caps.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                //dispatchTakePictureIntent();
-            }
-        });
-
-    }
-
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-        }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // check if the request code is same as what is passed  here it is 2
 
-        /*if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
-            Bitmap photo = (Bitmap) data.getExtras().get("data");
-            //imageView.setImageBitmap(photo);
-        }
-        */
-
-        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-            try {
-                mImageBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), Uri.parse(mCurrentPhotoPath));
-                mImageView.setImageBitmap(mImageBitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
+        {
+            if (requestCode == REQUEST_CAMERA) {
+                switch (resultCode) {
+                    case RESULT_OK:
+                        Toast.makeText(this, "PROCESADO", Toast.LENGTH_SHORT).show();
+                        break;
+                    case RESULT_CANCELED:
+                        Toast.makeText(this, "ERROR INESPERADO", Toast.LENGTH_SHORT).show();
+                        break;
+                }
             }
 
         }
-    }
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date());
-        String imageFileName = "_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-        System.out.println(storageDir);
-        System.out.println(image);
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        System.out.println(mCurrentPhotoPath);
-
-        return image;
     }
 
     private void Calc_Dif_Ent(boolean A) {
@@ -482,7 +455,6 @@ public class capt_data extends AppCompatActivity {
             iMetroB_EntDif = (ieb_act - ieb_ant);
             eb_dif.setText(String.valueOf(iMetroB_EntDif).toString());
         }
-
     }
 
     private void Calc_Dif_Sal(boolean A) {
@@ -508,7 +480,7 @@ public class capt_data extends AppCompatActivity {
         double iTot = 0.00;
         double ipFac_e = 0.00;
         double ftot_cole = 0.00;
-        DecimalFormat REAL_FORMATTER = new DecimalFormat("##########0.00");
+        DecimalFormat REAL_FORMATTER = new DecimalFormat("#############0");
 
         ipFac_e = (this.Denom_Ent_Fac == 0 ? 1 : this.Denom_Ent_Fac);
 
@@ -519,6 +491,7 @@ public class capt_data extends AppCompatActivity {
             this.Calc_Sub_Tot();
         } else {
             ftot_cole = Double.valueOf(tot_cole.getText().toString()).doubleValue();
+            op_colect = ftot_cole;
             if (ftot_cole <= 0.00) {
                 this.tot_cole.setText(REAL_FORMATTER.format(iTot));
                 this.Calc_Sub_Tot();
@@ -531,7 +504,7 @@ public class capt_data extends AppCompatActivity {
         double iTot = 0.00;
         double ipFac_s = 0.00;
         double ftot_prem = 0.00;
-        DecimalFormat REAL_FORMATTER = new DecimalFormat("##########0.00");
+        DecimalFormat REAL_FORMATTER = new DecimalFormat("#############0");
 
         ipFac_s = (this.Denom_Sal_Fac == 0 ? 1 : this.Denom_Sal_Fac);
 
@@ -542,6 +515,7 @@ public class capt_data extends AppCompatActivity {
             this.Calc_Sub_Tot();
         } else {
             ftot_prem = Double.valueOf(tot_cred.getText().toString()).doubleValue();
+            op_cred = ftot_prem;
             if (ftot_prem <= 0) {
                 this.tot_cred.setText(REAL_FORMATTER.format(iTot));
                 this.Calc_Sub_Tot();
@@ -578,66 +552,68 @@ public class capt_data extends AppCompatActivity {
         this.sb_dif.setText("0");
         this.sb_dif.setEnabled(false);
 
-        this.tot_cole.setText("0.00");
+        this.tot_cole.setText("0");
         this.tot_cole.setEnabled(false);
-        this.tot_cred.setText("0.00");
+        this.tot_cred.setText("0");
         this.tot_cred.setEnabled(false);
     }
 
     private boolean Buscar_Maquina(String pId_emp, String pId_Cte, String pId_Maq) {
         cSqlLn = "";
-        cSqlLn = cSqlLn + "SELECT ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_id, ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_cod, ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_modelo, ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_chapa, ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_inactivo, ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_metros, ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_denom_e, ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_tipomaq, ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_denom_s, ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_m1e_act, ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_m1e_ant, ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_m1s_ant, ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_m2e_act, ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_m2e_ant, ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_m2s_act, ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_m2s_ant, ";
-        cSqlLn = cSqlLn + "  maquinastc.maqtc_m1s_act, ";
-        cSqlLn = cSqlLn + "  maquinas_lnk.MaqLnk_Id, ";
-        cSqlLn = cSqlLn + "  clientes.cte_id, ";
-        cSqlLn = cSqlLn + "  clientes.cte_nombre_loc, ";
-        cSqlLn = cSqlLn + "  clientes.cte_nombre_com, ";
-        cSqlLn = cSqlLn + "  clientes.cte_inactivo, ";
-        cSqlLn = cSqlLn + "  clientes.cte_pag_jcj, ";
-        cSqlLn = cSqlLn + "  clientes.cte_pag_impm, ";
-        cSqlLn = cSqlLn + "  clientes.cte_pag_spac, ";
-        cSqlLn = cSqlLn + "  clientes.cte_poc_ret, ";
-        cSqlLn = cSqlLn + "  clientes.mun_id, ";
-        cSqlLn = cSqlLn + "  clientes.rut_id, ";
-        cSqlLn = cSqlLn + "  rutas.rut_nombre, ";
-        cSqlLn = cSqlLn + "  empresas.emp_id, ";
-        cSqlLn = cSqlLn + "  empresas.emp_descripcion, ";
-        cSqlLn = cSqlLn + "  empresas.emp_inactivo, ";
-        cSqlLn = cSqlLn + "  empresas.emp_cargo_jcj, ";
-        cSqlLn = cSqlLn + "  empresas.emp_cargo_spac, ";
-        cSqlLn = cSqlLn + "  municipios.mun_nombre, ";
-        cSqlLn = cSqlLn + "  municipios.mun_impuesto, ";
-        cSqlLn = cSqlLn + "  a.den_valor AS den_valore , ";
-        cSqlLn = cSqlLn + "  b.den_valor AS den_valors , ";
-        cSqlLn = cSqlLn + "  a.den_fact_e , ";
-        cSqlLn = cSqlLn + "  b.den_fact_s  ";
-        cSqlLn = cSqlLn + "FROM maquinastc ";
-        cSqlLn = cSqlLn + "  INNER JOIN maquinas_lnk ON (maquinastc.maqtc_id = maquinas_lnk.maqtc_id) ";
-        cSqlLn = cSqlLn + "  LEFT JOIN clientes  ON (maquinas_lnk.cte_id = clientes.cte_id) ";
-        cSqlLn = cSqlLn + "  LEFT JOIN empresas   ON (maquinas_lnk.emp_id = empresas.emp_id) ";
-        cSqlLn = cSqlLn + "  LEFT JOIN municipios ON (clientes.mun_id = municipios.mun_id) ";
-        cSqlLn = cSqlLn + "  LEFT JOIN rutas      ON (clientes.rut_id = rutas.rut_id) ";
-        cSqlLn = cSqlLn + "  LEFT JOIN denominaciones a ON (maquinastc.maqtc_denom_e = a.den_id) ";
-        cSqlLn = cSqlLn + "  LEFT JOIN denominaciones b ON (maquinastc.maqtc_denom_s = b.den_id) ";
-        cSqlLn = cSqlLn + "WHERE maqtc_tipomaq = 1 ";
-        cSqlLn = cSqlLn + "AND TRIM(maquinastc.maqtc_chapa) ='" + pId_Maq + "' ";
-        cSqlLn = cSqlLn + "AND empresas.emp_id ='" + pId_emp + "' ";
+        cSqlLn += "SELECT ";
+        cSqlLn += "  maquinastc.maqtc_id, ";
+        cSqlLn += "  maquinastc.maqtc_cod, ";
+        cSqlLn += "  maquinastc.maqtc_modelo, ";
+        cSqlLn += "  maquinastc.maqtc_chapa, ";
+        cSqlLn += "  maquinastc.maqtc_inactivo, ";
+        cSqlLn += "  maquinastc.maqtc_metros, ";
+        cSqlLn += "  maquinastc.maqtc_denom_e, ";
+        cSqlLn += "  maquinastc.maqtc_tipomaq, ";
+        cSqlLn += "  maquinastc.maqtc_denom_s, ";
+        cSqlLn += "  maquinastc.maqtc_m1e_act, ";
+        cSqlLn += "  maquinastc.maqtc_m1e_ant, ";
+        cSqlLn += "  maquinastc.maqtc_m1s_ant, ";
+        cSqlLn += "  maquinastc.maqtc_m2e_act, ";
+        cSqlLn += "  maquinastc.maqtc_m2e_ant, ";
+        cSqlLn += "  maquinastc.maqtc_m2s_act, ";
+        cSqlLn += "  maquinastc.maqtc_m2s_ant, ";
+        cSqlLn += "  maquinastc.maqtc_m1s_act, ";
+        cSqlLn += "  maquinas_lnk.MaqLnk_Id, ";
+        cSqlLn += "  clientes.cte_id, ";
+        cSqlLn += "  clientes.cte_nombre_loc, ";
+        cSqlLn += "  clientes.cte_nombre_com, ";
+        cSqlLn += "  clientes.cte_inactivo, ";
+        cSqlLn += "  clientes.cte_pag_jcj, ";
+        cSqlLn += "  clientes.cte_pag_impm, ";
+        cSqlLn += "  clientes.cte_pag_spac, ";
+        cSqlLn += "  clientes.cte_poc_ret, ";
+        cSqlLn += "  clientes.mun_id, ";
+        cSqlLn += "  clientes.rut_id, ";
+        cSqlLn += "  rutas.rut_nombre, ";
+        cSqlLn += "  empresas.emp_id, ";
+        cSqlLn += "  empresas.emp_descripcion, ";
+        cSqlLn += "  empresas.emp_inactivo, ";
+        cSqlLn += "  empresas.emp_cargo_jcj, ";
+        cSqlLn += "  empresas.emp_cargo_spac, ";
+        cSqlLn += "  municipios.mun_nombre, ";
+        cSqlLn += "  municipios.mun_impuesto, ";
+        cSqlLn += "  a.den_valor AS den_valore , ";
+        cSqlLn += "  b.den_valor AS den_valors , ";
+        cSqlLn += "  a.den_fact_e , ";
+        cSqlLn += "  b.den_fact_s  ";
+        cSqlLn += "FROM maquinastc ";
+        cSqlLn += "  INNER JOIN maquinas_lnk ON (maquinastc.maqtc_id = maquinas_lnk.maqtc_id) ";
+        cSqlLn += "  LEFT JOIN clientes   ON (maquinas_lnk.cte_id = clientes.cte_id) ";
+        cSqlLn += "  LEFT JOIN empresas   ON (maquinas_lnk.emp_id = empresas.emp_id) ";
+        cSqlLn += "  LEFT JOIN municipios ON (clientes.mun_id = municipios.mun_id) ";
+        cSqlLn += "  LEFT JOIN rutas      ON (clientes.rut_id = rutas.rut_id) ";
+        cSqlLn += "  LEFT JOIN denominaciones a ON (maquinastc.maqtc_denom_e = a.den_id) ";
+        cSqlLn += "  LEFT JOIN denominaciones b ON (maquinastc.maqtc_denom_s = b.den_id) ";
+        cSqlLn += "WHERE maqtc_tipomaq = 1 ";
+        cSqlLn += "AND TRIM(maquinastc.maqtc_chapa) ='" + pId_Maq + "' ";
+        cSqlLn += "AND empresas.emp_id ='" + pId_emp + "' ";
+        Log.d("SQL", cSqlLn);
+        //System.out.print(cSqlLn);
 
         data = db4.rawQuery(cSqlLn, null);
 
@@ -653,8 +629,11 @@ public class capt_data extends AppCompatActivity {
         data.moveToFirst();
         op_serie = "0";
 
-        this.lab_cte.setText("CLIENTE: " + data.getString(data.getColumnIndex("cte_nombre_loc")));
-        this.lab_cha.setText("CHAPA  : " + data.getString(data.getColumnIndex("maqtc_chapa")));
+        //this.lab_cte.setText("CLIENTE: " + data.getString(data.getColumnIndex("cte_nombre_loc")));
+        //this.lab_cha.setText("CHAPA  : " + data.getString(data.getColumnIndex("maqtc_chapa")));
+
+        this.lab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
+        this.lab_cha.setText("CHAPA  : [" + Global.cMaq_Id + "]/[" + Global.cMaq_De + "]");
 
         op_chapa = data.getString(data.getColumnIndex("maqtc_chapa"));
 
@@ -704,11 +683,11 @@ public class capt_data extends AppCompatActivity {
                 if (bIsNew == true) {
                     // Entradas A
                     this.ea_act.setEnabled(true);
-                    this.ea_act.setText("0.00");
+                    this.ea_act.setText("0");
                     this.ea_ant.setText(data.getString(data.getColumnIndex("maqtc_m1e_act")));
                     // Salidas A
                     this.sa_act.setEnabled(true);
-                    this.sa_act.setText("0.00");
+                    this.sa_act.setText("0");
                     this.sa_ant.setText(data.getString(data.getColumnIndex("maqtc_m1s_act")));
 
                     if (data.getInt(data.getColumnIndex("maqtc_m1e_ant")) == 0)
@@ -878,6 +857,20 @@ public class capt_data extends AppCompatActivity {
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    private String getNow() {
+        // set the format to sql date time
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
+    private String getDateTime() {
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 
 }

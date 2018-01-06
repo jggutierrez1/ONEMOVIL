@@ -8,12 +8,12 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CAMERA" />
 
-    <uses-feature
-        android:name="android.hardware.camera"
-        android:required="true" />
+
+    <uses-feature android:name="android.hardware.camera2.full" />
 
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
 
     <application
         android:allowBackup="true"
@@ -34,7 +34,10 @@
         <activity android:name=".select_maq" />
         <activity android:name=".sync_data" />
         <activity android:name=".capt_data" />
+        <activity android:name=".take_photo" />
         <activity android:name=".capt_fin"></activity>
+
     </application>
+
 
 </manifest>
