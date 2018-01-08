@@ -13,33 +13,33 @@
             tools:layout_editor_absoluteX="314dp"
             tools:layout_editor_absoluteY="26dp">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_weight="0"
-                android:orientation="horizontal">
+             <LinearLayout
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_weight="0"
+                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/obtn_totfin_hide"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="QUITAR TECLADO" />
+                 <Button
+                     android:id="@+id/obtn_totfin_hide"
+                     android:layout_width="wrap_content"
+                     android:layout_height="65dp"
+                     android:layout_weight="1"
+                     android:text="QUITAR TECLADO" />
 
-                <Button
-                    android:id="@+id/obtn_totfin_save"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="PROCESAR" />
+                 <Button
+                     android:id="@+id/obtn_totfin_save"
+                     android:layout_width="wrap_content"
+                     android:layout_height="65dp"
+                     android:layout_weight="1"
+                     android:text="PROCESAR" />
 
-                <Button
-                    android:id="@+id/obtn_totfin_canc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="CANCELAR" />
-            </LinearLayout>
+                 <Button
+                     android:id="@+id/obtn_totfin_canc"
+                     android:layout_width="wrap_content"
+                     android:layout_height="65dp"
+                     android:layout_weight="1"
+                     android:text="CANCELAR" />
+             </LinearLayout>
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="15dp" />
@@ -96,9 +96,9 @@
                      android:layout_height="wrap_content"
                      android:layout_weight="1"
                      android:ems="10"
-                     android:enabled="true"
-                     android:inputType="number|numberDecimal"
-                     android:text="0.00"
+                     android:enabled="false"
+                     android:inputType="number"
+                     android:text="0"
                      android:textSize="18sp"
                      tools:layout_editor_absoluteX="182dp"
                      tools:layout_editor_absoluteY="147dp" />
@@ -125,8 +125,8 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:enabled="false"
-                    android:inputType="number|numberDecimal"
-                    android:text="0.00"
+                    android:inputType="number"
+                    android:text="0"
                     android:textSize="18sp"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
@@ -159,8 +159,8 @@
                      android:layout_weight="1"
                      android:ems="10"
                      android:enabled="true"
-                     android:inputType="number|numberDecimal"
-                     android:text="0.00"
+                     android:inputType="number"
+                     android:text="0"
                      android:textSize="18sp"
                      tools:layout_editor_absoluteX="182dp"
                      tools:layout_editor_absoluteY="147dp" />
@@ -187,8 +187,8 @@
                      android:layout_height="wrap_content"
                      android:layout_weight="1"
                      android:ems="10"
-                     android:inputType="number|numberDecimal"
-                     android:text="0.00"
+                     android:inputType="number"
+                     android:text="0"
                      android:textSize="18sp"
                      tools:layout_editor_absoluteX="182dp"
                      tools:layout_editor_absoluteY="147dp" />
@@ -216,8 +216,8 @@
                       android:layout_weight="1"
                       android:ems="10"
                       android:enabled="false"
-                      android:inputType="number|numberDecimal"
-                      android:text="0.00"
+                      android:inputType="number"
+                      android:text="0"
                       android:textSize="18sp"
                       android:textStyle="bold"
                       tools:layout_editor_absoluteX="182dp"
@@ -260,8 +260,8 @@
                      android:layout_height="wrap_content"
                      android:layout_weight="1"
                      android:ems="10"
-                     android:inputType="number|numberDecimal"
-                     android:text="0.00"
+                     android:inputType="number"
+                     android:text="0"
                      android:textSize="18sp"
                      tools:layout_editor_absoluteX="182dp"
                      tools:layout_editor_absoluteY="147dp" />
@@ -289,8 +289,9 @@
                      android:layout_height="wrap_content"
                      android:layout_weight="1"
                      android:ems="10"
-                     android:inputType="number|numberDecimal"
-                     android:text="0.00"
+                     android:enabled="false"
+                     android:inputType="number"
+                     android:text="0"
                      android:textSize="18sp"
                      android:textStyle="bold"
                      tools:layout_editor_absoluteX="182dp"
@@ -322,6 +323,7 @@
                      android:layout_height="246dp"
                      android:layout_weight="1"
                      android:ems="10"
+                     android:enabled="true"
                      android:inputType="textMultiLine"
                      android:tooltipText="ESCRIBA EL DETALLE AQUI" />
 

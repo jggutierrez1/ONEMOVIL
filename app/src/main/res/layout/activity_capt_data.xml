@@ -21,21 +21,21 @@
             <Button
                 android:id="@+id/obtn_hide_capt"
                 android:layout_width="wrap_content"
-                android:layout_height="35dp"
+                android:layout_height="65dp"
                 android:layout_weight="1"
                 android:text="QUITAR TECLADO" />
 
             <Button
                 android:id="@+id/obtn_save_capt"
                 android:layout_width="wrap_content"
-                android:layout_height="35dp"
+                android:layout_height="65dp"
                 android:layout_weight="1"
                 android:text="GUARDAR" />
 
             <Button
-                android:id="@+id/obtn_canc_capt"
+                android:id="@+id/obtn_cancel_capt"
                 android:layout_width="wrap_content"
-                android:layout_height="35dp"
+                android:layout_height="65dp"
                 android:layout_weight="1"
                 android:text="CANCELAR" />
 
@@ -85,6 +85,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:inputType="textPersonName|number"
+                android:selectAllOnFocus="true"
                 android:text="1" />
 
         </LinearLayout>
@@ -122,6 +123,7 @@
                 android:ems="10"
                 android:enabled="true"
                 android:inputType="number"
+                android:selectAllOnFocus="true"
                 android:text="0"
                 android:textSize="18sp"
                 tools:layout_editor_absoluteX="182dp"
@@ -155,6 +157,7 @@
                 android:ems="10"
                 android:enabled="false"
                 android:inputType="number"
+                android:selectAllOnFocus="true"
                 android:text="0"
                 android:textSize="18sp"
                 tools:layout_editor_absoluteX="182dp"
@@ -222,6 +225,7 @@
                 android:ems="10"
                 android:enabled="true"
                 android:inputType="number"
+                android:selectAllOnFocus="true"
                 android:text="0"
                 android:textSize="18sp"
                 tools:layout_editor_absoluteX="182dp"
@@ -253,6 +257,7 @@
                 android:ems="10"
                 android:enabled="false"
                 android:inputType="number"
+                android:selectAllOnFocus="true"
                 android:text="0"
                 android:textSize="18sp"
                 tools:layout_editor_absoluteX="182dp"
@@ -333,6 +338,7 @@
                 android:ems="10"
                 android:enabled="true"
                 android:inputType="number"
+                android:selectAllOnFocus="true"
                 android:text="0"
                 android:textSize="18sp"
                 tools:layout_editor_absoluteX="182dp"
@@ -364,6 +370,7 @@
                 android:ems="10"
                 android:enabled="false"
                 android:inputType="number"
+                android:selectAllOnFocus="true"
                 android:text="0"
                 android:textSize="18sp"
                 tools:layout_editor_absoluteX="182dp"
@@ -430,6 +437,7 @@
                 android:ems="10"
                 android:enabled="true"
                 android:inputType="number"
+                android:selectAllOnFocus="true"
                 android:text="0"
                 android:textSize="18sp"
                 tools:layout_editor_absoluteX="182dp"
@@ -461,6 +469,7 @@
                 android:ems="10"
                 android:enabled="false"
                 android:inputType="number"
+                android:selectAllOnFocus="true"
                 android:text="0"
                 android:textSize="18sp"
                 tools:layout_editor_absoluteX="182dp"
@@ -581,10 +590,6 @@
                 tools:layout_editor_absoluteY="147dp" />
 
         </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
 
     </LinearLayout>
 

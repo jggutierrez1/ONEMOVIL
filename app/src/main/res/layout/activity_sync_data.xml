@@ -23,14 +23,35 @@
             android:textStyle="bold"
             tools:text="192.168.0.1" />
 
+        <TextView
+            android:id="@+id/oInternetStatus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="STATUS!!!"
+            android:textAlignment="center"
+            android:textColor="@color/IndianRed"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
         <Space
             android:layout_width="match_parent"
-            android:layout_height="15dp" />
+            android:layout_height="25dp" />
+
+        <CheckBox
+            android:id="@+id/ock_renew"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="BORRAR Y CREAR TODO."
+            android:textSize="18sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp" />
 
         <Button
             android:id="@+id/obtn_proc"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="65dp"
             android:text="Procesar" />
 
         <EditText
@@ -43,7 +64,7 @@
         <Button
             android:id="@+id/obtn_regr"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="65dp"
             android:text="REGRESAR" />
     </LinearLayout>
 

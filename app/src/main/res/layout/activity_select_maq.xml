@@ -29,14 +29,14 @@
             <Button
                 android:id="@+id/obtn_regr_maq"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="65dp"
                 android:layout_weight="1"
                 android:text="REGRESAR" />
 
             <Button
                 android:id="@+id/obtn_sele_maq"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="65dp"
                 android:layout_weight="1"
                 android:enabled="false"
                 android:text="SELECCIONAR" />

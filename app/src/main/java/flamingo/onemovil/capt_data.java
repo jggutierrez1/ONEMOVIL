@@ -60,13 +60,13 @@ public class capt_data extends AppCompatActivity {
 
     public final static int REQUEST_CAMERA = 1;
     private static final String TAG = capt_data.class.getSimpleName();
-    private Button btn_hide_capt, btn_save_capt, btn_canc_capt;
+    private Button btn_hide_capt, btn_save_capt, btn_cancel_capt;
     private EditText ea_act, ea_ant, ea_dif;
     private EditText eb_act, eb_ant, eb_dif;
     private EditText sa_act, sa_ant, sa_dif;
     private EditText sb_act, sb_ant, sb_dif;
     private EditText tot_cole, tot_cred;
-    private EditText semanas;
+    private EditText oSemanas;
     private TextView ltot_cole, ltot_cred;
     private TextView lab_cte, lab_cha;
     private TextView leb_act, leb_ant, leb_dif;
@@ -80,14 +80,13 @@ public class capt_data extends AppCompatActivity {
     private String op_chapa, op_modelo, op_serie, maqlnk_id, cte_nombre_loc, cte_nombre_com,
             maqtc_denom_e, maqtc_denom_s;
     private double op_colect, op_cred, op_cal_colect, op_cal_cred, op_cporc_Loc, Op_tot_impjcj, Op_tot_impmunic, den_valore, den_valors;
-    private int op_emp_id, den_fact_e, den_fact_s, maqtc_tipomaq, Op_ea_metroac, Op_ea_metroan, Op_sa_metroac, Op_sa_metroan;
+    private int op_emp_id, den_fact_e, den_fact_s, maqtc_tipomaq, Op_ea_metroac, Op_ea_metroan, Op_sa_metroac, Op_sa_metroan, Op_semanas;
     private boolean bFoundMach;
     private int cte_pag_jcj, cte_pag_spac, cte_pag_impm, Denom_Ent_Fac, Denom_Sal_Fac;
     private double fDenom_Ent_Val, fDenom_Sal_Val, Porc_Loc;
     //private double ftot_cole, ftot_prem;
     private int iMetroA_EntDif, iMetroB_EntDif, iMetroA_SalDif, iMetroB_SalDif;
     private String cid_device2 = "";
-    private int iSemanas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +96,7 @@ public class capt_data extends AppCompatActivity {
 
         this.btn_hide_capt = (Button) findViewById(R.id.obtn_hide_capt);
         this.btn_save_capt = (Button) findViewById(R.id.obtn_save_capt);
-        this.btn_canc_capt = (Button) findViewById(R.id.obtn_canc_capt);
+        this.btn_cancel_capt = (Button) findViewById(R.id.obtn_cancel_capt);
 
         /*-------------------ETIQUETAS------------------------*/
         this.leb_act = (TextView) findViewById(R.id.oleb_act);
@@ -122,8 +121,8 @@ public class capt_data extends AppCompatActivity {
 
         /*-------------------------------------------------------*/
 
-        this.semanas = (EditText) findViewById(R.id.osemanas);
-        this.semanas.setSelectAllOnFocus(true);
+        this.oSemanas = (EditText) findViewById(R.id.osemanas);
+        this.oSemanas.setSelectAllOnFocus(true);
 
         this.ea_act = (EditText) findViewById(R.id.oea_act);
         this.ea_act.setSelectAllOnFocus(true);
@@ -167,6 +166,14 @@ public class capt_data extends AppCompatActivity {
 
         this.MaquinaValid(true);
 
+        this.oSemanas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (oSemanas.getText().toString() == "")
+                    oSemanas.setText("1");
+            }
+        });
+
         this.ltot_cole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,30 +188,6 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
-
-        this.ea_act.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-                Calc_Dif_Ent(true);
-                Calc_Tot(1);
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
-
-        this.semanas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (semanas.getText().toString() == "")
-                    semanas.setText("1");
-            }
-        });
-
         this.ea_act.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -213,18 +196,11 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
-        this.eb_act.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-                Calc_Dif_Ent(true);
-                Calc_Tot(1);
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+        this.ea_ant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ea_ant.getText().toString() == "")
+                    ea_ant.setText("0");
             }
         });
 
@@ -236,18 +212,11 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
-        this.sa_act.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-                Calc_Dif_Sal(true);
-                Tot_Cred(1);
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+        this.eb_ant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (eb_ant.getText().toString() == "")
+                    eb_ant.setText("0");
             }
         });
 
@@ -259,9 +228,70 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
-        this.sb_act.addTextChangedListener(new TextWatcher() {
+        this.sa_ant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sa_ant.getText().toString() == "")
+                    sa_ant.setText("0");
+            }
+        });
+
+        this.sb_act.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sb_act.getText().toString() == "")
+                    sb_act.setText("0");
+            }
+        });
+
+        this.sb_ant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (sb_ant.getText().toString() == "")
+                    sb_ant.setText("0");
+            }
+        });
+
+        this.ea_act.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
+                Valid_Data();
+
+                Calc_Dif_Ent(true);
+                Calc_Tot(1);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        this.eb_act.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Valid_Data();
+
+                Calc_Dif_Ent(true);
+                Calc_Tot(1);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        this.sa_act.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+
+                Valid_Data();
+
                 Calc_Dif_Sal(true);
                 Tot_Cred(1);
             }
@@ -274,11 +304,21 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
-        this.sb_act.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sb_act.getText().toString() == "")
-                    sb_act.setText("0");
+        this.sb_act.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+
+                Valid_Data();
+
+                Calc_Dif_Sal(true);
+                Tot_Cred(1);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
 
@@ -308,21 +348,22 @@ public class capt_data extends AppCompatActivity {
                 Log.e("SQL", cSql_Ln);
                 //System.out.print(cSql_Ln);
                 db4.execSQL(cSql_Ln);
-                iSemanas = Integer.parseInt(semanas.getText().toString());
+                Op_semanas = Integer.parseInt(oSemanas.getText().toString());
 
                 double Op_tot_impjcj2 = 0.00;
                 double Op_tot_impmunic2 = 0.00;
 
                 if (cte_pag_jcj == 0) {
-                    Op_tot_impjcj2 = (Op_tot_impjcj * iSemanas);
+                    Op_tot_impjcj2 = (Op_tot_impjcj * Op_semanas);
                 }
 
                 if (cte_pag_impm == 0) {
-                    Op_tot_impmunic2 = (Op_tot_impmunic * iSemanas);
+                    Op_tot_impmunic2 = (Op_tot_impmunic * Op_semanas);
                 }
 
                 cSql_Ln = "";
                 cSql_Ln += "INSERT INTO operacion ( ";
+                cSql_Ln += "cte_id,";
                 cSql_Ln += "cte_nombre_loc, cte_nombre_com, op_cporc_Loc,";
                 cSql_Ln += "cte_pag_jcj, cte_pag_spac, cte_pag_impm,";
                 cSql_Ln += "maqtc_denom_e, maqtc_denom_s,";
@@ -340,7 +381,8 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "op_tot_cred,op_cal_cred,";
                 cSql_Ln += "op_fecha_alta,op_fecha_modif,";
                 cSql_Ln += "op_tot_impmunic,op_tot_impjcj,";
-                cSql_Ln += "op_emp_id,id_device) VALUES (";
+                cSql_Ln += "op_emp_id,id_device,op_semanas) VALUES (";
+                cSql_Ln += "'" + Global.cCte_Id + "',";
                 cSql_Ln += "'" + cte_nombre_loc + "',";
                 cSql_Ln += "'" + cte_nombre_com + "',";
                 cSql_Ln += "'" + op_cporc_Loc + "',";
@@ -389,7 +431,9 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "'" + Op_tot_impmunic2 + "',";
 
                 cSql_Ln += "'" + op_emp_id + "',";
-                cSql_Ln += "'" + cid_device2 + "');";
+                cSql_Ln += "'" + cid_device2 + "',";
+                cSql_Ln += "'" + Op_semanas + "');";
+
                 Log.e("SQL", cSql_Ln);
                 //System.out.print(cSql_Ln);
                 db4.execSQL(cSql_Ln);
@@ -400,11 +444,15 @@ public class capt_data extends AppCompatActivity {
                 Intent i = getIntent();
                 setResult(RESULT_OK, i);
 
+                ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
+                        .toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
+
                 finish();
             }
         });
 
-        btn_canc_capt.setOnClickListener(new View.OnClickListener() {
+        btn_cancel_capt.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -414,6 +462,10 @@ public class capt_data extends AppCompatActivity {
                 setResult(RESULT_CANCELED, i);
 
                 db4.close();
+
+                ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
+                        .toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
+
                 finish();
             }
         });
@@ -871,6 +923,52 @@ public class capt_data extends AppCompatActivity {
                 "yyyy-MM-dd HH:mm:ss", Locale.getDefault());
         Date date = new Date();
         return dateFormat.format(date);
+    }
+
+    private boolean isEmpty(EditText etText) {
+        return etText.getText().toString().trim().length() == 0;
+    }
+
+    private void Valid_Data() {
+        if (ea_ant.getText().toString().length() == 0) {
+            ea_ant.setError(null);
+            ea_ant.setText("0");
+        }
+
+        if (ea_act.getText().toString().length() == 0) {
+            ea_act.setError(null);
+            ea_act.setText("0");
+        }
+
+        if (eb_ant.getText().toString().length() == 0) {
+            eb_ant.setError(null);
+            eb_ant.setText("0");
+        }
+
+        if (eb_ant.getText().toString().length() == 0) {
+            eb_ant.setError(null);
+            eb_ant.setText("0");
+        }
+
+        if (sa_ant.getText().toString().length() == 0) {
+            sa_ant.setError(null);
+            sa_ant.setText("0");
+        }
+
+        if (sa_act.getText().toString().length() == 0) {
+            sa_act.setError(null);
+            sa_act.setText("0");
+        }
+
+        if (sb_ant.getText().toString().length() == 0) {
+            sb_ant.setError(null);
+            sb_ant.setText("0");
+        }
+
+        if (sb_act.getText().toString().length() == 0) {
+            sb_act.setError(null);
+            sb_act.setText("0");
+        }
     }
 
 }
