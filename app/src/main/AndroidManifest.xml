@@ -10,11 +10,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-}
-    
-
+    }
     <uses-feature android:name="android.hardware.camera2.full" />
-
 
     <application
         android:allowBackup="true"
@@ -36,9 +33,9 @@
         <activity android:name=".sync_data" />
         <activity android:name=".capt_data" />
         <activity android:name=".take_photo" />
-        <activity android:name=".capt_fin"></activity>
-
+        <activity android:name=".capt_fin" />
+        <activity android:name=".print_data" />
+        <activity android:name=".print_data"></activity>
     </application>
-
 
 </manifest>

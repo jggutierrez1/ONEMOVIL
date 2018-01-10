@@ -138,6 +138,16 @@ public class menu extends AppCompatActivity {
             }
         });
 
+
+        btn_conf.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent Int_SyncScreen = new Intent(getApplicationContext(), print_data.class);
+                startActivity(Int_SyncScreen);
+            }
+        });
+
         btn_upd.setOnClickListener(new View.OnClickListener() {
 
             @Override

@@ -421,10 +421,10 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "'0',";
 
                 cSql_Ln += "'" + op_cal_colect + "',";
-                cSql_Ln += "'" + String.format("%d", Integer.parseInt(tot_cole.getText().toString())) + "',";
+                cSql_Ln += "'" + String.format("%d", Double.parseDouble(tot_cole.getText().toString())) + "',";
 
                 cSql_Ln += "'" + op_cal_cred + "',";
-                cSql_Ln += "'" + String.format("%d", Integer.parseInt(tot_cred.getText().toString())) + "',";
+                cSql_Ln += "'" + String.format("%d", Double.parseDouble(tot_cred.getText().toString())) + "',";
                 cSql_Ln += "'" + cNow2 + "',";
                 cSql_Ln += "'" + cNow2 + "',";
                 cSql_Ln += "'" + Op_tot_impjcj2 + "',";
@@ -529,51 +529,49 @@ public class capt_data extends AppCompatActivity {
     }
 
     private void Calc_Tot(int iForce) {
-        double iTot = 0.00;
-        double ipFac_e = 0.00;
+        double fTot = 0.00;
+        double fpFac_e = 0.00;
         double ftot_cole = 0.00;
-        DecimalFormat REAL_FORMATTER = new DecimalFormat("#############0");
 
-        ipFac_e = (this.Denom_Ent_Fac == 0 ? 1 : this.Denom_Ent_Fac);
+        fpFac_e = (this.Denom_Ent_Fac == 0 ? 1 : this.Denom_Ent_Fac);
 
-        iTot = (this.iMetroA_EntDif + this.iMetroB_EntDif) / ipFac_e;
+        fTot = (this.iMetroA_EntDif + this.iMetroB_EntDif) / fpFac_e;
 
         if (iForce == 1) {
-            this.tot_cole.setText(REAL_FORMATTER.format(iTot));
+            this.tot_cole.setText(Double.valueOf(fTot).toString());
             this.Calc_Sub_Tot();
         } else {
             ftot_cole = Double.valueOf(tot_cole.getText().toString()).doubleValue();
             op_colect = ftot_cole;
             if (ftot_cole <= 0.00) {
-                this.tot_cole.setText(REAL_FORMATTER.format(iTot));
+                this.tot_cole.setText(Double.valueOf(fTot).toString());
                 this.Calc_Sub_Tot();
             }
         }
-        op_cal_colect = iTot;
+        op_cal_colect = fTot;
     }
 
     private void Tot_Cred(int iForce) {
-        double iTot = 0.00;
-        double ipFac_s = 0.00;
+        double fTot = 0.00;
+        double fpFac_s = 0.00;
         double ftot_prem = 0.00;
-        DecimalFormat REAL_FORMATTER = new DecimalFormat("#############0");
 
-        ipFac_s = (this.Denom_Sal_Fac == 0 ? 1 : this.Denom_Sal_Fac);
+        fpFac_s = (this.Denom_Sal_Fac == 0 ? 1 : this.Denom_Sal_Fac);
 
-        iTot = ((this.iMetroA_SalDif + this.iMetroB_SalDif) / ipFac_s) * (this.fDenom_Sal_Val == 0 ? 1 : this.fDenom_Sal_Val);
+        fTot = ((this.iMetroA_SalDif + this.iMetroB_SalDif) / fpFac_s) * (this.fDenom_Sal_Val == 0 ? 1 : this.fDenom_Sal_Val);
 
         if (iForce == 1) {
-            this.tot_cred.setText(REAL_FORMATTER.format(iTot));
+            this.tot_cred.setText(Double.valueOf(fTot).toString());
             this.Calc_Sub_Tot();
         } else {
             ftot_prem = Double.valueOf(tot_cred.getText().toString()).doubleValue();
             op_cred = ftot_prem;
             if (ftot_prem <= 0) {
-                this.tot_cred.setText(REAL_FORMATTER.format(iTot));
+                this.tot_cred.setText(Double.valueOf(fTot).toString());
                 this.Calc_Sub_Tot();
             }
         }
-        op_cal_cred = iTot;
+        op_cal_cred = fTot;
     }
 
     private void Calc_Sub_Tot() {
@@ -604,9 +602,9 @@ public class capt_data extends AppCompatActivity {
         this.sb_dif.setText("0");
         this.sb_dif.setEnabled(false);
 
-        this.tot_cole.setText("0");
+        this.tot_cole.setText("0.00");
         this.tot_cole.setEnabled(false);
-        this.tot_cred.setText("0");
+        this.tot_cred.setText("0.00");
         this.tot_cred.setEnabled(false);
     }
 

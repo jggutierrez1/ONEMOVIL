@@ -5,6 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="flamingo.onemovil.capt_data">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"> <!--IMPORTANT otherwise backgrnd img. will not fill the whole screen -->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -550,8 +554,8 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:enabled="false"
-                android:inputType="number"
-                android:text="0"
+                android:inputType="number|numberDecimal"
+                android:text="0.00"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:layout_editor_absoluteX="182dp"
@@ -582,8 +586,8 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:enabled="false"
-                android:inputType="number"
-                android:text="0"
+                android:inputType="number|numberDecimal"
+                android:text="0.00"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 tools:layout_editor_absoluteX="182dp"
@@ -592,5 +596,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>

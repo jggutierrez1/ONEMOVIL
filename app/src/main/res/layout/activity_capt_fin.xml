@@ -5,6 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="flamingo.onemovil.capt_fin">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"> <!--IMPORTANT otherwise backgrnd img. will not fill the whole screen -->
 
          <LinearLayout
             android:layout_width="match_parent"
@@ -20,21 +24,28 @@
                  android:orientation="horizontal">
 
                  <Button
-                     android:id="@+id/obtn_totfin_hide"
+                     android:id="@+id/btn_totfin_hide"
                      android:layout_width="wrap_content"
                      android:layout_height="65dp"
                      android:layout_weight="1"
                      android:text="QUITAR TECLADO" />
 
                  <Button
-                     android:id="@+id/obtn_totfin_save"
+                     android:id="@+id/btn_print_maq"
+                     android:layout_width="wrap_content"
+                     android:layout_height="65dp"
+                     android:layout_weight="1"
+                     android:text="Imprimir" />
+
+                 <Button
+                     android:id="@+id/btn_totfin_save"
                      android:layout_width="wrap_content"
                      android:layout_height="65dp"
                      android:layout_weight="1"
                      android:text="PROCESAR" />
 
                  <Button
-                     android:id="@+id/obtn_totfin_canc"
+                     android:id="@+id/btn_totfin_canc"
                      android:layout_width="wrap_content"
                      android:layout_height="65dp"
                      android:layout_weight="1"
@@ -45,7 +56,7 @@
                 android:layout_height="15dp" />
 
              <TextView
-                 android:id="@+id/olab_cte"
+                 android:id="@+id/lab_cte"
                  style="@style/Widget.AppCompat.TextView.SpinnerItem"
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
@@ -53,16 +64,7 @@
                  android:textSize="14sp"
                  android:textStyle="bold" />
 
-             <TextView
-                 android:id="@+id/olab_cha"
-                 style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:text="CHAPA:"
-                 android:textSize="14sp"
-                 android:textStyle="bold" />
-
-            <Space
+             <Space
                 android:layout_width="match_parent"
                 android:layout_height="15dp" />
 
@@ -91,14 +93,14 @@
                      android:textSize="18sp" />
 
                  <EditText
-                     android:id="@+id/ototfin_bruto"
+                     android:id="@+id/totfin_bruto"
                      android:layout_width="105dp"
                      android:layout_height="wrap_content"
                      android:layout_weight="1"
                      android:ems="10"
                      android:enabled="false"
-                     android:inputType="number"
-                     android:text="0"
+                     android:inputType="number|numberDecimal"
+                     android:text="0.00"
                      android:textSize="18sp"
                      tools:layout_editor_absoluteX="182dp"
                      tools:layout_editor_absoluteY="147dp" />
@@ -119,14 +121,14 @@
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/ototfin_prem"
+                    android:id="@+id/totfin_prem"
                     android:layout_width="105dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
                     android:enabled="false"
-                    android:inputType="number"
-                    android:text="0"
+                    android:inputType="number|numberDecimal"
+                    android:text="0.00"
                     android:textSize="18sp"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
@@ -149,18 +151,19 @@
                      android:layout_width="133dp"
                      android:layout_height="wrap_content"
                      android:layout_weight="1"
-                     android:text="DEVOLUCIONES"
+                     android:text="+DEVOLUCIONES"
                      android:textSize="18sp" />
 
                  <EditText
-                     android:id="@+id/ototfin_devo"
+                     android:id="@+id/totfin_devo"
                      android:layout_width="105dp"
                      android:layout_height="wrap_content"
                      android:layout_weight="1"
                      android:ems="10"
                      android:enabled="true"
-                     android:inputType="number"
-                     android:text="0"
+                     android:inputType="number|numberDecimal"
+                     android:selectAllOnFocus="true"
+                     android:text="0.00"
                      android:textSize="18sp"
                      tools:layout_editor_absoluteX="182dp"
                      tools:layout_editor_absoluteY="147dp" />
@@ -182,13 +185,14 @@
                      android:textSize="18sp" />
 
                  <EditText
-                     android:id="@+id/ototfin_otros"
+                     android:id="@+id/totfin_otros"
                      android:layout_width="105dp"
                      android:layout_height="wrap_content"
                      android:layout_weight="1"
                      android:ems="10"
-                     android:inputType="number"
-                     android:text="0"
+                     android:inputType="number|numberDecimal"
+                     android:selectAllOnFocus="true"
+                     android:text="0.00"
                      android:textSize="18sp"
                      tools:layout_editor_absoluteX="182dp"
                      tools:layout_editor_absoluteY="147dp" />
@@ -210,14 +214,14 @@
                      android:textStyle="bold" />
 
                   <EditText
-                      android:id="@+id/ototfin_total"
+                      android:id="@+id/totfin_total"
                       android:layout_width="105dp"
                       android:layout_height="wrap_content"
                       android:layout_weight="1"
                       android:ems="10"
                       android:enabled="false"
-                      android:inputType="number"
-                      android:text="0"
+                      android:inputType="number|numberDecimal"
+                      android:text="0.00"
                       android:textSize="18sp"
                       android:textStyle="bold"
                       tools:layout_editor_absoluteX="182dp"
@@ -251,17 +255,18 @@
                      android:layout_width="133dp"
                      android:layout_height="wrap_content"
                      android:layout_weight="1"
-                     android:text="FACTURA DE GASTOS"
+                     android:text="-FACTURA DE GASTOS"
                      android:textSize="18sp" />
 
                  <EditText
-                     android:id="@+id/ototfin_gast"
+                     android:id="@+id/totfin_gast"
                      android:layout_width="105dp"
                      android:layout_height="wrap_content"
                      android:layout_weight="1"
                      android:ems="10"
-                     android:inputType="number"
-                     android:text="0"
+                     android:inputType="number|numberDecimal"
+                     android:selectAllOnFocus="true"
+                     android:text="0.00"
                      android:textSize="18sp"
                      tools:layout_editor_absoluteX="182dp"
                      tools:layout_editor_absoluteY="147dp" />
@@ -284,14 +289,14 @@
                     android:textStyle="bold" />
 
                  <EditText
-                     android:id="@+id/ototfin_neto"
+                     android:id="@+id/totfin_neto"
                      android:layout_width="105dp"
                      android:layout_height="wrap_content"
                      android:layout_weight="1"
                      android:ems="10"
                      android:enabled="false"
-                     android:inputType="number"
-                     android:text="0"
+                     android:inputType="number|numberDecimal"
+                     android:text="0.00"
                      android:textSize="18sp"
                      android:textStyle="bold"
                      tools:layout_editor_absoluteX="182dp"
@@ -318,19 +323,20 @@
                      android:textStyle="bold" />
 
                  <EditText
-                     android:id="@+id/ototfin_notas"
+                     android:id="@+id/totfin_notas"
                      android:layout_width="wrap_content"
                      android:layout_height="246dp"
                      android:layout_weight="1"
                      android:ems="10"
                      android:enabled="true"
                      android:inputType="textMultiLine"
+                     android:selectAllOnFocus="true"
                      android:tooltipText="ESCRIBA EL DETALLE AQUI" />
 
              </LinearLayout>
 
 
         </LinearLayout>
-
+    </ScrollView>
     </android.support.constraint.ConstraintLayout>
 

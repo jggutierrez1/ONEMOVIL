@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -16,12 +18,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.DecimalFormat;
+
 public class capt_fin extends AppCompatActivity {
-    private Button btn_totfin_hide, btn_totfin_save, btn_totfin_canc;
-    private EditText totfin_bruto, totfin_prem, totfin_devo, totfin_otros, totfin_total, totfin_gast, totfin_neto, totfin_notas;
-    private TextView lab_cte, lab_cha;
-    private SQLiteDatabase db5;
-    private Cursor data;
+    private Button obtn_print_maq, obtn_totfin_hide, obtn_totfin_save, obtn_totfin_canc;
+    private EditText ototfin_bruto, ototfin_prem, ototfin_devo, ototfin_otros, ototfin_total, ototfin_gast, ototfin_neto, ototfin_notas;
+    private TextView olab_cte;
+    private SQLiteDatabase oDb5;
+    private Cursor oData;
     private String cid_device2 = "";
 
     private int itotfin_bruto, itotfin_prem, itotfin_devo, itotfin_otros, itotfin_total, itotfin_gast, itotfin_neto, itotfin_notas;
@@ -33,29 +37,119 @@ public class capt_fin extends AppCompatActivity {
 
         cid_device2 = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        this.lab_cte = (TextView) findViewById(R.id.olab_cte);
-        this.lab_cha = (TextView) findViewById(R.id.olab_cha);
+        this.olab_cte = (TextView) findViewById(R.id.lab_cte);
 
-        this.btn_totfin_hide = (Button) findViewById(R.id.obtn_totfin_hide);
-        this.btn_totfin_save = (Button) findViewById(R.id.obtn_totfin_save);
-        this.btn_totfin_canc = (Button) findViewById(R.id.obtn_totfin_canc);
+        this.obtn_totfin_hide = (Button) findViewById(R.id.btn_totfin_hide);
+        this.obtn_print_maq = (Button) findViewById(R.id.btn_print_maq);
+        this.obtn_totfin_save = (Button) findViewById(R.id.btn_totfin_save);
+        this.obtn_totfin_canc = (Button) findViewById(R.id.btn_totfin_canc);
 
-        this.totfin_bruto = (EditText) findViewById(R.id.ototfin_bruto);
-        this.totfin_prem = (EditText) findViewById(R.id.ototfin_prem);
-        this.totfin_devo = (EditText) findViewById(R.id.ototfin_devo);
-        this.totfin_otros = (EditText) findViewById(R.id.ototfin_otros);
-        this.totfin_total = (EditText) findViewById(R.id.ototfin_total);
-        this.totfin_gast = (EditText) findViewById(R.id.ototfin_gast);
-        this.totfin_neto = (EditText) findViewById(R.id.ototfin_neto);
-        this.totfin_notas = (EditText) findViewById(R.id.ototfin_notas);
+        this.ototfin_bruto = (EditText) findViewById(R.id.totfin_bruto);
+        this.ototfin_prem = (EditText) findViewById(R.id.totfin_prem);
+        this.ototfin_devo = (EditText) findViewById(R.id.totfin_devo);
+        this.ototfin_otros = (EditText) findViewById(R.id.totfin_otros);
+        this.ototfin_total = (EditText) findViewById(R.id.totfin_total);
+        this.ototfin_gast = (EditText) findViewById(R.id.totfin_gast);
+        this.ototfin_neto = (EditText) findViewById(R.id.totfin_neto);
+        this.ototfin_notas = (EditText) findViewById(R.id.totfin_notas);
+
+        this.olab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
 
         this.Clear_Screen();
 
         String databasePath = getDatabasePath("one2009.db").getPath();
-        this.db5 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
+        this.oDb5 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
         this.Find_Values();
 
-        btn_totfin_hide.setOnClickListener(new View.OnClickListener() {
+        Valid_Data();
+
+        Calc_Tot1();
+        Calc_Tot2();
+
+        this.ototfin_devo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ototfin_devo.getText().toString() == "")
+                    ototfin_devo.setText("0.00");
+            }
+        });
+
+        this.ototfin_otros.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ototfin_otros.getText().toString() == "")
+                    ototfin_otros.setText("0.00");
+            }
+        });
+
+        this.ototfin_gast.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ototfin_gast.getText().toString() == "")
+                    ototfin_gast.setText("0.00");
+            }
+        });
+
+        this.ototfin_notas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ototfin_notas.getText().toString() == "")
+                    ototfin_notas.setHint("Sin comentarios");
+            }
+        });
+
+        this.ototfin_devo.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Valid_Data();
+
+                Calc_Tot1();
+                Calc_Tot2();
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        this.ototfin_otros.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Valid_Data();
+
+                Calc_Tot1();
+                Calc_Tot2();
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        this.ototfin_gast.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Valid_Data();
+
+                Calc_Tot1();
+                Calc_Tot2();
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        this.obtn_print_maq.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -64,18 +158,27 @@ public class capt_fin extends AppCompatActivity {
             }
         });
 
-        this.btn_totfin_save.setOnClickListener(new View.OnClickListener() {
+        this.obtn_totfin_hide.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
+                        .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+            }
+        });
+
+        this.obtn_totfin_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(v.getContext(), "Factor de Conversión [" + Denom_Ent_Fac + "/ $" + fDenom_Ent_Val + "]", Toast.LENGTH_SHORT).show();
                 Intent i = getIntent();
                 setResult(RESULT_OK, i);
-                db5.close();
+                oDb5.close();
                 finish();
             }
         });
 
-        btn_totfin_canc.setOnClickListener(new View.OnClickListener() {
+        this.obtn_totfin_canc.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -85,7 +188,7 @@ public class capt_fin extends AppCompatActivity {
                 Global.cCte_Id = "";
                 setResult(RESULT_CANCELED, i);
 
-                db5.close();
+                oDb5.close();
                 finish();
             }
         });
@@ -93,18 +196,18 @@ public class capt_fin extends AppCompatActivity {
     }
 
     private void Clear_Screen() {
-        this.totfin_bruto.setText("0");
-        this.totfin_bruto.setEnabled(false);
-        this.totfin_prem.setText("0");
-        this.totfin_prem.setEnabled(false);
-        this.totfin_devo.setText("0");
-        this.totfin_otros.setText("0");
-        this.totfin_total.setText("0");
-        this.totfin_total.setEnabled(false);
-        this.totfin_gast.setText("0");
-        this.totfin_neto.setText("0");
-        this.totfin_neto.setEnabled(false);
-        this.totfin_notas.setText("");
+        this.ototfin_bruto.setText("0.00");
+        this.ototfin_bruto.setEnabled(false);
+        this.ototfin_prem.setText("0.00");
+        this.ototfin_prem.setEnabled(false);
+        this.ototfin_devo.setText("0.00");
+        this.ototfin_otros.setText("0.00");
+        this.ototfin_total.setText("0.00");
+        this.ototfin_total.setEnabled(false);
+        this.ototfin_gast.setText("0.00");
+        this.ototfin_neto.setText("0.00");
+        this.ototfin_neto.setEnabled(false);
+        this.ototfin_notas.setText("");
     }
 
     private void Find_Values() {
@@ -119,16 +222,89 @@ public class capt_fin extends AppCompatActivity {
         cSql_Ln += "AND   cte_id   ='" + Global.cCte_Id + "' ";
 
         Log.e("SQL", cSql_Ln);
-        data = db5.rawQuery(cSql_Ln, null);
-        data.moveToFirst();
+        oData = oDb5.rawQuery(cSql_Ln, null);
+        oData.moveToFirst();
 
-        if ((data == null) || (data.getCount() == 0)) {
-            this.totfin_bruto.setText('0');
-            this.totfin_prem.setText('0');
+        if ((oData == null) || (oData.getCount() == 0)) {
+            this.ototfin_bruto.setText("0.00");
+            this.ototfin_prem.setText("0.00");
         } else {
-            this.totfin_bruto.setText(data.getString(data.getColumnIndex("op_tot_colect")));
-            this.totfin_prem.setText(data.getString(data.getColumnIndex("op_tot_cred")));
+
+            Double ftotfin_bruto = oData.getDouble(oData.getColumnIndex("op_tot_colect"));
+            Double ftotfin_prem = oData.getDouble(oData.getColumnIndex("op_tot_cred"));
+
+            this.ototfin_bruto.setText(Double.valueOf(ftotfin_bruto).toString());
+            this.ototfin_prem.setText(Double.valueOf(ftotfin_prem).toString());
         }
     }
 
+    private void Valid_Data() {
+        if (ototfin_bruto.getText().toString().length() == 0) {
+            ototfin_bruto.setError(null);
+            ototfin_bruto.setText("0.00");
+        }
+
+        if (ototfin_prem.getText().toString().length() == 0) {
+            ototfin_prem.setError(null);
+            ototfin_prem.setText("0.00");
+        }
+
+        if (ototfin_devo.getText().toString().length() == 0) {
+            ototfin_devo.setError(null);
+            ototfin_devo.setText("0.00");
+        }
+
+        if (ototfin_otros.getText().toString().length() == 0) {
+            ototfin_otros.setError(null);
+            ototfin_otros.setText("0.00");
+        }
+
+        if (ototfin_total.getText().toString().length() == 0) {
+            ototfin_total.setError(null);
+            ototfin_total.setText("0.00");
+        }
+
+        if (ototfin_gast.getText().toString().length() == 0) {
+            ototfin_gast.setError(null);
+            ototfin_gast.setText("0.00");
+        }
+
+        if (ototfin_neto.getText().toString().length() == 0) {
+            ototfin_neto.setError(null);
+            ototfin_neto.setText("0.00");
+        }
+
+        if (ototfin_notas.getText().toString().length() == 0) {
+            ototfin_notas.setError(null);
+            ototfin_notas.setHint("Sin Comentarios");
+        }
+    }
+
+    private void Calc_Tot1() {
+        Double dtotfin_bruto = 0.00;
+        Double dtotfin_prem = 0.00;
+        Double dtotfin_devo = 0.00;
+        Double dtotfin_otros = 0.00;
+        Double dtotfin_total = 0.00;
+
+        dtotfin_bruto = Double.parseDouble(this.ototfin_bruto.getText().toString().replace(',', '.'));
+        dtotfin_prem = Double.parseDouble(this.ototfin_prem.getText().toString().replace(',', '.'));
+        dtotfin_devo = Double.parseDouble(this.ototfin_devo.getText().toString().replace(',', '.'));
+        dtotfin_otros = Double.parseDouble(this.ototfin_otros.getText().toString().replace(',', '.'));
+        dtotfin_total = (dtotfin_bruto - dtotfin_prem) + dtotfin_devo - dtotfin_otros;
+
+        this.ototfin_total.setText(Double.valueOf(dtotfin_total).toString());
+    }
+
+    private void Calc_Tot2() {
+        Double dtotfin_total = 0.00;
+        Double dtotfin_gast = 0.00;
+        Double dtotfin_neto = 0.00;
+
+        dtotfin_total = Double.parseDouble(this.ototfin_total.getText().toString().replace(',', '.'));
+        dtotfin_gast = Double.parseDouble(this.ototfin_gast.getText().toString().replace(',', '.'));
+        dtotfin_neto = dtotfin_total - dtotfin_gast;
+
+        this.ototfin_neto.setText(Double.valueOf(dtotfin_neto).toString());
+    }
 }

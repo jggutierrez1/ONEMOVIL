@@ -5,6 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="flamingo.onemovil.login">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"> <!--IMPORTANT otherwise backgrnd img. will not fill the whole screen -->
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -32,6 +36,7 @@
         android:layout_width = "wrap_content"
         android:layout_height = "wrap_content"
         android:id = "@+id/oLogin_User"
+        android:inputType="textNoSuggestions"
         android:hint = "Entre el nombre"
         android:focusable = "true"
         android:textColorHighlight = "#ff7eff15"
@@ -54,7 +59,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:inputType="textPassword"
+        android:inputType="textPassword|textNoSuggestions"
         android:ems="10"
         android:id="@+id/oLogin_Pass"
         android:layout_below="@+id/oLogin_User"
@@ -94,5 +99,5 @@
             android:text="Salir" />
 
     </RelativeLayout>
-
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>
