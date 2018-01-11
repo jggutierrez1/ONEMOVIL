@@ -11,104 +11,104 @@
         android:fillViewport="true"> <!--IMPORTANT otherwise backgrnd img. will not fill the whole screen -->
 
         <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="8dp">
-
-        <TextView
-            android:id="@+id/oDeviceId"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ID. DISPOSITIVO:" />
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="8dp">
 
-        <TextView
-            android:id="@+id/oLabel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="." />
+            <TextView
+                android:id="@+id/oDeviceId"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ID. DISPOSITIVO:" />
 
-        <EditText
-            android:id="@+id/oEntry"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="textPersonName"
-            android:text="Name" />
+            <TextView
+                android:id="@+id/oLabel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="." />
 
-        <Button
-            android:id="@+id/obtn_conf"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:text="CONFIGURAR" />
+            <EditText
+                android:id="@+id/oEntry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Name" />
 
-        <Button
-            android:id="@+id/obtn_upd"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:text="CARGAR DATOS BASICOS" />
+            <Button
+                android:id="@+id/obtn_conf"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="CONFIGURAR" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
+            <Button
+                android:id="@+id/obtn_upd"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="CARGAR DATOS BASICOS" />
 
-        <Button
-            android:id="@+id/obtn_start"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:text="INICIAR COLECTA" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
 
-        <Button
-            android:id="@+id/obtn_maq"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:text="SELECCIONAR MAQUINA" />
+            <Button
+                android:id="@+id/obtn_start"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="INICIAR COLECTA" />
 
-        <Button
-            android:id="@+id/obtn_capt"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:text="REGISTRAR METROS MAQUINAS" />
+            <Button
+                android:id="@+id/obtn_maq"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="SELECCIONAR MAQUINA" />
 
-        <Button
-            android:id="@+id/obtn_canc_colec"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:text="DESCARTAR COLECTA" />
+            <Button
+                android:id="@+id/obtn_capt"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="REGISTRAR METROS MAQUINAS" />
 
-        <Button
-            android:id="@+id/obtn_fin_colec"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:text="FINALIZAR COLECTA" />
+            <Button
+                android:id="@+id/obtn_canc_colec"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="DESCARTAR COLECTA" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
+            <Button
+                android:id="@+id/obtn_fin_colec"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="FINALIZAR COLECTA" />
 
-        <Button
-            android:id="@+id/obtn_repo"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:text="REPORTES" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
 
-        <Button
-            android:id="@+id/obtn_descar"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:text="DESCARGAR ENTRADAS" />
+            <Button
+                android:id="@+id/obtn_repo"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="REPORTES" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
+            <Button
+                android:id="@+id/obtn_descar"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="DESCARGAR ENTRADAS" />
 
-        <Button
-            android:id="@+id/obtn_exit"
-            android:layout_width="match_parent"
-            android:layout_height="65dp"
-            android:text="SALIR" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
 
-    </LinearLayout>
-</ScrollView>
+            <Button
+                android:id="@+id/obtn_exit"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="SALIR" />
+
+        </LinearLayout>
+    </ScrollView>
 </android.support.constraint.ConstraintLayout>

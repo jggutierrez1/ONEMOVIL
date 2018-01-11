@@ -49,16 +49,17 @@ public class select_cte extends AppCompatActivity {
         //populate an ArrayList<String> from the database and then view it
         ArrayList<String> theList = new ArrayList<>();
 
-        data = db3.rawQuery("SELECT ( SUBSTR(trim(cte_id) || '                    ', 1, 20) || trim(cte_nombre_loc)) AS expr1 FROM clientes ORDER BY UPPER(trim(cte_nombre_loc))", null);
+        data = db3.rawQuery("SELECT ( trim(cte_id) || SUBSTR('                   ', 1, 20-length(trim(cte_id))) || trim(cte_nombre_loc)) AS expr1 FROM clientes ORDER BY UPPER(trim(cte_nombre_loc))", null);
 
         if (data.getCount() == 0) {
             Toast.makeText(this, "There are no contents in this list!", Toast.LENGTH_LONG).show();
         } else {
-            while (data.moveToNext()) {
+            data.moveToFirst();
+            do {
                 theList.add(data.getString(0));
                 ListAdapter listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, theList);
                 olst_cte2.setAdapter(listAdapter);
-            }
+            } while (data.moveToNext());
         }
 
         btn_regr_cte.setOnClickListener(new View.OnClickListener() {

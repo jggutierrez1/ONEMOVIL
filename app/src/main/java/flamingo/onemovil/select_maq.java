@@ -56,7 +56,7 @@ public class select_maq extends AppCompatActivity {
         //dialogBox("EMRPRESA["+cId_emp+"] / CLIENTE["+cId_Cte+"] / SQL["+cSqlLn+"]");
 
         cSqlLn = cSqlLn + "SELECT ";
-        cSqlLn = cSqlLn + "	(SUBSTR(trim(maq.maqtc_chapa) || '                    ', 1, 20) || trim(maq.maqtc_modelo)) AS expr1 ";
+        cSqlLn = cSqlLn + "	(trim(maq.maqtc_chapa) || SUBSTR('                   ', 1, 20-length(trim(maq.maqtc_chapa))) || trim(maq.maqtc_modelo)) AS expr1 ";
         //cSqlLn = cSqlLn + "	maq.maqtc_id,(maq.maqtc_chapa||' - '||maq.maqtc_modelo) as cList ";
         cSqlLn = cSqlLn + "FROM maquinastc maq ";
         cSqlLn = cSqlLn + "INNER JOIN maquinas_lnk maql ON (maq.maqtc_id = maql.maqtc_id) ";
@@ -70,11 +70,12 @@ public class select_maq extends AppCompatActivity {
         if (data.getCount() == 0) {
             Toast.makeText(this, "There are no contents in this list!", Toast.LENGTH_LONG).show();
         } else {
-            while (data.moveToNext()) {
+            data.moveToFirst();
+            do {
                 theList.add(data.getString(0));
                 ListAdapter listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, theList);
                 lst_maq.setAdapter(listAdapter);
-            }
+            } while (data.moveToNext());
         }
 
         btn_regr_maq.setOnClickListener(new View.OnClickListener() {

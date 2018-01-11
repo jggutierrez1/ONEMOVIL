@@ -5,6 +5,7 @@ package flamingo.onemovil;
  */
 
 public class Global {
+    public static Integer iPrn_Data=0;
 
     public static String cEmp_Id="1";
     public static String cEmp_De="";

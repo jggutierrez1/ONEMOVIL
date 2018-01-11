@@ -143,8 +143,8 @@ public class menu extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                Intent Int_SyncScreen = new Intent(getApplicationContext(), print_data.class);
-                startActivity(Int_SyncScreen);
+                Intent Int_TakePhoto = new Intent(getApplicationContext(), take_photo.class);
+                startActivity(Int_TakePhoto);
             }
         });
 

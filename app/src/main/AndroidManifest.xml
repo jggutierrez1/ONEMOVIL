@@ -10,7 +10,6 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    }
     <uses-feature android:name="android.hardware.camera2.full" />
 
     <application
@@ -27,15 +26,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".capt_data" />
+        <activity android:name=".capt_fin" />
         <activity android:name=".menu" />
+        <activity android:name=".print_data" />
         <activity android:name=".select_cte" />
         <activity android:name=".select_maq" />
         <activity android:name=".sync_data" />
-        <activity android:name=".capt_data" />
-        <activity android:name=".take_photo" />
-        <activity android:name=".capt_fin" />
-        <activity android:name=".print_data" />
-        <activity android:name=".print_data"></activity>
+        <activity android:name=".take_photo">
+        </activity>
     </application>
 
 </manifest>

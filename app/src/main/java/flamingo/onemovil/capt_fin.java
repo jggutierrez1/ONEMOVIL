@@ -153,8 +153,9 @@ public class capt_fin extends AppCompatActivity {
 
             @Override
             public void onClick(View arg0) {
-                ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
-                        .toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+                Global.iPrn_Data = 1;
+                Intent Int_PrnMaqScreen = new Intent(getApplicationContext(), print_data.class);
+                startActivity(Int_PrnMaqScreen);
             }
         });
 

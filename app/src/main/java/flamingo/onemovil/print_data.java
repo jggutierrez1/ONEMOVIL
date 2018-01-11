@@ -1,12 +1,22 @@
 package flamingo.onemovil;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.provider.Settings;
 import android.support.annotation.WorkerThread;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
 
 // Import neccessor namespace
@@ -18,10 +28,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import java.util.ArrayList;
 import java.util.Set;
 import java.util.UUID;
 
 import android.os.Handler;
+import android.widget.Toast;
 
 import java.util.concurrent.RunnableFuture;
 import java.util.logging.LogRecord;
@@ -41,8 +53,15 @@ public class print_data extends AppCompatActivity {
     volatile boolean stopWorker;
 
     TextView lblPrinterName;
+    ListView ListMaq;
     EditText textBox;
-
+    TextView olab_cte;
+    String cid_device2 = "";
+    private SQLiteDatabase oDb6;
+    private Cursor oData1, oData2;
+    private String cSqlLn = "";
+    private String cDatabasePath = "";
+    private ArrayList<String> theList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +72,35 @@ public class print_data extends AppCompatActivity {
         Button btnConnect = (Button) findViewById(R.id.btnConnect);
         Button btnDisconnect = (Button) findViewById(R.id.btnDisconnect);
         Button btnPrint = (Button) findViewById(R.id.btnPrint);
+        Button btnRegr = (Button) findViewById(R.id.btnRegr);
 
-        textBox = (EditText) findViewById(R.id.txtText);
+        this.textBox = (EditText) findViewById(R.id.txtText);
+        this.lblPrinterName = (TextView) findViewById(R.id.lblPrinterName);
+        this.olab_cte = (TextView) findViewById(R.id.lab_cte3);
 
-        lblPrinterName = (TextView) findViewById(R.id.lblPrinterName);
+        this.ListMaq = (ListView) findViewById(R.id.oListMaq);
+        this.ListMaq.setClickable(true);
+
+        this.cid_device2 = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        this.olab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
+
+        this.cDatabasePath = getDatabasePath("one2009.db").getPath();
+
+        this.oDb6 = openOrCreateDatabase(cDatabasePath, Context.MODE_PRIVATE, null);
+
+        switch (Global.iPrn_Data) {
+            case 1: {
+                Listar_Maquinas();
+                Listar_Montos();
+             }
+            break;
+            case 2: {
+            }
+            break;
+            default: {
+            }
+            ;
+        }
 
         btnConnect.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,11 +127,25 @@ public class print_data extends AppCompatActivity {
         btnPrint.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                try {
+                Imprimir_Maquinas();
+                Imprimir_Montos();
+
+/*                try {
                     printData();
                 } catch (Exception ex) {
                     ex.printStackTrace();
                 }
+*/
+            }
+        });
+
+        btnRegr.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = getIntent();
+                setResult(RESULT_CANCELED, i);
+                oDb6.close();
+                finish();
             }
         });
 
@@ -215,6 +273,16 @@ public class print_data extends AppCompatActivity {
         }
     }
 
+    void printString(String msg) {
+        try {
+            msg += "\n";
+            outputStream.write(msg.getBytes());
+            lblPrinterName.setText("Printing Text...");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
     // Disconnect Printer //
     void disconnectBT() throws IOException {
         try {
@@ -228,4 +296,97 @@ public class print_data extends AppCompatActivity {
         }
     }
 
+    private boolean Listar_Maquinas() {
+
+        cSqlLn = "";
+        cSqlLn += "SELECT ";
+        cSqlLn += "trim(op.op_chapa ) || SUBSTR('                   ', 1, 12-length(trim(op.op_chapa ))) || ";
+        cSqlLn += "trim(op.op_modelo) || SUBSTR('                   ', 1, 20-length(trim(op.op_modelo))) AS expr1, ";
+        cSqlLn += " op.op_chapa, ";
+        cSqlLn += " op.op_modelo, ";
+        cSqlLn += " SUM(op.op_tot_colect) AS tot_cole, ";
+        cSqlLn += "SUM(op.op_tot_cred)   AS tot_cred, ";
+        cSqlLn += "(SUM(op.op_tot_colect)-SUM(op.op_tot_cred)) AS tot_dife ";
+        cSqlLn += "FROM operacion op ";
+        cSqlLn += "WHERE (op.id_device='" + cid_device2 + "') ";
+        cSqlLn += "AND   (op.op_emp_id='" + Global.cEmp_Id + "') ";
+        cSqlLn += "AND   (op.cte_id   ='" + Global.cCte_Id + "') ";
+        cSqlLn += "GROUP BY op.op_emp_id,op.op_chapa ";
+        cSqlLn += "ORDER BY op.op_emp_id,op.op_modelo ";
+
+        Log.d("SQL", cSqlLn);
+        oData1 = oDb6.rawQuery(cSqlLn, null);
+
+        if ((oData1 == null) || (oData1.getCount() == 0)) {
+            return false;
+        } else {
+
+            oData1.moveToFirst();
+            do {
+                theList.add(oData1.getString(0));
+                ListAdapter listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, theList);
+                ListMaq.setAdapter(listAdapter);
+
+            } while (oData1.moveToNext());
+            return true;
+        }
+    }
+
+    private boolean Listar_Montos() {
+
+        cSqlLn = "";
+        cSqlLn += "SELECT ";
+        cSqlLn += " SUM(op.op_tot_colect) AS tot_cole, ";
+        cSqlLn += " SUM(op.op_tot_cred)   AS tot_cred, ";
+        cSqlLn += " (SUM(op.op_tot_colect)-SUM(op.op_tot_cred)) AS tot_dife ";
+        cSqlLn += "FROM operacion op ";
+        cSqlLn += "WHERE op.id_device='" + cid_device2 + "' ";
+        cSqlLn += "AND   op.op_emp_id='" + Global.cEmp_Id + "' ";
+        cSqlLn += "AND   op.cte_id   ='" + Global.cCte_Id + "' ";
+        cSqlLn += "GROUP BY op.op_emp_id,id_device ";
+        Log.d("SQL", cSqlLn);
+        oData2 = oDb6.rawQuery(cSqlLn, null);
+
+        if ((oData2 == null) || (oData2.getCount() == 0)) {
+            return false;
+        } else {
+            oData2.moveToFirst();
+            return true;
+        }
+    }
+
+    private boolean Imprimir_Maquinas() {
+
+        if ((oData1 == null) || (oData1.getCount() == 0)) {
+            return false;
+        } else {
+            printString("LISTADO DE MAQUINAS COLECTADAS");
+            printString("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
+            printString("______________________________");
+            oData1.moveToFirst();
+            do {
+                printString(oData1.getString(0).trim() );
+            } while (oData1.moveToNext());
+            printString("______________________________");
+            return true;
+        }
+    }
+
+    private boolean Imprimir_Montos() {
+
+        if ((oData2 == null) || (oData2.getCount() == 0)) {
+            return false;
+        } else {
+            printString("");
+            oData2.moveToFirst();
+            do {
+                printString("Colectado : " + String.format("%12.2f",oData2.getDouble(0)).trim() );
+                printString("Credito   : " + String.format("%12.2f",oData2.getDouble(1)).trim());
+                printString("Diferencia: " + String.format("%12.2f",oData2.getDouble(2)).trim());
+            } while (oData2.moveToNext());
+            printString("______________________________");
+
+            return true;
+        }
+    }
 }

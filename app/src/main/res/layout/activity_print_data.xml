@@ -5,45 +5,92 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="flamingo.onemovil.capt_data">
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:fillViewport="true"> <!--IMPORTANT otherwise backgrnd img. will not fill the whole screen -->
 
     <LinearLayout
-        android:layout_width="368dp"
-        android:layout_height="495dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        tools:layout_editor_absoluteY="8dp"
-        tools:layout_editor_absoluteX="8dp">
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
 
-        <TextView android:id="@+id/lbl"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Attach Printer"
-            android:padding="5dp"/>
-        <TextView android:id="@+id/lblPrinterName"
+        <TextView
+            android:id="@+id/lbl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="Printer Name"/>
-        <EditText android:id="@+id/txtText"
-            android:layout_width="match_parent"
-            android:padding="5dp"
-            android:layout_height="150dp" />
-        <Button android:id="@+id/btnConnect"
+            android:text="Attach Printer" />
+
+        <TextView
+            android:id="@+id/lblPrinterName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="Connect Printer"/>
-        <Button android:id="@+id/btnDisconnect"
+            android:text="Printer Name" />
+
+        <EditText
+            android:id="@+id/txtText"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:inputType="textMultiLine"
+            android:padding="5dp"
+            android:scrollHorizontally="true" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LISTADO DE MAQUINAS COLECTADAS DEL CLIENTE"
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/lab_cte3"
+            style="@style/Widget.AppCompat.TextView.SpinnerItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="CLIENTE:"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <ListView
+            android:id="@+id/oListMaq"
+            android:layout_width="match_parent"
+            android:layout_height="550dp"
+            android:scrollbars="vertical" />
+
+        <Button
+            android:id="@+id/btnConnect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="Disconnect Printer"/>
-        <Button android:id="@+id/btnPrint"
+            android:text="Conectar impresora" />
+
+        <Button
+            android:id="@+id/btnDisconnect"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"
-            android:text="Print Document"/>
+            android:text="Desconectar Impresora" />
+
+        <Button
+            android:id="@+id/btnPrint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Imprimir Listado" />
+
+        <Button
+            android:id="@+id/btnRegr"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="REGRESAR" />
 
     </LinearLayout>
-
+    </ScrollView>
 
 </android.support.constraint.ConstraintLayout>

@@ -421,10 +421,10 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "'0',";
 
                 cSql_Ln += "'" + op_cal_colect + "',";
-                cSql_Ln += "'" + String.format("%d", Double.parseDouble(tot_cole.getText().toString())) + "',";
+                cSql_Ln += "'" + String.format("%.2f", Double.parseDouble(tot_cole.getText().toString())) + "',";
 
                 cSql_Ln += "'" + op_cal_cred + "',";
-                cSql_Ln += "'" + String.format("%d", Double.parseDouble(tot_cred.getText().toString())) + "',";
+                cSql_Ln += "'" + String.format("%.2f", Double.parseDouble(tot_cred.getText().toString())) + "',";
                 cSql_Ln += "'" + cNow2 + "',";
                 cSql_Ln += "'" + cNow2 + "',";
                 cSql_Ln += "'" + Op_tot_impjcj2 + "',";
