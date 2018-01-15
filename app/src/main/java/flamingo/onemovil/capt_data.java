@@ -60,7 +60,7 @@ public class capt_data extends AppCompatActivity {
 
     public final static int REQUEST_CAMERA = 1;
     private static final String TAG = capt_data.class.getSimpleName();
-    private Button btn_hide_capt, btn_save_capt, btn_cancel_capt;
+    private Button btn_hide_capt, btn_foto_capt, btn_save_capt, btn_cancel_capt;
     private EditText ea_act, ea_ant, ea_dif;
     private EditText eb_act, eb_ant, eb_dif;
     private EditText sa_act, sa_ant, sa_dif;
@@ -75,7 +75,6 @@ public class capt_data extends AppCompatActivity {
     private Space Spaceb_esep, Spaceb_ssep;
     private SQLiteDatabase db4;
     private Cursor data;
-    //private String cId_emp, cId_Cte, cId_Maq;
     private String cSqlLn = "";
     private String op_chapa, op_modelo, op_serie, maqlnk_id, cte_nombre_loc, cte_nombre_com,
             maqtc_denom_e, maqtc_denom_s;
@@ -86,15 +85,17 @@ public class capt_data extends AppCompatActivity {
     private double fDenom_Ent_Val, fDenom_Sal_Val, Porc_Loc;
     //private double ftot_cole, ftot_prem;
     private int iMetroA_EntDif, iMetroB_EntDif, iMetroA_SalDif, iMetroB_SalDif;
-    private String cid_device2 = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capt_data);
-        cid_device2 = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        Global.oActual_Context = null;
+        Global.oActual_Context = this.getApplicationContext();
 
         this.btn_hide_capt = (Button) findViewById(R.id.obtn_hide_capt);
+        this.btn_foto_capt = (Button) findViewById(R.id.obtn_foto_capt);
         this.btn_save_capt = (Button) findViewById(R.id.obtn_save_capt);
         this.btn_cancel_capt = (Button) findViewById(R.id.obtn_cancel_capt);
 
@@ -344,7 +345,7 @@ public class capt_data extends AppCompatActivity {
                 String cSql_Ln = "";
 
                 cSql_Ln = "";
-                cSql_Ln += "DELETE FROM operacion WHERE id_device='" + cid_device2 + "' and  op_chapa='" + op_chapa + "';";
+                cSql_Ln += "DELETE FROM operacion WHERE id_device='" + Global.cid_device + "' and  op_chapa='" + op_chapa + "';";
                 Log.e("SQL", cSql_Ln);
                 //System.out.print(cSql_Ln);
                 db4.execSQL(cSql_Ln);
@@ -431,7 +432,7 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "'" + Op_tot_impmunic2 + "',";
 
                 cSql_Ln += "'" + op_emp_id + "',";
-                cSql_Ln += "'" + cid_device2 + "',";
+                cSql_Ln += "'" + Global.cid_device + "',";
                 cSql_Ln += "'" + Op_semanas + "');";
 
                 Log.e("SQL", cSql_Ln);
@@ -469,6 +470,17 @@ public class capt_data extends AppCompatActivity {
                 finish();
             }
         });
+
+        btn_foto_capt.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Intent Int_TakePhoto = new Intent(getApplicationContext(), take_photo.class);
+                Int_TakePhoto.putExtra("show_image", 1);
+                startActivity(Int_TakePhoto);
+            }
+        });
+
     }
 
     @Override

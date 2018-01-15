@@ -38,6 +38,10 @@ public class sync_data extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync_data);
+
+        Global.oActual_Context = null;
+        Global.oActual_Context = this.getApplicationContext();
+
         ock_rene = (CheckBox) findViewById(R.id.ock_renew);
         btn_proc = (Button) findViewById(R.id.obtn_proc);
         btn_regr = (Button) findViewById(R.id.obtn_regr);

@@ -30,6 +30,13 @@
                 android:text="QUITAR TECLADO" />
 
             <Button
+                android:id="@+id/obtn_foto_capt"
+                android:layout_width="wrap_content"
+                android:layout_height="65dp"
+                android:layout_weight="1"
+                android:text="FOTO METROS" />
+
+            <Button
                 android:id="@+id/obtn_save_capt"
                 android:layout_width="wrap_content"
                 android:layout_height="65dp"

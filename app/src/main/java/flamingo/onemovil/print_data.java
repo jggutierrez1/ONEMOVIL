@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.provider.Settings;
 import android.support.annotation.WorkerThread;
 import android.support.v7.app.AppCompatActivity;
@@ -56,7 +57,6 @@ public class print_data extends AppCompatActivity {
     ListView ListMaq;
     EditText textBox;
     TextView olab_cte;
-    String cid_device2 = "";
     private SQLiteDatabase oDb6;
     private Cursor oData1, oData2;
     private String cSqlLn = "";
@@ -67,6 +67,11 @@ public class print_data extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_print_data);
+
+        Global.oActual_Context = null;
+        Global.oActual_Context = this.getApplicationContext();
+
+        getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffc2b3"));
 
         // Create object of controls
         Button btnConnect = (Button) findViewById(R.id.btnConnect);
@@ -81,7 +86,6 @@ public class print_data extends AppCompatActivity {
         this.ListMaq = (ListView) findViewById(R.id.oListMaq);
         this.ListMaq.setClickable(true);
 
-        this.cid_device2 = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         this.olab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
 
         this.cDatabasePath = getDatabasePath("one2009.db").getPath();
@@ -92,7 +96,7 @@ public class print_data extends AppCompatActivity {
             case 1: {
                 Listar_Maquinas();
                 Listar_Montos();
-             }
+            }
             break;
             case 2: {
             }
@@ -158,6 +162,7 @@ public class print_data extends AppCompatActivity {
             bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (bluetoothAdapter == null) {
                 lblPrinterName.setText("No Bluetooth Adapter found");
+                getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffc2b3"));
             }
             if (bluetoothAdapter.isEnabled()) {
                 Intent enableBT = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -167,6 +172,7 @@ public class print_data extends AppCompatActivity {
             Set<BluetoothDevice> pairedDevice = bluetoothAdapter.getBondedDevices();
 
             lblPrinterName.setText("Bluetooth Printer NOT ATTACHED: ");
+            lblPrinterName.setTextColor(Color.parseColor("#ff0000"));
 
             if (pairedDevice.size() > 0) {
                 for (BluetoothDevice pairedDev : pairedDevice) {
@@ -174,6 +180,8 @@ public class print_data extends AppCompatActivity {
                     if (pairedDev.getName().equals("BlueTooth Printer")) {
                         bluetoothDevice = pairedDev;
                         lblPrinterName.setText("Bluetooth Printer Attached: " + pairedDev.getName());
+                        lblPrinterName.setTextColor(Color.parseColor("#009900"));
+                        getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffffff"));
                         break;
                     }
                 }
@@ -182,6 +190,8 @@ public class print_data extends AppCompatActivity {
         } catch (Exception ex) {
             ex.printStackTrace();
             lblPrinterName.setText("Bluetooth Printer ERROR...");
+            lblPrinterName.setTextColor(Color.parseColor("#ff0000"));
+            getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffc2b3"));
         }
 
     }
@@ -308,7 +318,7 @@ public class print_data extends AppCompatActivity {
         cSqlLn += "SUM(op.op_tot_cred)   AS tot_cred, ";
         cSqlLn += "(SUM(op.op_tot_colect)-SUM(op.op_tot_cred)) AS tot_dife ";
         cSqlLn += "FROM operacion op ";
-        cSqlLn += "WHERE (op.id_device='" + cid_device2 + "') ";
+        cSqlLn += "WHERE (op.id_device='" + Global.cid_device + "') ";
         cSqlLn += "AND   (op.op_emp_id='" + Global.cEmp_Id + "') ";
         cSqlLn += "AND   (op.cte_id   ='" + Global.cCte_Id + "') ";
         cSqlLn += "GROUP BY op.op_emp_id,op.op_chapa ";
@@ -340,7 +350,7 @@ public class print_data extends AppCompatActivity {
         cSqlLn += " SUM(op.op_tot_cred)   AS tot_cred, ";
         cSqlLn += " (SUM(op.op_tot_colect)-SUM(op.op_tot_cred)) AS tot_dife ";
         cSqlLn += "FROM operacion op ";
-        cSqlLn += "WHERE op.id_device='" + cid_device2 + "' ";
+        cSqlLn += "WHERE op.id_device='" + Global.cid_device + "' ";
         cSqlLn += "AND   op.op_emp_id='" + Global.cEmp_Id + "' ";
         cSqlLn += "AND   op.cte_id   ='" + Global.cCte_Id + "' ";
         cSqlLn += "GROUP BY op.op_emp_id,id_device ";
@@ -365,7 +375,7 @@ public class print_data extends AppCompatActivity {
             printString("______________________________");
             oData1.moveToFirst();
             do {
-                printString(oData1.getString(0).trim() );
+                printString(oData1.getString(0).trim());
             } while (oData1.moveToNext());
             printString("______________________________");
             return true;
@@ -380,9 +390,9 @@ public class print_data extends AppCompatActivity {
             printString("");
             oData2.moveToFirst();
             do {
-                printString("Colectado : " + String.format("%12.2f",oData2.getDouble(0)).trim() );
-                printString("Credito   : " + String.format("%12.2f",oData2.getDouble(1)).trim());
-                printString("Diferencia: " + String.format("%12.2f",oData2.getDouble(2)).trim());
+                printString("Colectado : " + String.format("%12.2f", oData2.getDouble(0)).trim());
+                printString("Credito   : " + String.format("%12.2f", oData2.getDouble(1)).trim());
+                printString("Diferencia: " + String.format("%12.2f", oData2.getDouble(2)).trim());
             } while (oData2.moveToNext());
             printString("______________________________");
 

@@ -2,6 +2,7 @@ package flamingo.onemovil;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -22,6 +23,16 @@ public class login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        Global.cid_device = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        Global.cid_device = Global.cid_device.toUpperCase();
+        Global.PACKAGE_NAME = getApplicationContext().getPackageName();
+
+        Global.oActual_Context = null;
+        Global.oActual_Context = this.getApplicationContext();
+
+        Global.Init_Vars();
+        Global.Chech_App_Folders();
 
         btn_entar = (Button) findViewById(R.id.obtn_login_entrar);
         btn_cance = (Button) findViewById(R.id.obtn_login_cancel);

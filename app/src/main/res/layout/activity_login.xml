@@ -32,21 +32,22 @@
         android:textColor = "#ff7aff24"
         android:textSize = "35dp" />
 
-    <EditText
-        android:layout_width = "wrap_content"
-        android:layout_height = "wrap_content"
-        android:id = "@+id/oLogin_User"
-        android:inputType="textNoSuggestions"
-        android:hint = "Entre el nombre"
-        android:focusable = "true"
-        android:textColorHighlight = "#ff7eff15"
-        android:textColorHint = "#ffff25e6"
-        android:layout_marginTop = "46dp"
-        android:layout_below = "@+id/imageView"
-        android:layout_alignParentLeft = "true"
-        android:layout_alignParentStart = "true"
-        android:layout_alignParentRight = "true"
-        android:layout_alignParentEnd = "true" />
+        <EditText
+            android:id="@+id/oLogin_User"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/imageView"
+            android:layout_marginTop="46dp"
+            android:focusable="true"
+            android:hint="Entre el nombre"
+            android:inputType="textNoSuggestions"
+            android:text="admin"
+            android:textColorHighlight="#ff7eff15"
+            android:textColorHint="#ffff25e6" />
 
     <ImageView
         android:layout_width="wrap_content"
@@ -56,19 +57,20 @@
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:inputType="textPassword|textNoSuggestions"
-        android:ems="10"
-        android:id="@+id/oLogin_Pass"
-        android:layout_below="@+id/oLogin_User"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignRight="@+id/oLogin_User"
-        android:layout_alignEnd="@+id/oLogin_User"
-        android:textColorHint="#ffff299f"
-        android:hint="Clave" />
+        <EditText
+            android:id="@+id/oLogin_Pass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/oLogin_User"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignRight="@+id/oLogin_User"
+            android:layout_below="@+id/oLogin_User"
+            android:ems="10"
+            android:hint="Clave"
+            android:inputType="textPassword|textNoSuggestions"
+            android:text="admin"
+            android:textColorHint="#ffff299f" />
 
     <TextView
         android:id="@+id/ologin_intentos"

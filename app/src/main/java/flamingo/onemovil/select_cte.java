@@ -34,6 +34,9 @@ public class select_cte extends AppCompatActivity {
         setContentView(R.layout.activity_select_cte);
         getWindow().getDecorView().getRootView().setBackgroundColor(Color.rgb(204, 217, 255));
 
+        Global.oActual_Context = null;
+        Global.oActual_Context = this.getApplicationContext();
+
         btn_regr_cte = (Button) findViewById(R.id.obtn_regr_cte);
         btn_sele_cte = (Button) findViewById(R.id.obtn_sele_cte);
         //btn_clear_cte = (Button) findViewById(R.id.obtn_clear);

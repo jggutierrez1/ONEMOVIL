@@ -46,7 +46,6 @@ public class menu extends AppCompatActivity {
     private SQLiteDatabase db;
     private String cSql_Ln;
     private String mCurrentPhotoPath;
-    private String cdevice_id;
 
     private final static int REQUEST_SEL_CTE = 1;
     private final static int REQUEST_SEL_MAQ = 2;
@@ -80,26 +79,9 @@ public class menu extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        cdevice_id = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-/*
-        try {
-            Wini oini = new Wini(new FileReader("config.ini"));
 
-            Wini oini;
-            oini = new Wini(new File("config.ini"));
-            cdevice_id = oini.get("DEVICE", "ID", String.class);
-
-            if (cdevice_id==""){
-                oini.put("DEVICE", "ID", cdevice_id);
-                oini.store();
-              }
-
-        } catch (InvalidFileFormatException e) {
-            System.out.println("Invalid file format.");
-        } catch (IOException e) {
-            System.out.println("Problem reading file.");
-        }
-*/
+        Global.oActual_Context = null;
+        Global.oActual_Context = this.getApplicationContext();
 
         if (android.os.Environment.getExternalStorageState().equals(
                 android.os.Environment.MEDIA_MOUNTED)) {
@@ -118,7 +100,7 @@ public class menu extends AppCompatActivity {
         btn_fin_colec = (Button) findViewById(R.id.obtn_fin_colec);
 
         DeviceId = (TextView) findViewById(R.id.oDeviceId);
-        DeviceId.setText("ID EQUIPO:" + cdevice_id.toUpperCase());
+        DeviceId.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
         myLabel = (TextView) findViewById(R.id.oLabel);
         myTextbox = (EditText) findViewById(R.id.oEntry);
 
@@ -196,7 +178,7 @@ public class menu extends AppCompatActivity {
             public void onClick(View v) {
                 dialogBox("ESTA SEGURO QUE DESEA DESCARTAR TODAS LAS ENTRADAS REALIZADAS EN EL EQUIPO.");
                 if (iGlobalRes == 1) {
-                    String cSql_Ln = "DELETE FROM operacion WHERE id_device='" + cdevice_id + "'";
+                    String cSql_Ln = "DELETE FROM operacion WHERE id_device='" + Global.cid_device + "'";
                     db.execSQL(cSql_Ln);
                     Toast.makeText(getApplicationContext(), "LOS DATOS FUERON ELIMINADOS.", Toast.LENGTH_SHORT).show();
 
@@ -220,7 +202,9 @@ public class menu extends AppCompatActivity {
                 switch (resultCode) {
                     case RESULT_OK:
                         Toast.makeText(this, "Aceptó el cliente:[" + Global.cCte_Id.trim() + "]/" + Global.cCte_De.trim(), Toast.LENGTH_SHORT).show();
-                        btn_start.setEnabled(false);
+                        //btn_start.setEnabled(false);
+                        btn_start.setTextColor(getApplication().getResources().getColor(R.color.Blue));
+
                         break;
                     case RESULT_CANCELED:
 
@@ -228,27 +212,28 @@ public class menu extends AppCompatActivity {
                         Global.cCte_De = "";
 
                         Toast.makeText(this, "Rechazó el cliente.", Toast.LENGTH_SHORT).show();
-                        btn_start.setEnabled(true);
+                        btn_start.setTextColor(getApplication().getResources().getColor(R.color.Black));
+                        //btn_start.setEnabled(true);
                         break;
                 }
             }
 
-            if (requestCode == REQUEST_SEL_MAQ)
-            {
+            if (requestCode == REQUEST_SEL_MAQ) {
                 //Se procesa la devolución
-                switch (resultCode)
-                {
+                switch (resultCode) {
                     case RESULT_OK:
                         Toast.makeText(this, "Aceptó la máquina: [" + Global.cMaq_Id + "]/[" + Global.cMaq_De + "]", Toast.LENGTH_SHORT).show();
-                        btn_start.setEnabled(false);
-                        btn_maq.setEnabled(false);
+                        //btn_start.setEnabled(false);
+                        //btn_maq.setEnabled(false);
+                        btn_maq.setTextColor(getApplication().getResources().getColor(R.color.Blue));
                         break;
                     case RESULT_CANCELED:
                         Global.cMaq_Id = "";
                         Global.cMaq_De = "";
 
                         Toast.makeText(this, "Rechazó la máquina.", Toast.LENGTH_SHORT).show();
-                        btn_capt.setEnabled(true);
+                        //btn_capt.setEnabled(true);
+                        btn_maq.setTextColor(getApplication().getResources().getColor(R.color.Black));
                         break;
                 }
             }
@@ -259,12 +244,12 @@ public class menu extends AppCompatActivity {
                     case RESULT_OK:
                         //cId_Maq = data.getStringExtra("MAQ_ID");
                         Toast.makeText(this, "SE GUARDARON LOS DATOS DE MANERA SATISFACTORIAMENTE [" + Global.cCte_Id + "]+[" + Global.cMaq_Id + "]", Toast.LENGTH_SHORT).show();
-                        btn_start.setEnabled(false);
-                        btn_maq.setEnabled(true);
+                        //btn_start.setEnabled(false);
+                        //btn_maq.setEnabled(true);
                         break;
                     case RESULT_CANCELED:
-                        btn_start.setEnabled(false);
-                        btn_maq.setEnabled(true);
+                        //btn_start.setEnabled(false);
+                        //btn_maq.setEnabled(true);
                         Toast.makeText(this, "SE CANCELO LA CAPTURA", Toast.LENGTH_SHORT).show();
                         break;
                 }
@@ -277,6 +262,7 @@ public class menu extends AppCompatActivity {
                         //Toast.makeText(this, "Aceptó las condiciones [" + cId_Maq + "]", Toast.LENGTH_SHORT).show();
                         btn_start.setEnabled(true);
                         btn_maq.setEnabled(true);
+                        btn_start.setTextColor(getApplication().getResources().getColor(R.color.Black));
                         break;
                     case RESULT_CANCELED:
                         btn_start.setEnabled(true);

@@ -1,11 +1,16 @@
 package flamingo.onemovil;
 
 import android.Manifest;
+import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -17,10 +22,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,49 +36,70 @@ import java.util.Locale;
 public class take_photo extends AppCompatActivity {
 
     private static final String TAG = capt_data.class.getSimpleName();
-    private String cid_device2 = "";
 
     private String mCurrentPhotoPath;
-    private final String ruta_fotos_e = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/fotos_metros_entrada/";
-    private final String ruta_fotos_s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/fotos_metros_salidas/";
-    //private File file_e = new File(ruta_fotos_e);
-    //private File file_s = new File(ruta_fotos_s);
 
     // Activity request codes
     private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
     private static final int CAMERA_CAPTURE_VIDEO_REQUEST_CODE = 200;
     public static final int MEDIA_TYPE_IMAGE = 1;
     public static final int MEDIA_TYPE_VIDEO = 2;
-
-    // directory name to store captured images and videos
-    private static String IMAGE_DIRECTORY_NAME;
+    public static final int PICK_IMAGE_REQUEST = 3;
+    private static Context oContext;
 
     private Uri fileUri; // file url to store image/video
 
     private ImageView imgPreview;
-    private VideoView videoPreview;
-    private Button btnCapturePicture, btnRecordVideo, btnSalir;
+    private TextView txtSDK;
+    private TextView txtUriPath;
+    private TextView txtRealPath;
+
+    private int pShow_Image;
+
+    private Button btnCapturePicture, btnDeletePhoto, btnOpenPhotos, btnSalir;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_photo);
 
-        //file_e.mkdirs();
-        //file_s.mkdirs();
-        cid_device2 = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
-        cid_device2 = cid_device2.toUpperCase();
+        if (Global.cCte_Id == "") {
+            Toast.makeText(getApplicationContext(), "Debe seleccionar un <CLIENTE>, PARA PODER TOMAR LAS FOTOS.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+        if (Global.cMaq_Id == "") {
+            Toast.makeText(getApplicationContext(), "Debe seleccionar una <MAQUINA>, PARA PODER TOMAR LAS FOTOS.", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
 
-        IMAGE_DIRECTORY_NAME = cid_device2 + "-foto_metros";
+        Global.oActual_Context = null;
+        Global.oActual_Context = this.getApplicationContext();
+        oContext = this.getApplicationContext();
 
+        Global.callBroadCast();
+
+        txtSDK = (TextView) findViewById(R.id.txtSDK);
+        txtUriPath = (TextView) findViewById(R.id.txtUriPath);
+        txtRealPath = (TextView) findViewById(R.id.txtRealPath);
 
         imgPreview = (ImageView) findViewById(R.id.imgPreview);
-        videoPreview = (VideoView) findViewById(R.id.videoPreview);
         btnCapturePicture = (Button) findViewById(R.id.btnCapturePicture);
-        btnRecordVideo = (Button) findViewById(R.id.btnRecordVideo);
+        btnDeletePhoto = (Button) findViewById(R.id.btn_deletephoto);
+        btnOpenPhotos = (Button) findViewById(R.id.btn_openphotos);
+
         btnSalir = (Button) findViewById(R.id.btnSalir);
 
-		/*
+        Intent i = getIntent();
+        pShow_Image = i.getIntExtra("show_image", 0);
+        i = null;
+
+        if (pShow_Image == 1) {
+            load_image_Last_from();
+        }
+
+       /*
          * Capture image button click event
 		 */
         btnCapturePicture.setOnClickListener(new View.OnClickListener() {
@@ -82,18 +110,66 @@ public class take_photo extends AppCompatActivity {
             }
         });
 
-		/*
-         * Record video button click event
-		 */
-        btnRecordVideo.setOnClickListener(new View.OnClickListener() {
+        btnDeletePhoto.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                // record video
-                recordVideo();
+                if (Global.cLastFilePhoto != "") {
+                    if (Global.DeleteLastFilePhotoFile() == true) {
+                        txtSDK.setText("ELEMENTO ELIMINADO: ");
+                        txtUriPath.setText("URI Path: " + Global.oLastSelectedImageId.toString());
+                        txtRealPath.setText("Real Path: " + Global.cLastFullPathFilePhoto);
+
+                        imgPreview.setImageResource(android.R.color.transparent);
+
+                        refreshAndroidGallery(Global.oLastSelectedImageId);
+
+                        Global.callBroadCast();
+                    }
+                }
             }
         });
 
+        btnOpenPhotos.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse(Global.cStorageDirectoryPhoto + "/");
+
+                if (Build.VERSION.SDK_INT < 19) {
+                    //Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.getContentUri(uri.toString()));
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT, android.provider.MediaStore.Images.Thumbnails.getContentUri(uri.toString()));
+                    //Intent intent = new Intent();
+                    intent.setType("image/jpeg");
+                    //intent.setData(uri);
+                    //intent.setDataAndType(uri,"image/jpeg");
+                    //intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivity(Intent.createChooser(intent, "CONTENEDOR DE IMAGENES FLAMINGO"));
+                } else {
+/*
+                    Global.oPictureActionIntent = new Intent(Intent.ACTION_GET_CONTENT, null);
+                    Global.oPictureActionIntent.setType("image/jpeg");
+                    Global.oPictureActionIntent.putExtra("return-data", true);
+                    startActivityForResult(Global.oPictureActionIntent, PICK_IMAGE_REQUEST);
+*/
+                    //*Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT, android.provider.MediaStore.Images.Media.getContentUri(uri.toString()));
+                    Intent intent = new Intent(Intent.ACTION_GET_CONTENT, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    //intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    intent.setType("image/jpeg");
+
+
+                    //intent.setAction(Intent.ACTION_OPEN_DOCUMENT);
+                    //intent.addCategory(Intent.CATEGORY_OPENABLE);
+                    //intent.setType("*/*");
+                    //String[] extraMimeTypes = {"image/*", "video/*"};
+                    //intent.putExtra(Intent.EXTRA_MIME_TYPES, extraMimeTypes);
+                    //intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+
+                    startActivityForResult(intent, PICK_IMAGE_REQUEST);
+                }
+
+            }
+        });
 
         btnSalir.setOnClickListener(new View.OnClickListener() {
 
@@ -105,11 +181,11 @@ public class take_photo extends AppCompatActivity {
 
         // Checking camera availability
         if (!isDeviceSupportCamera()) {
-            Toast.makeText(getApplicationContext(),"Sorry! Your device doesn't support camera",Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Sorry! Your device doesn't support camera", Toast.LENGTH_LONG).show();
             // will close the app if the device does't have camera
             finish();
+            return;
         }
-
     }
 
     @Override
@@ -141,12 +217,9 @@ public class take_photo extends AppCompatActivity {
      */
     private void captureImage() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
         fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE);
-
         intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-
-        // start the image capture Intent
+        intent.putExtra("return-data", true);
         startActivityForResult(intent, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
     }
 
@@ -158,8 +231,6 @@ public class take_photo extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
-        // save file url in bundle as it will be null on scren orientation
-        // changes
         outState.putParcelable("file_uri", fileUri);
     }
 
@@ -171,35 +242,51 @@ public class take_photo extends AppCompatActivity {
         fileUri = savedInstanceState.getParcelable("file_uri");
     }
 
-    /*
-     * Recording video
-     */
-    private void recordVideo() {
-        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-
-        fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
-
-        // set video quality
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file
-        // name
-
-        // start the video capture Intent
-        startActivityForResult(intent, CAMERA_CAPTURE_VIDEO_REQUEST_CODE);
-    }
-
     /**
      * Receiving activity result method will be called after closing the camera
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         // if the result is capturing Image
+        if (requestCode == PICK_IMAGE_REQUEST && data != null && data.getData() != null) {
+            try {
+                String realPath;
+                // SDK < API11
+                if (Build.VERSION.SDK_INT < 11)
+                    realPath = RealPathUtil.getRealPathFromURI_BelowAPI11(this, data.getData());
+                    // SDK >= 11 && SDK < 19
+                else if (Build.VERSION.SDK_INT <= 19)
+                    realPath = RealPathUtil.getRealPathFromURI_API11to18(this, data.getData());
+                    // SDK > 19 (Android 4.4)
+                else
+                    realPath = RealPathUtil.getRealPathFromURI_API19(this, data.getData());
+
+                Global.cLastFullPathFilePhoto = realPath;
+                Global.oLastSelectedImageId = data.getData();
+
+                File file = new File(realPath);
+                Global.cLastFilePhoto = file.getName();
+                file = null;
+
+                imgPreview.setVisibility(View.VISIBLE);
+                setTextViews1(Build.VERSION.SDK_INT, Global.oLastSelectedImageId.toString(), Global.cLastFullPathFilePhoto);
+/*
+*/
+            } catch (NullPointerException e) {
+                imgPreview.setImageResource(android.R.color.transparent);
+                e.printStackTrace();
+                Global.oLastSelectedImageId = null;
+                Global.cLastFilePhoto = "";
+                Global.cLastFullPathFilePhoto = "";
+            }
+        }
+
         if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
-                // successfully captured the image
+                Global.oLastSelectedImageId = getImageContentUri(oContext, Global.cLastFullPathFilePhoto);
+                setTextViews2();
                 // display it in image view
-                previewCapturedImage();
+                //previewCapturedImage();
                 super.onResume();
             } else if (resultCode == RESULT_CANCELED) {
                 // user cancelled Image capture
@@ -212,23 +299,62 @@ public class take_photo extends AppCompatActivity {
                         "Sorry! Failed to capture image", Toast.LENGTH_SHORT)
                         .show();
             }
-        } else if (requestCode == CAMERA_CAPTURE_VIDEO_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                // video successfully recorded
-                // preview the recorded video
-                previewVideo();
-            } else if (resultCode == RESULT_CANCELED) {
-                // user cancelled recording
-                Toast.makeText(getApplicationContext(),
-                        "User cancelled video recording", Toast.LENGTH_SHORT)
-                        .show();
-            } else {
-                // failed to record video
-                Toast.makeText(getApplicationContext(),
-                        "Sorry! Failed to record video", Toast.LENGTH_SHORT)
-                        .show();
-            }
         }
+    }
+
+    private void load_image_Last_from() {
+        try {
+            if (Global.cLastFilePhoto.trim() != "") {
+                String CadenaMaq = "[" + Global.cCte_Id + "]_[" + Global.cMaq_Id + "]_IMG_";
+                if (Global.cLastFilePhoto.toLowerCase().contains(CadenaMaq.trim().toLowerCase())) {
+                    imgPreview.setVisibility(View.VISIBLE);
+                    setTextViews1(Build.VERSION.SDK_INT, Global.oLastSelectedImageId.toString(), Global.cLastFullPathFilePhoto);
+                }
+            }
+        } catch (NullPointerException e) {
+            imgPreview.setImageResource(android.R.color.transparent);
+            e.printStackTrace();
+        }
+
+    }
+
+    private void setTextViews2() {
+        Integer sdk = Build.VERSION.SDK_INT;
+
+        try {
+            imgPreview.setVisibility(View.VISIBLE);
+            BitmapFactory.Options options = new BitmapFactory.Options();
+            options.inSampleSize = 6;
+            final Bitmap bitmap = BitmapFactory.decodeFile(fileUri.getPath(), options);
+            imgPreview.setImageBitmap(bitmap);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+
+        this.txtSDK.setText("Build.VERSION.SDK_INT: " + sdk);
+        this.txtUriPath.setText("URI Path: " + Global.oLastSelectedImageId.toString());
+        this.txtRealPath.setText("Real Path: " + Global.cLastFullPathFilePhoto);
+
+        Log.d("HMKCODE", "Build.VERSION.SDK_INT:" + sdk);
+        Log.d("HMKCODE", "URI Path:" + Global.oLastSelectedImageId.toString());
+        Log.d("HMKCODE", "Path File: " + Global.cLastFilePhoto);
+        Log.d("HMKCODE", "Real Path: " + Global.cLastFullPathFilePhoto);
+    }
+
+    private void setTextViews1(int sdk, String uriPath, String realPath) {
+
+        this.txtSDK.setText("Build.VERSION.SDK_INT: " + sdk);
+        this.txtUriPath.setText("URI Path: " + uriPath);
+        this.txtRealPath.setText("Real Path: " + realPath);
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inSampleSize = 4;
+        imgPreview.setImageBitmap(BitmapFactory.decodeFile(realPath, options));
+
+
+        Log.d("HMKCODE", "Build.VERSION.SDK_INT:" + sdk);
+        Log.d("HMKCODE", "URI Path:" + uriPath);
+        Log.d("HMKCODE", "Real Path: " + realPath);
     }
 
     /*
@@ -236,9 +362,6 @@ public class take_photo extends AppCompatActivity {
      */
     private void previewCapturedImage() {
         try {
-            // hide video preview
-            videoPreview.setVisibility(View.GONE);
-
             imgPreview.setVisibility(View.VISIBLE);
 
             // bimatp factory
@@ -248,8 +371,7 @@ public class take_photo extends AppCompatActivity {
             // images
             options.inSampleSize = 8;
 
-            final Bitmap bitmap = BitmapFactory.decodeFile(fileUri.getPath(),
-                    options);
+            final Bitmap bitmap = BitmapFactory.decodeFile(fileUri.getPath(), options);
 
             imgPreview.setImageBitmap(bitmap);
         } catch (NullPointerException e) {
@@ -257,20 +379,16 @@ public class take_photo extends AppCompatActivity {
         }
     }
 
-    /*
-     * Previewing recorded video
-     */
-    private void previewVideo() {
-        try {
-            // hide image preview
-            imgPreview.setVisibility(View.GONE);
-
-            videoPreview.setVisibility(View.VISIBLE);
-            videoPreview.setVideoPath(fileUri.getPath());
-            // start playing
-            videoPreview.start();
-        } catch (Exception e) {
-            e.printStackTrace();
+    private void refreshAndroidGallery(Uri fileUri) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            Intent mediaScanIntent = new Intent(
+                    Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+            mediaScanIntent.setData(fileUri);
+            this.getApplicationContext().sendBroadcast(mediaScanIntent);
+        } else {
+            this.getApplicationContext().sendBroadcast(new Intent(
+                    Intent.ACTION_MEDIA_MOUNTED,
+                    Uri.parse("file://" + Environment.getExternalStorageDirectory())));
         }
     }
 
@@ -291,13 +409,13 @@ public class take_photo extends AppCompatActivity {
     private static File getOutputMediaFile(int type) {
 
         // External sdcard location
-        File mediaStorageDir = new File(
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), IMAGE_DIRECTORY_NAME);
+        //File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), IMAGE_DIRECTORY_NAME);
+        File mediaStorageDir = new File(Global.cStorageDirectoryPhoto);
 
         // Create the storage directory if it does not exist
         if (!mediaStorageDir.exists()) {
             if (!mediaStorageDir.mkdirs()) {
-                Log.d(IMAGE_DIRECTORY_NAME, "Oops! Failed create " + IMAGE_DIRECTORY_NAME + " directory");
+                Log.d(Global.cStorageDirectory, "Oops! Failed create " + Global.cStorageDirectoryPhoto + " directory");
                 return null;
             }
         }
@@ -305,39 +423,64 @@ public class take_photo extends AppCompatActivity {
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss",
                 Locale.getDefault()).format(new Date());
+
+        String cImageFileName = "";
+        Global.cLastFilePhoto = "";
+
         File mediaFile;
         if (type == MEDIA_TYPE_IMAGE) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "IMG_" + timeStamp + ".jpg");
-        } else if (type == MEDIA_TYPE_VIDEO) {
-            mediaFile = new File(mediaStorageDir.getPath() + File.separator + "VID_" + timeStamp + ".mp4");
+            cImageFileName = "[" + Global.cCte_Id + "]_[" + Global.cMaq_Id + "]_IMG_" + timeStamp + ".jpg";
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator + cImageFileName);
+
+            Global.cLastFilePhoto = cImageFileName;
+            Global.cLastFullPathFilePhoto = mediaFile.getAbsolutePath();
         } else {
             return null;
         }
-
         return mediaFile;
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmm").format(new Date());
-        String imageFileName = cid_device2 + "_" + timeStamp + "_";
+    private void scanFile(String path, final boolean isDelete) {
+        try {
+            MediaScannerConnection.scanFile(Global.oActual_Context, new String[]{path},
+                    null, new MediaScannerConnection.OnScanCompletedListener() {
+                        public void onScanCompleted(String path, Uri uri) {
+                            if (isDelete) {
+                                if (uri != null) {
+                                    Global.oActual_Context.getContentResolver().delete(uri,
+                                            null, null);
+                                }
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        //private final String ruta_fotos_s = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES) + "/fotos_metros_salidas/";
-        //private File file_e = new File(ruta_fotos_e);
-
-        File storageDir = new File(ruta_fotos_e);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-        System.out.println(storageDir);
-        System.out.println(image);
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        System.out.println(mCurrentPhotoPath);
-
-        return image;
     }
+
+    public static Uri getImageContentUri(Context context, String cFullPath) {
+        File imageFile = new File(cFullPath);
+        String filePath = imageFile.getAbsolutePath();
+        Cursor cursor = context.getContentResolver().query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                new String[]{MediaStore.Images.Media._ID},
+                MediaStore.Images.Media.DATA + "=? ",
+                new String[]{filePath}, null);
+        if (cursor != null && cursor.moveToFirst()) {
+            int id = cursor.getInt(cursor.getColumnIndex(MediaStore.MediaColumns._ID));
+            cursor.close();
+            return Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "" + id);
+        } else {
+            if (imageFile.exists()) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Images.Media.DATA, filePath);
+                return context.getContentResolver().insert(
+                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+            } else {
+                return null;
+            }
+        }
+    }
+
 }

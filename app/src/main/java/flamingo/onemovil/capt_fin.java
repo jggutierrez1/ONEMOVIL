@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +19,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.channels.FileChannel;
 import java.text.DecimalFormat;
 
 public class capt_fin extends AppCompatActivity {
@@ -26,7 +34,6 @@ public class capt_fin extends AppCompatActivity {
     private TextView olab_cte;
     private SQLiteDatabase oDb5;
     private Cursor oData;
-    private String cid_device2 = "";
 
     private int itotfin_bruto, itotfin_prem, itotfin_devo, itotfin_otros, itotfin_total, itotfin_gast, itotfin_neto, itotfin_notas;
 
@@ -35,7 +42,8 @@ public class capt_fin extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_capt_fin);
 
-        cid_device2 = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
+        Global.oActual_Context = null;
+        Global.oActual_Context = this.getApplicationContext();
 
         this.olab_cte = (TextView) findViewById(R.id.lab_cte);
 
@@ -153,6 +161,7 @@ public class capt_fin extends AppCompatActivity {
 
             @Override
             public void onClick(View arg0) {
+                Global.ExportDB();
                 Global.iPrn_Data = 1;
                 Intent Int_PrnMaqScreen = new Intent(getApplicationContext(), print_data.class);
                 startActivity(Int_PrnMaqScreen);
@@ -172,6 +181,7 @@ public class capt_fin extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(v.getContext(), "Factor de Conversión [" + Denom_Ent_Fac + "/ $" + fDenom_Ent_Val + "]", Toast.LENGTH_SHORT).show();
+                Global.ExportDB();
                 Intent i = getIntent();
                 setResult(RESULT_OK, i);
                 oDb5.close();
@@ -219,7 +229,7 @@ public class capt_fin extends AppCompatActivity {
         cSql_Ln += "    SUM(op_tot_colect) AS op_tot_colect, ";
         cSql_Ln += "    SUM(op_tot_cred) AS op_tot_cred ";
         cSql_Ln += "FROM operacion ";
-        cSql_Ln += "WHERE id_device='" + cid_device2 + "' ";
+        cSql_Ln += "WHERE id_device='" + Global.cid_device + "' ";
         cSql_Ln += "AND   cte_id   ='" + Global.cCte_Id + "' ";
 
         Log.e("SQL", cSql_Ln);
@@ -308,4 +318,5 @@ public class capt_fin extends AppCompatActivity {
 
         this.ototfin_neto.setText(Double.valueOf(dtotfin_neto).toString());
     }
+
 }

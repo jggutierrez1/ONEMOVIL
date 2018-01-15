@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class select_maq extends AppCompatActivity {
 
-    private Button btn_regr_maq, btn_sele_maq, btn_clear_maq, btn_find_maq;
+    private Button btn_regr_maq, btn_sele_maq, btn_foto_maq;
     ;
     private TextView text_fnd;
     private ListView lst_maq;
@@ -34,13 +34,15 @@ public class select_maq extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_maq);
+
+        Global.oActual_Context = null;
+        Global.oActual_Context = this.getApplicationContext();
+
         getWindow().getDecorView().getRootView().setBackgroundColor(Color.rgb(204, 255, 204));
 
         btn_regr_maq = (Button) findViewById(R.id.obtn_regr_maq);
         btn_sele_maq = (Button) findViewById(R.id.obtn_sele_maq);
-        //btn_clear_maq = (Button) findViewById(R.id.obtn_clear);
-        //btn_find_maq = (Button) findViewById(R.id.obtn_find);
-        //text_fnd_maq= (TextView) findViewById(R.id.otext_fnd);
+        btn_foto_maq = (Button) findViewById(R.id.obtn_foto_maq);
 
         lst_maq = (ListView) findViewById(R.id.olst_maq);
         lst_maq.setClickable(true);
@@ -109,6 +111,16 @@ public class select_maq extends AppCompatActivity {
             }
         });
 
+        btn_foto_maq.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Intent Int_TakePhoto = new Intent(getApplicationContext(), take_photo.class);
+                Int_TakePhoto.putExtra("show_image", 1);
+                startActivity(Int_TakePhoto);
+            }
+        });
+
         lst_maq.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -122,6 +134,7 @@ public class select_maq extends AppCompatActivity {
                 Global.cMaq_De = selectedFromList.substring(20, selectedFromList.length()).trim();
 
                 btn_sele_maq.setEnabled(true);
+                btn_foto_maq.setEnabled(true);
             }
         });
 
