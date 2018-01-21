@@ -16,7 +16,7 @@
     <color name="LavenderBlush">#FFF0F5</color>
     <color name="PapayaWhip">#FFEFD5</color>
     <color name="BlanchedAlmond">#FFEBCD</color>
-    <color name="MistyRose">#FFE4E1</color>
+    <color name="MistyRose">#ffe4e1</color>
     <color name="Bisque">#FFE4C4</color>
     <color name="Moccasin">#FFE4B5</color>
     <color name="NavajoWhite">#FFDEAD</color>
@@ -48,7 +48,7 @@
     <color name="SandyBrown">#F4A460</color>
     <color name="Azure">#F0FFFF</color>
     <color name="Honeydew">#F0FFF0</color>
-    <color name="AliceBlue">#F0F8FF</color>
+    <color name="AliceBlue">#f0f8ff</color>
     <color name="Khaki">#F0E68C</color>
     <color name="LightCoral">#F08080</color>
     <color name="PaleGoldenrod">#EEE8AA</color>
@@ -89,7 +89,7 @@
     <color name="PaleGreen">#98FB98</color>
     <color name="DarkViolet">#9400D3</color>
     <color name="MediumPurple">#9370DB</color>
-    <color name="LightGreen">#90EE90</color>
+    <color name="LightGreen">#90ee90</color>
     <color name="DarkSeaGreen">#8FBC8F</color>
     <color name="SaddleBrown">#8B4513</color>
     <color name="DarkMagenta">#8B008B</color>
@@ -139,7 +139,7 @@
     <color name="Teal">#008080</color>
     <color name="Green">#008000</color>
     <color name="DarkGreen">#006400</color>
-    <color name="Blue">#0000FF</color>
+    <color name="Blue">#0000ff</color>
     <color name="MediumBlue">#0000CD</color>
     <color name="DarkBlue">#00008B</color>
     <color name="Navy">#000080</color>

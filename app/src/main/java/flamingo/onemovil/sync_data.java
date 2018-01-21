@@ -27,7 +27,7 @@ import java.util.Arrays;
 
 public class sync_data extends AppCompatActivity {
 
-    private Button btn_proc, btn_regr;
+    private Button btn_proc, btn_regr, btn_json;
     private CheckBox ock_rene;
     private SQLiteDatabase db2;
     private EditText memo;
@@ -45,6 +45,7 @@ public class sync_data extends AppCompatActivity {
         ock_rene = (CheckBox) findViewById(R.id.ock_renew);
         btn_proc = (Button) findViewById(R.id.obtn_proc);
         btn_regr = (Button) findViewById(R.id.obtn_regr);
+        btn_json = (Button) findViewById(R.id.obtn_json);
         memo = (EditText) findViewById(R.id.omemo);
         lurl = (TextView) findViewById(R.id.olurl);
         InternetStatus = (TextView) findViewById(R.id.oInternetStatus);
@@ -162,6 +163,18 @@ public class sync_data extends AppCompatActivity {
                 finish();
             }
         });
+
+        btn_json.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                String Sql="SELECT * FROM operacion limit 200";
+                //String cValue=Global.Cursor_To_MySql_Sentense(Sql,"operacion",2);
+                String aValue=Global.getJsonResults2(Sql,"operacion");
+                memo.setText(aValue);
+            }
+        });
+
 
     }
 

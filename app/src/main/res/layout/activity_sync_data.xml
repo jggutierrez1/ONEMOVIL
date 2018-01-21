@@ -58,6 +58,12 @@
             android:layout_height="65dp"
             android:text="Procesar" />
 
+        <Button
+            android:id="@+id/obtn_json"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="VER JSON" />
+
         <EditText
             android:id="@+id/omemo"
             android:layout_width="match_parent"

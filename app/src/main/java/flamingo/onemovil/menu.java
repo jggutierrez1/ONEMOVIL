@@ -37,6 +37,7 @@ import java.io.IOException;
 
 import org.ini4j.InvalidFileFormatException;
 import org.ini4j.Wini;
+import org.json.JSONArray;
 
 public class menu extends AppCompatActivity {
 
@@ -125,8 +126,20 @@ public class menu extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
+                /*
+                String Sql="SELECT * FROM operacion limit 200";
+                String aValue=Global.getJsonResults2(Sql,"operacion");
+                Toast.makeText(getApplicationContext(), aValue , Toast.LENGTH_SHORT).show();
+                */
+
+                /*
                 Intent Int_TakePhoto = new Intent(getApplicationContext(), take_photo.class);
                 startActivity(Int_TakePhoto);
+                */
+                Intent Int_Uploadfiles = new Intent(getApplicationContext(), uploadfiletoserver.class);
+                startActivity(Int_Uploadfiles);
+
+
             }
         });
 

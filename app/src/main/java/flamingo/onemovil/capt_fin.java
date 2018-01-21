@@ -19,6 +19,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -203,7 +205,6 @@ public class capt_fin extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 
     private void Clear_Screen() {

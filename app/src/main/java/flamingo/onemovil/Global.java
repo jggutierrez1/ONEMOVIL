@@ -1,9 +1,11 @@
 package flamingo.onemovil;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
@@ -11,10 +13,18 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.ListAdapter;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -22,15 +32,31 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
 import java.lang.String;
+import java.sql.ResultSetMetaData;
+import java.util.ArrayList;
 import java.util.Calendar;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import static android.content.ContentValues.TAG;
+import static java.lang.System.exit;
 
 /**
  * Created by Usuario on 01/01/2018.
  */
 
 public class Global {
+    private static final char[] DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
+
     public static Integer iPrn_Data = 0;
 
     public static String cEmp_Id = "1";
@@ -58,6 +84,10 @@ public class Global {
     public static Uri oLastSelectedImageId = null;
     public static Context oActual_Context = null;
     public static Intent oPictureActionIntent = null;
+    public static SQLiteDatabase oGen_Db;
+    public static Cursor oGen_Cursor;
+    public static String SERVER_URL = "http://190.140.40.242/flam/UploadToServer.php";
+    public static String SERVER_URL_IMGS = "http://190.140.40.242/flam/images/";
 
     public static void Init_Vars() {
         PACKAGE_NAME = "flamingo.onemovil";
@@ -363,4 +393,419 @@ public class Global {
         return oCursor.getString(idx);
     }
 
+    private static String bytesToHexString(byte[] bytes) {
+        char[] digits = DIGITS;
+        char[] buf = new char[bytes.length * 2];
+        int c = 0;
+        for (byte b : bytes) {
+            buf[c++] = digits[(b >> 4) & 0xf];
+            buf[c++] = digits[b & 0xf];
+        }
+        return new String(buf);
+    }
+
+    public static JSONArray cur2Json(Cursor cursor) {
+        JSONArray resultSet = new JSONArray();
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int nColumns = cursor.getColumnCount();
+            JSONObject rowObject = new JSONObject();
+            for (int i = 0; i < nColumns; i++) {
+                String colName = cursor.getColumnName(i);
+                if (colName != null) {
+                    String val = "";
+                    try {
+                        switch (cursor.getType(i)) {
+                            case Cursor.FIELD_TYPE_BLOB:
+                                rowObject.put(colName, cursor.getBlob(i).toString());
+                                break;
+                            case Cursor.FIELD_TYPE_FLOAT:
+                                rowObject.put(colName, cursor.getDouble(i));
+                                break;
+                            case Cursor.FIELD_TYPE_INTEGER:
+                                rowObject.put(colName, cursor.getLong(i));
+                                break;
+                            case Cursor.FIELD_TYPE_NULL:
+                                rowObject.put(colName, null);
+                                break;
+                            case Cursor.FIELD_TYPE_STRING: {
+                                String sValue1 = cursor.getString(i);
+                                String sValue2 = sValue1.trim().replaceAll(" ", "_");
+                                rowObject.put(colName, sValue2);
+                            }
+                            break;
+                        }
+                    } catch (JSONException e) {
+                        Log.d(TAG, e.getMessage());
+                    }
+                }
+            }
+            resultSet.put(rowObject);
+            if (!cursor.moveToNext())
+                break;
+        }
+        cursor.close(); // close the cursor
+        return resultSet;
+    }
+
+    public static String cursorToString(Cursor crs) {
+        JSONArray arr = new JSONArray();
+        crs.moveToFirst();
+        while (!crs.isAfterLast()) {
+            int nColumns = crs.getColumnCount();
+            JSONObject row = new JSONObject();
+            for (int i = 0; i < nColumns; i++) {
+                String colName = crs.getColumnName(i);
+                if (colName != null) {
+                    String val = "";
+                    try {
+                        switch (crs.getType(i)) {
+                            case Cursor.FIELD_TYPE_BLOB:
+                                row.put(colName, crs.getBlob(i).toString());
+                                break;
+                            case Cursor.FIELD_TYPE_FLOAT:
+                                row.put(colName, crs.getDouble(i));
+                                break;
+                            case Cursor.FIELD_TYPE_INTEGER:
+                                row.put(colName, crs.getLong(i));
+                                break;
+                            case Cursor.FIELD_TYPE_NULL:
+                                row.put(colName, null);
+                                break;
+                            case Cursor.FIELD_TYPE_STRING: {
+                                String sValue1 = crs.getString(i);
+                                String sValue2 = sValue1.trim().replaceAll(" ", "_");
+                                row.put(colName, sValue2);
+                            }
+                            break;
+                        }
+                    } catch (JSONException e) {
+                        Log.d(TAG, e.getMessage());
+                    }
+                }
+            }
+            arr.put(row);
+            if (!crs.moveToNext())
+                break;
+        }
+        crs.close(); // close the cursor
+        return arr.toString();
+    }
+
+    public static JSONArray getJsonResults(String cSql_Cmd) {
+
+        Cursor data;
+
+        String myPath = Global.oActual_Context.getDatabasePath("one2009.db").getPath();
+
+        SQLiteDatabase myDataBase = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+
+        String searchQuery = cSql_Cmd;
+        Cursor cursor = myDataBase.rawQuery(searchQuery, null);
+
+        JSONArray resultSet = new JSONArray();
+
+        resultSet = Global.cur2Json(cursor);
+        return resultSet;
+    }
+
+    public static String getJsonResults2(String cSql_Cmd, String cTableName) {
+        JSONArray resultSet = new JSONArray();
+        JSONObject resultSet2 = new JSONObject();
+
+        resultSet = getJsonResults(cSql_Cmd);
+        try {
+            resultSet2.put(cTableName, resultSet);
+            Global.logLargeString(resultSet.toString());
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
+        }
+        return resultSet2.toString();
+    }
+
+    public static void logLargeString(String str) {
+        if (str.length() > 3000) {
+            Log.i(TAG, str.substring(0, 3000));
+            logLargeString(str.substring(3000));
+        } else {
+            Log.i(TAG, str); // continuation
+        }
+    }
+
+    public static String INCOMPLETE_Cursor_To_MySql_Sentense(String cSql_Ln, String cTblName, int iLimitInserts) {
+        String myPath = Global.oActual_Context.getDatabasePath("one2009.db").getPath();
+        Global.oGen_Db = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
+        Global.oGen_Cursor = oGen_Db.rawQuery(cSql_Ln, null);
+
+
+        int iIdx = 0;
+        String cStr_Fields = "";
+        String cStr_Values = "";
+        String cSql_String = "";
+
+        String cSql_Insert_Cab = "";
+        String cSql_Insert_Val = "";
+        String cSql_Insert_Fin = "";
+
+        String cColumnName = "";
+        int iRegs_Index = 0;
+        int iRows_Count = 0;
+        int iFields_Cnt = 0;
+        int iNext_Limit = 0;
+
+        iRows_Count = oGen_Cursor.getCount();
+        iFields_Cnt = oGen_Cursor.getColumnCount();
+
+        if (iRows_Count == 0) {
+            Toast.makeText(Global.oActual_Context, "No hay registros que procesar!!!", Toast.LENGTH_LONG).show();
+        } else {
+            //cStr_Fields += "(";
+            for (iIdx = 0; iIdx <= iFields_Cnt - 1; iIdx++) {
+                cColumnName = oGen_Cursor.getColumnName(iIdx);
+                if (cColumnName != null) {
+                    cColumnName = oGen_Cursor.getColumnName(iIdx);
+                    cStr_Fields += cColumnName;
+                    if (iIdx != iFields_Cnt)
+                        cStr_Fields += ",";
+                }
+
+            }
+            cStr_Values = "";
+            cSql_Insert_Val = "";
+            if (oGen_Cursor != null && oGen_Cursor.moveToFirst()) {
+                iRegs_Index = 1;
+                iNext_Limit = 1;
+                do {
+                    iIdx = 0;
+                    //cStr_Values += "(";
+                    for (iIdx = 0; iIdx <= iFields_Cnt - 1; iIdx++) {
+                        try {
+                            switch (oGen_Cursor.getType(iIdx)) {
+                                case Cursor.FIELD_TYPE_INTEGER:
+                                    if (oGen_Cursor.getString(iIdx) == null)
+                                        cStr_Values += "\"" + "0" + "\"";
+                                    else
+                                        cStr_Values += "\"" + Integer.valueOf(oGen_Cursor.getString(iIdx)).toString() + "\"";
+                                    break;
+                                case Cursor.FIELD_TYPE_FLOAT:
+                                    if (oGen_Cursor.getString(iIdx) == null)
+                                        cStr_Values += "\"" + "0.00" + "\"";
+                                    else
+                                        cStr_Values += "\"" + Double.valueOf(oGen_Cursor.getString(iIdx)).toString() + "\"";
+                                    break;
+                                case Cursor.FIELD_TYPE_STRING:
+                                    if (oGen_Cursor.getString(iIdx) == null)
+                                        cStr_Values += "NULL";
+                                    else
+                                        cStr_Values += "\"" + oGen_Cursor.getString(iIdx) + "\"";
+                                    break;
+                                case Cursor.FIELD_TYPE_BLOB:
+                                    if (oGen_Cursor.getString(iIdx) == null)
+                                        cStr_Values += "NULL";
+                                    else
+                                        cStr_Values += "\"" + bytesToHexString(oGen_Cursor.getBlob(iIdx)) + "\"";
+                                    break;
+                            }
+                        } catch (Exception ex) {
+                            //Log.e(TAG, "Exception converting cursor column to json field: " + cName);
+                        }
+
+                        if (iIdx != iFields_Cnt)
+                            cStr_Values += ",";
+                    }
+                    String cStr_Values2 = cStr_Values.substring(1, cStr_Values.length() - 1);
+
+                    cSql_Insert_Val += "(" + cStr_Values2 + ")," + (char) 13;
+                    if ((iRegs_Index == 1) || (iRegs_Index == iRows_Count) || (iNext_Limit > iLimitInserts)) {
+                        iNext_Limit = 1;
+                        cSql_Insert_Val += ";";
+                        cSql_Insert_Cab = "INSERT INTO " + cTblName + " (" + cStr_Fields + ") VALUES " + (char) 13 + "(" + cStr_Values2 + ");" + (char) 13;
+                    } else {
+                        cSql_Insert_Cab = "";
+                    }
+
+                    cSql_Insert_Fin += cSql_Insert_Cab + cSql_Insert_Val + (char) 13;
+                    Log.d("TAG_NAME", cSql_Insert_Fin);
+
+                    iRegs_Index++;
+                    iNext_Limit++;
+
+                } while (oGen_Cursor.moveToNext());
+            }
+            //ON DUPLICATE KEY UPDATE ".$str_update. "";
+        }
+        Log.d("TAG_NAME", cSql_Insert_Fin);
+        return cSql_Insert_Fin;
+
+
+    }
+
+    public static String POST_Send_Json(String url_server, String Json) {
+        try {
+//            URL url = new URL("http://[ip]:[port]"); //in the real code, there is an ip and a port
+            URL url = new URL(url_server); //in the real code, there is an ip and a port
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.connect();
+
+            JSONObject jsonParam = new JSONObject();
+            jsonParam.put("EMPRESA", 0);
+            jsonParam.put("MACHINE", Global.cid_device);
+            jsonParam.put("DATA", Json);
+
+            DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+            String encode = URLEncoder.encode(jsonParam.toString(), "UTF-8");
+            //os.writeBytes(encode);
+            os.writeBytes(jsonParam.toString());
+
+            os.flush();
+            os.close();
+
+            Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+            Log.i("MSG", conn.getResponseMessage());
+            String Response = conn.getResponseMessage();
+
+            conn.disconnect();
+            return Response;
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            return "ERROR AL ENVIAR EL JSON ";
+        }
+    }
+
+    public void UploadFile2() {
+        try {
+            // Set your file path here
+            FileInputStream fstrm = new FileInputStream(Environment.getExternalStorageDirectory().toString() + "/DCIM/file.mp4");
+
+            // Set your server page url (and the file title/description)
+            HttpFileUpload hfu = new HttpFileUpload("http://www.myurl.com/fileup.aspx", "my file title", "my file description");
+
+            hfu.Send_Now(fstrm);
+
+        } catch (FileNotFoundException e) {
+            // Error: File not found
+        }
+    }
+
+    public int uploadFile(final String selectedFilePath) {
+
+        int serverResponseCode = 0;
+        HttpURLConnection connection;
+        DataOutputStream dataOutputStream;
+        String lineEnd = "\r\n";
+        String twoHyphens = "--";
+        String boundary = "*****";
+
+
+        int bytesRead, bytesAvailable, bufferSize;
+        byte[] buffer;
+        int maxBufferSize = 1 * 1024 * 1024;
+        File selectedFile = new File(selectedFilePath);
+
+
+        String[] parts = selectedFilePath.split("/");
+        final String fileName = parts[parts.length - 1];
+
+        if (!selectedFile.isFile()) {
+            Global.logLargeString("Source File Doesn't Exist: " + selectedFilePath);
+            return 0;
+        } else {
+            try {
+                FileInputStream fileInputStream = new FileInputStream(selectedFile);
+                URL url = new URL(Global.SERVER_URL);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setDoInput(true);//Allow Inputs
+                connection.setDoOutput(true);//Allow Outputs
+                connection.setUseCaches(false);//Don't use a cached Copy
+                connection.setRequestMethod("POST");
+                connection.setRequestProperty("Connection", "Keep-Alive");
+                connection.setRequestProperty("ENCTYPE", "multipart/form-data");
+                connection.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+                connection.setRequestProperty("uploaded_file", selectedFilePath);
+
+                //creating new dataoutputstream
+                dataOutputStream = new DataOutputStream(connection.getOutputStream());
+
+                //writing bytes to data outputstream
+                dataOutputStream.writeBytes(twoHyphens + boundary + lineEnd);
+                dataOutputStream.writeBytes("Content-Disposition: form-data; name=\"uploaded_file\";filename=\""
+                        + selectedFilePath + "\"" + lineEnd);
+
+                dataOutputStream.writeBytes(lineEnd);
+
+                //returns no. of bytes present in fileInputStream
+                bytesAvailable = fileInputStream.available();
+                //selecting the buffer size as minimum of available bytes or 1 MB
+                bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                //setting the buffer as byte array of size of bufferSize
+                buffer = new byte[bufferSize];
+
+                //reads bytes from FileInputStream(from 0th index of buffer to buffersize)
+                bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+                //loop repeats till bytesRead = -1, i.e., no bytes are left to read
+                while (bytesRead > 0) {
+                    //write the bytes read from inputstream
+                    dataOutputStream.write(buffer, 0, bufferSize);
+                    bytesAvailable = fileInputStream.available();
+                    bufferSize = Math.min(bytesAvailable, maxBufferSize);
+                    bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+                }
+
+                dataOutputStream.writeBytes(lineEnd);
+                dataOutputStream.writeBytes(twoHyphens + boundary + twoHyphens + lineEnd);
+
+                serverResponseCode = connection.getResponseCode();
+                String serverResponseMessage = connection.getResponseMessage();
+
+                Log.i(TAG, "Server Response is: " + serverResponseMessage + ": " + serverResponseCode);
+
+                //response code of 200 indicates the server status OK
+                if (serverResponseCode == 200) {
+
+                    Runnable runnable = new Runnable() {
+                        public void run() {
+                            Toast.makeText(Global.oActual_Context, "File Upload completed.\n\n You can see the uploaded file here: \n\n" + Global.SERVER_URL + fileName, Toast.LENGTH_SHORT).show();
+                        }
+                    };
+
+                    Thread mythread = new Thread(runnable);
+                    mythread.start();
+                }
+
+                //closing the input and output streams
+                fileInputStream.close();
+                dataOutputStream.flush();
+                dataOutputStream.close();
+
+
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+
+                Runnable runnable = new Runnable() {
+                    public void run() {
+                        Toast.makeText(Global.oActual_Context, "File Not Found", Toast.LENGTH_SHORT).show();
+                    }
+                };
+                Thread mythread = new Thread(runnable);
+                mythread.start();
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                Toast.makeText(Global.oActual_Context, "URL error!", Toast.LENGTH_SHORT).show();
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(Global.oActual_Context, "Cannot Read/Write File!", Toast.LENGTH_SHORT).show();
+            }
+            return serverResponseCode;
+        }
+
+    }
 }
+
