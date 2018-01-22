@@ -3,6 +3,7 @@ package flamingo.onemovil;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,8 +15,11 @@ import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.Settings;
+import android.support.v7.app.AlertDialog;
+import android.text.InputType;
 import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.Toast;
 
@@ -88,6 +92,8 @@ public class Global {
     public static Cursor oGen_Cursor;
     public static String SERVER_URL = "http://190.140.40.242/flam/UploadToServer.php";
     public static String SERVER_URL_IMGS = "http://190.140.40.242/flam/images/";
+    public static String stringResult = "";
+    public static int iObj_Select = 0;
 
     public static void Init_Vars() {
         PACKAGE_NAME = "flamingo.onemovil";
@@ -807,5 +813,44 @@ public class Global {
         }
 
     }
+
+    // return password
+    public static String ShowPasswordBox(
+            Context context, String title, String message, String positiveMessage, String negativeMessage) {
+        Global.stringResult = null;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(title);
+        builder.setMessage(message);
+
+        // Set up the input
+        final EditText input = new EditText(context);
+
+        // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+        input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        builder.setView(input);
+
+        // Set up the buttons
+        builder.setPositiveButton(positiveMessage, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Global.stringResult = input.getText().toString();
+
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(negativeMessage, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+                dialog.dismiss();
+            }
+        });
+
+
+        builder.create().show();
+
+        return Global.stringResult;
+    }
+
 }
 

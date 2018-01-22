@@ -41,7 +41,9 @@
         <activity android:name=".select_maq" />
         <activity android:name=".sync_data" />
         <activity android:name=".take_photo" />
-        <activity android:name=".uploadfiletoserver"></activity>
+        <activity android:name=".uploadfiletoserver" />
+        <activity android:name=".calculadora" />
+        <activity android:name=".get_password"></activity>
     </application>
 
 </manifest>

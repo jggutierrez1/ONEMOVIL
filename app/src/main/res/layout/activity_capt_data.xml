@@ -153,6 +153,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/olea_ant"
                 style="@style/Widget.AppCompat.TextView.SpinnerItem"
                 android:layout_width="133dp"
                 android:layout_height="wrap_content"
@@ -366,6 +367,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/olsa_ant"
                 style="@style/Widget.AppCompat.TextView.SpinnerItem"
                 android:layout_width="133dp"
                 android:layout_height="wrap_content"
@@ -561,7 +563,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:enabled="false"
-                android:inputType="number|numberDecimal"
+                android:inputType="numberDecimal"
                 android:text="0.00"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -593,7 +595,7 @@
                 android:layout_weight="1"
                 android:ems="10"
                 android:enabled="false"
-                android:inputType="number|numberDecimal"
+                android:inputType="numberDecimal"
                 android:text="0.00"
                 android:textSize="18sp"
                 android:textStyle="bold"

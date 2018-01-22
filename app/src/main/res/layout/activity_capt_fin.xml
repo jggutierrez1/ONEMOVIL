@@ -5,105 +5,452 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="flamingo.onemovil.capt_fin">
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fillViewport="true"> <!--IMPORTANT otherwise backgrnd img. will not fill the whole screen -->
 
-         <LinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             tools:layout_editor_absoluteX="314dp"
             tools:layout_editor_absoluteY="26dp">
 
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_weight="0"
-                 android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:orientation="horizontal">
 
-                 <Button
-                     android:id="@+id/btn_totfin_hide"
-                     android:layout_width="wrap_content"
-                     android:layout_height="65dp"
-                     android:layout_weight="1"
-                     android:text="QUITAR TECLADO" />
+                <Button
+                    android:id="@+id/btn_totfin_hide"
+                    android:layout_width="wrap_content"
+                    android:layout_height="65dp"
+                    android:layout_weight="1"
+                    android:text="QUITAR TECLADO" />
 
-                 <Button
-                     android:id="@+id/btn_print_maq"
-                     android:layout_width="wrap_content"
-                     android:layout_height="65dp"
-                     android:layout_weight="1"
-                     android:text="Imprimir" />
+                <Button
+                    android:id="@+id/btn_print_maq"
+                    android:layout_width="wrap_content"
+                    android:layout_height="65dp"
+                    android:layout_weight="1"
+                    android:text="Imprimir" />
 
-                 <Button
-                     android:id="@+id/btn_totfin_save"
-                     android:layout_width="wrap_content"
-                     android:layout_height="65dp"
-                     android:layout_weight="1"
-                     android:text="PROCESAR" />
+                <Button
+                    android:id="@+id/btn_totfin_save"
+                    android:layout_width="wrap_content"
+                    android:layout_height="65dp"
+                    android:layout_weight="1"
+                    android:text="PROCESAR" />
 
-                 <Button
-                     android:id="@+id/btn_totfin_canc"
-                     android:layout_width="wrap_content"
-                     android:layout_height="65dp"
-                     android:layout_weight="1"
-                     android:text="CANCELAR" />
-             </LinearLayout>
+                <Button
+                    android:id="@+id/btn_totfin_canc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="65dp"
+                    android:layout_weight="1"
+                    android:text="CANCELAR" />
+            </LinearLayout>
+
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="15dp" />
 
-             <TextView
-                 android:id="@+id/lab_cte"
-                 style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:text="CLIENTE:"
-                 android:textSize="14sp"
-                 android:textStyle="bold" />
+            <TextView
+                android:id="@+id/lab_cte"
+                style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="CLIENTE:"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-             <Space
+            <Space
                 android:layout_width="match_parent"
                 android:layout_height="15dp" />
 
-             <TextView
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:autoText="false"
-                 android:background="@color/colorPrimaryDark"
-                 android:text="----------------------------"
-                 android:textAlignment="center"
-                 android:textSize="14sp"
-                 android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoText="false"
+                android:background="@color/colorPrimaryDark"
+                android:text="----------------------------"
+                android:textAlignment="center"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-             <LinearLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_weight="0"
                 android:orientation="horizontal">
 
-                 <TextView
-                     style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                     android:layout_width="133dp"
-                     android:layout_height="wrap_content"
-                     android:layout_weight="1"
-                     android:text="+BRUTO FACTURADO:"
-                     android:textSize="18sp" />
+                <TextView
+                    android:id="@+id/lop_tot_cole"
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="COLECTADO:"
+                    android:textSize="18sp" />
 
-                 <EditText
-                     android:id="@+id/totfin_bruto"
-                     android:layout_width="105dp"
-                     android:layout_height="wrap_content"
-                     android:layout_weight="1"
-                     android:ems="10"
-                     android:enabled="false"
-                     android:inputType="number|numberDecimal"
-                     android:text="0.00"
-                     android:textSize="18sp"
-                     tools:layout_editor_absoluteX="182dp"
-                     tools:layout_editor_absoluteY="147dp" />
+                <EditText
+                    android:id="@+id/op_tot_cole"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="false"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:text="0.00"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/olayout_timb"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TIMBRES:"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/op_tot_timb"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:text="0.00"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/olayout_impm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="IMPUESTO MUNICIPAL:"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/op_tot_impm"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:text="0.00"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/olayout_jcj"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/lop_tot_jcj"
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="IMP. J.C.J.:"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/op_tot_jcj"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="false"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:text="0.00"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/olayout_serv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="SERVICIO TECNICO:"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/op_tot_tecn"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:text="0.00"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/olayout_tot_cred"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/lop_tot_cred"
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="PREMIOS:"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/op_tot_cred"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="false"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:text="0.00"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/olayou_tot_dev"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="DEVOLUCIONES/FACTURAS:"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/op_tot_devo"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:text="0.00"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/olayout_tot_otro"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="OTROS/DEPOSITOS:"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/op_tot_otro"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:text="0.00"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/olayout_subt"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="SUB-TOTAL:"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/op_tot_subt"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="false"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="false"
+                    android:text="0.00"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/olayout_tota"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TOTAL:"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/op_tot_tota"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="false"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="false"
+                    android:text="0.00"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/olayout_imp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="IMPUESTOS:"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/op_tot_impu"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="false"
+                    android:inputType="numberDecimal"
+                    android:selectAllOnFocus="false"
+                    android:text="0.00"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:autoText="false"
+                android:background="@color/colorPrimaryDark"
+                android:text="----------------------------"
+                android:textAlignment="center"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="BRUTO CLIENTE:"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/op_tot_bloc"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="false"
+                    android:inputType="numberDecimal"
+                    android:text="0.00"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+
             </LinearLayout>
 
             <LinearLayout
@@ -117,17 +464,17 @@
                     android:layout_width="133dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="-PAGOS DE PREMIOS:"
+                    android:text="BRUTO EMP:"
                     android:textSize="18sp" />
 
                 <EditText
-                    android:id="@+id/totfin_prem"
+                    android:id="@+id/op_tot_bemp"
                     android:layout_width="105dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
                     android:enabled="false"
-                    android:inputType="number|numberDecimal"
+                    android:inputType="numberDecimal"
                     android:text="0.00"
                     android:textSize="18sp"
                     tools:layout_editor_absoluteX="182dp"
@@ -135,145 +482,18 @@
 
             </LinearLayout>
 
-              <Space
+            <TextView
                 android:layout_width="match_parent"
-                android:layout_height="15dp" />
+                android:layout_height="wrap_content"
+                android:autoText="false"
+                android:background="@color/colorPrimaryDark"
+                android:text="----------------------------"
+                android:textAlignment="center"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
-             <LinearLayout
-                 android:id="@+id/olayoutb_eact"
-                 android:layout_width="match_parent"
-                 android:layout_height="40dp"
-                 android:layout_weight="0"
-                 android:orientation="horizontal">
 
-                 <TextView
-                     style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                     android:layout_width="133dp"
-                     android:layout_height="wrap_content"
-                     android:layout_weight="1"
-                     android:text="+DEVOLUCIONES"
-                     android:textSize="18sp" />
-
-                 <EditText
-                     android:id="@+id/totfin_devo"
-                     android:layout_width="105dp"
-                     android:layout_height="wrap_content"
-                     android:layout_weight="1"
-                     android:ems="10"
-                     android:enabled="true"
-                     android:inputType="number|numberDecimal"
-                     android:selectAllOnFocus="true"
-                     android:text="0.00"
-                     android:textSize="18sp"
-                     tools:layout_editor_absoluteX="182dp"
-                     tools:layout_editor_absoluteY="147dp" />
-             </LinearLayout>
-
-             <LinearLayout
-                 android:id="@+id/olayoutb_edif"
-                 android:layout_width="match_parent"
-                 android:layout_height="40dp"
-                 android:layout_weight="0"
-                 android:orientation="horizontal">
-
-                 <TextView
-                     style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                     android:layout_width="133dp"
-                     android:layout_height="wrap_content"
-                     android:layout_weight="1"
-                     android:text="-OTROS:"
-                     android:textSize="18sp" />
-
-                 <EditText
-                     android:id="@+id/totfin_otros"
-                     android:layout_width="105dp"
-                     android:layout_height="wrap_content"
-                     android:layout_weight="1"
-                     android:ems="10"
-                     android:inputType="number|numberDecimal"
-                     android:selectAllOnFocus="true"
-                     android:text="0.00"
-                     android:textSize="18sp"
-                     tools:layout_editor_absoluteX="182dp"
-                     tools:layout_editor_absoluteY="147dp" />
-             </LinearLayout>
-
-              <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="40dp"
-                 android:layout_weight="0"
-                 android:orientation="horizontal">
-
-                 <TextView
-                     style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                     android:layout_width="133dp"
-                     android:layout_height="wrap_content"
-                     android:layout_weight="1"
-                     android:text="TOTAL:"
-                     android:textSize="18sp"
-                     android:textStyle="bold" />
-
-                  <EditText
-                      android:id="@+id/totfin_total"
-                      android:layout_width="105dp"
-                      android:layout_height="wrap_content"
-                      android:layout_weight="1"
-                      android:ems="10"
-                      android:enabled="false"
-                      android:inputType="number|numberDecimal"
-                      android:text="0.00"
-                      android:textSize="18sp"
-                      android:textStyle="bold"
-                      tools:layout_editor_absoluteX="182dp"
-                      tools:layout_editor_absoluteY="147dp" />
-
-             </LinearLayout>
-
-             <Space
-                 android:layout_width="match_parent"
-                 android:layout_height="15dp"
-                 android:layout_weight="0" />
-
-             <TextView
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:autoText="false"
-                 android:background="@color/colorPrimaryDark"
-                 android:text="----------------------------"
-                 android:textAlignment="center"
-                 android:textSize="14sp"
-                 android:textStyle="bold" />
-
-             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_weight="0"
-                android:orientation="horizontal">
-
-                 <TextView
-                     style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                     android:layout_width="133dp"
-                     android:layout_height="wrap_content"
-                     android:layout_weight="1"
-                     android:text="-FACTURA DE GASTOS"
-                     android:textSize="18sp" />
-
-                 <EditText
-                     android:id="@+id/totfin_gast"
-                     android:layout_width="105dp"
-                     android:layout_height="wrap_content"
-                     android:layout_weight="1"
-                     android:ems="10"
-                     android:inputType="number|numberDecimal"
-                     android:selectAllOnFocus="true"
-                     android:text="0.00"
-                     android:textSize="18sp"
-                     tools:layout_editor_absoluteX="182dp"
-                     tools:layout_editor_absoluteY="147dp" />
-
-            </LinearLayout>
-
-             <LinearLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_weight="0"
@@ -284,59 +504,88 @@
                     android:layout_width="133dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="TOTAL NETO RECIBIDO:"
+                    android:text="NETO CLIENTE:"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/op_tot_nloc"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="false"
+                    android:inputType="numberDecimal"
+                    android:text="0.00"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TOTAL A DEPOSITORA"
+                    android:textSize="18sp" />
+
+                <EditText
+                    android:id="@+id/op_tot_nemp"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="false"
+                    android:inputType="numberDecimal"
+                    android:text="0.00"
+                    android:textSize="18sp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:layout_weight="0" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="11dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="OBSERVACIONES:"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
-                 <EditText
-                     android:id="@+id/totfin_neto"
-                     android:layout_width="105dp"
-                     android:layout_height="wrap_content"
-                     android:layout_weight="1"
-                     android:ems="10"
-                     android:enabled="false"
-                     android:inputType="number|numberDecimal"
-                     android:text="0.00"
-                     android:textSize="18sp"
-                     android:textStyle="bold"
-                     tools:layout_editor_absoluteX="182dp"
-                     tools:layout_editor_absoluteY="147dp" />
+                <EditText
+                    android:id="@+id/totfin_notas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="textMultiLine"
+                    android:selectAllOnFocus="true"
+                    android:tooltipText="ESCRIBA EL DETALLE AQUI" />
+
             </LinearLayout>
-
-              <Space
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
-
-             <LinearLayout
-                 android:layout_width="match_parent"
-                 android:layout_height="match_parent"
-                 android:layout_weight="0"
-                 android:orientation="horizontal">
-
-                 <TextView
-                     style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                     android:layout_width="11dp"
-                     android:layout_height="wrap_content"
-                     android:layout_weight="1"
-                     android:text="OBSERVACIONES:"
-                     android:textSize="18sp"
-                     android:textStyle="bold" />
-
-                 <EditText
-                     android:id="@+id/totfin_notas"
-                     android:layout_width="wrap_content"
-                     android:layout_height="246dp"
-                     android:layout_weight="1"
-                     android:ems="10"
-                     android:enabled="true"
-                     android:inputType="textMultiLine"
-                     android:selectAllOnFocus="true"
-                     android:tooltipText="ESCRIBA EL DETALLE AQUI" />
-
-             </LinearLayout>
 
 
         </LinearLayout>
     </ScrollView>
-    </android.support.constraint.ConstraintLayout>
+</android.support.constraint.ConstraintLayout>
 

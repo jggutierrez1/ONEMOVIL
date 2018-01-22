@@ -171,6 +171,7 @@ public class menu extends AppCompatActivity {
         btn_capt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Global.iObj_Select=0;
                 Intent Int_CapScreen = new Intent(getApplicationContext(), capt_data.class);
                 startActivityForResult(Int_CapScreen, REQUEST_INI_CAP);
             }
@@ -178,6 +179,7 @@ public class menu extends AppCompatActivity {
         btn_fin_colec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Global.iObj_Select=0;
                 Intent Capf_MaqScreen = new Intent(getApplicationContext(), capt_fin.class);
                 startActivityForResult(Capf_MaqScreen, REQUEST_END_CAP);
 

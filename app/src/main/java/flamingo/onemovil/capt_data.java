@@ -33,6 +33,7 @@ import android.text.TextWatcher;
 
 import android.util.Log;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -69,8 +70,8 @@ public class capt_data extends AppCompatActivity {
     private EditText oSemanas;
     private TextView ltot_cole, ltot_cred;
     private TextView lab_cte, lab_cha;
-    private TextView leb_act, leb_ant, leb_dif;
-    private TextView lsb_act, lsb_ant, lsb_dif;
+    private TextView lea_act, lea_ant, leb_act, leb_ant, lsa_act, lsa_ant, lsb_act, lsb_ant, leb_dif;
+    private TextView lsb_dif;
     private LinearLayout layoutb_eact, layoutb_eant, layoutb_edif, layoutb_sact, layoutb_sant, layoutb_sdif;
     private Space Spaceb_esep, Spaceb_ssep;
     private SQLiteDatabase db4;
@@ -85,6 +86,7 @@ public class capt_data extends AppCompatActivity {
     private double fDenom_Ent_Val, fDenom_Sal_Val, Porc_Loc;
     //private double ftot_cole, ftot_prem;
     private int iMetroA_EntDif, iMetroB_EntDif, iMetroA_SalDif, iMetroB_SalDif;
+    private final static int REQUEST_GET_PASS = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,12 +102,15 @@ public class capt_data extends AppCompatActivity {
         this.btn_cancel_capt = (Button) findViewById(R.id.obtn_cancel_capt);
 
         /*-------------------ETIQUETAS------------------------*/
-        this.leb_act = (TextView) findViewById(R.id.oleb_act);
+        this.lea_ant = (TextView) findViewById(R.id.olea_ant);
+        this.lsa_ant = (TextView) findViewById(R.id.olsa_ant);
         this.leb_ant = (TextView) findViewById(R.id.oleb_ant);
+        this.lsb_ant = (TextView) findViewById(R.id.olsb_ant);
+
+        this.leb_act = (TextView) findViewById(R.id.oleb_act);
         this.leb_dif = (TextView) findViewById(R.id.oleb_dif);
 
         this.lsb_act = (TextView) findViewById(R.id.olsb_act);
-        this.lsb_ant = (TextView) findViewById(R.id.olsb_ant);
         this.lsb_dif = (TextView) findViewById(R.id.olsb_dif);
         /*-------------------------------------------------------*/
 
@@ -175,6 +180,44 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
+
+        this.lea_ant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Global.iObj_Select = 1;
+                Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
+                startActivityForResult(Int_GetPass, REQUEST_GET_PASS);
+            }
+        });
+
+        this.lsa_ant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Global.iObj_Select = 2;
+                Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
+                startActivityForResult(Int_GetPass, REQUEST_GET_PASS);
+            }
+        });
+
+        this.leb_ant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Global.iObj_Select = 3;
+                Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
+                startActivityForResult(Int_GetPass, REQUEST_GET_PASS);
+            }
+        });
+
+
+        this.lsb_ant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Global.iObj_Select = 4;
+                Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
+                startActivityForResult(Int_GetPass, REQUEST_GET_PASS);
+            }
+        });
+
         this.ltot_cole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,6 +248,15 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
+        this.ea_ant.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    ea_ant.setEnabled(false);
+                }
+            }
+        });
+
         this.eb_act.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,6 +270,15 @@ public class capt_data extends AppCompatActivity {
             public void onClick(View v) {
                 if (eb_ant.getText().toString() == "")
                     eb_ant.setText("0");
+            }
+        });
+
+        this.eb_ant.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    eb_ant.setEnabled(false);
+                }
             }
         });
 
@@ -237,6 +298,15 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
+        this.sa_ant.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    sa_ant.setEnabled(false);
+                }
+            }
+        });
+
         this.sb_act.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -250,6 +320,15 @@ public class capt_data extends AppCompatActivity {
             public void onClick(View v) {
                 if (sb_ant.getText().toString() == "")
                     sb_ant.setText("0");
+            }
+        });
+
+        this.sb_ant.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    sb_ant.setEnabled(false);
+                }
             }
         });
 
@@ -270,7 +349,41 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
+        this.ea_ant.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Valid_Data();
+
+                Calc_Dif_Ent(true);
+                Calc_Tot(1);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
         this.eb_act.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Valid_Data();
+
+                Calc_Dif_Ent(true);
+                Calc_Tot(1);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        this.eb_ant.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
                 Valid_Data();
@@ -305,7 +418,43 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
+        this.sa_ant.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+
+                Valid_Data();
+
+                Calc_Dif_Sal(true);
+                Tot_Cred(1);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
         this.sb_act.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+
+                Valid_Data();
+
+                Calc_Dif_Sal(true);
+                Tot_Cred(1);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        this.sb_ant.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
 
@@ -488,6 +637,73 @@ public class capt_data extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         {
+            if (requestCode == REQUEST_GET_PASS) {
+                //Se procesa la devolución
+                switch (resultCode) {
+                    case RESULT_OK:
+                        int ipass = data.getIntExtra("PASSWORD", -1);
+                        Log.e("TAG", Integer.valueOf(ipass).toString());
+
+                        if (ipass == 1234) {
+                            switch (Global.iObj_Select) {
+                                case 0:
+                                    this.ea_ant.setEnabled(false);
+                                    this.sa_ant.setEnabled(false);
+                                    this.eb_ant.setEnabled(false);
+                                    this.sb_ant.setEnabled(false);
+                                    break;
+                                case 1:
+                                    this.ea_ant.setEnabled(true);
+                                    this.ea_ant.selectAll();
+                                    this.ea_ant.requestFocus();
+                                    break;
+                                case 2:
+                                    this.sa_ant.setEnabled(true);
+                                    this.sa_ant.selectAll();
+                                    this.sa_ant.requestFocus();
+                                    break;
+                                case 3:
+                                    this.eb_ant.setEnabled(true);
+                                    this.eb_ant.selectAll();
+                                    this.eb_ant.requestFocus();
+                                    break;
+                                case 4:
+                                    this.sb_ant.setEnabled(true);
+                                    this.sb_ant.selectAll();
+                                    this.sb_ant.requestFocus();
+                                    break;
+                            }
+                            //Toast.makeText(this, "CONTRASEÑA VALIDA", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(this, "CONTRASEÑA INCORRECTA", Toast.LENGTH_SHORT).show();
+                        }
+                        break;
+                    case RESULT_CANCELED:
+                        switch (Global.iObj_Select) {
+                            case 0:
+                                this.ea_ant.setEnabled(false);
+                                this.sa_ant.setEnabled(false);
+                                this.eb_ant.setEnabled(false);
+                                this.sb_ant.setEnabled(false);
+                                break;
+                            case 1:
+                                this.ea_ant.setEnabled(false);
+                                break;
+                            case 2:
+                                this.sa_ant.setEnabled(false);
+                                break;
+                            case 3:
+                                this.eb_ant.setEnabled(false);
+                                break;
+                            case 4:
+                                this.sb_ant.setEnabled(false);
+                                break;
+                        }
+                        Toast.makeText(this, "Canceló la operación.", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+            }
+
             if (requestCode == REQUEST_CAMERA) {
                 switch (resultCode) {
                     case RESULT_OK:
@@ -541,6 +757,7 @@ public class capt_data extends AppCompatActivity {
     }
 
     private void Calc_Tot(int iForce) {
+        String cTot = "";
         double fTot = 0.00;
         double fpFac_e = 0.00;
         double ftot_cole = 0.00;
@@ -549,8 +766,10 @@ public class capt_data extends AppCompatActivity {
 
         fTot = (this.iMetroA_EntDif + this.iMetroB_EntDif) / fpFac_e;
 
+        cTot=String.format("%.2f",fTot);
+
         if (iForce == 1) {
-            this.tot_cole.setText(Double.valueOf(fTot).toString());
+            this.tot_cole.setText(cTot);
             this.Calc_Sub_Tot();
         } else {
             ftot_cole = Double.valueOf(tot_cole.getText().toString()).doubleValue();
@@ -564,6 +783,7 @@ public class capt_data extends AppCompatActivity {
     }
 
     private void Tot_Cred(int iForce) {
+        String cTot = "";
         double fTot = 0.00;
         double fpFac_s = 0.00;
         double ftot_prem = 0.00;
@@ -571,15 +791,16 @@ public class capt_data extends AppCompatActivity {
         fpFac_s = (this.Denom_Sal_Fac == 0 ? 1 : this.Denom_Sal_Fac);
 
         fTot = ((this.iMetroA_SalDif + this.iMetroB_SalDif) / fpFac_s) * (this.fDenom_Sal_Val == 0 ? 1 : this.fDenom_Sal_Val);
+        cTot=String.format("%.2f",fTot);
 
         if (iForce == 1) {
-            this.tot_cred.setText(Double.valueOf(fTot).toString());
+            this.tot_cred.setText(cTot);
             this.Calc_Sub_Tot();
         } else {
             ftot_prem = Double.valueOf(tot_cred.getText().toString()).doubleValue();
             op_cred = ftot_prem;
             if (ftot_prem <= 0) {
-                this.tot_cred.setText(Double.valueOf(fTot).toString());
+                this.tot_cred.setText(cTot);
                 this.Calc_Sub_Tot();
             }
         }
