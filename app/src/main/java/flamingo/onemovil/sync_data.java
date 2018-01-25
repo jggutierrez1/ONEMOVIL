@@ -28,7 +28,7 @@ import java.util.Arrays;
 public class sync_data extends AppCompatActivity {
 
     private Button btn_proc, btn_regr, btn_json;
-    private CheckBox ock_rene;
+    private CheckBox ock_rene, ock_delc;
     private SQLiteDatabase db2;
     private EditText memo;
     private TextView lurl, InternetStatus;
@@ -43,6 +43,8 @@ public class sync_data extends AppCompatActivity {
         Global.oActual_Context = this.getApplicationContext();
 
         ock_rene = (CheckBox) findViewById(R.id.ock_renew);
+        ock_delc = (CheckBox) findViewById(R.id.ock_del_capt);
+
         btn_proc = (Button) findViewById(R.id.obtn_proc);
         btn_regr = (Button) findViewById(R.id.obtn_regr);
         btn_json = (Button) findViewById(R.id.obtn_json);
@@ -168,9 +170,9 @@ public class sync_data extends AppCompatActivity {
 
             @Override
             public void onClick(View arg0) {
-                String Sql="SELECT * FROM operacion limit 200";
+                String Sql = "SELECT * FROM operacion limit 200";
                 //String cValue=Global.Cursor_To_MySql_Sentense(Sql,"operacion",2);
-                String aValue=Global.getJsonResults2(Sql,"operacion");
+                String aValue = Global.getJsonResults2(Sql, "operacion");
                 memo.setText(aValue);
             }
         });
@@ -339,7 +341,9 @@ public class sync_data extends AppCompatActivity {
             // --------------------------------- RUTAS ---------------------------------------------------------//
             cSql_Ln = "DROP TABLE IF EXISTS rutas;";
             db2.execSQL(cSql_Ln);
+        }
 
+        if (ock_delc.isChecked() == true) {
             cSql_Ln = "DROP TABLE IF EXISTS operacion;";
             db2.execSQL(cSql_Ln);
         }
@@ -555,9 +559,6 @@ public class sync_data extends AppCompatActivity {
         db2.execSQL(cSql_Ln);
         // -------------------------------FIN RUTAS --------------------------------------------------------//
 
-        cSql_Ln = "DROP TABLE IF EXISTS operacion;";
-        //db2.execSQL(cSql_Ln);
-
         cSql_Ln = "";
         cSql_Ln += "CREATE TABLE IF NOT EXISTS operacion (";
         cSql_Ln += "id_op  INTEGER NOT NULL,";
@@ -633,7 +634,6 @@ public class sync_data extends AppCompatActivity {
 
         cSql_Ln = "CREATE INDEX IF NOT EXISTS MaqLnk_Id ON operacion ('MaqLnk_Id')";
         db2.execSQL(cSql_Ln);
-
     }
 
 }

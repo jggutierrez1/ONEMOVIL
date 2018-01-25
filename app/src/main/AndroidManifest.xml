@@ -43,7 +43,8 @@
         <activity android:name=".take_photo" />
         <activity android:name=".uploadfiletoserver" />
         <activity android:name=".calculadora" />
-        <activity android:name=".get_password"></activity>
+        <activity android:name=".get_password" />
+        <activity android:name=".install_check"></activity>
     </application>
 
 </manifest>

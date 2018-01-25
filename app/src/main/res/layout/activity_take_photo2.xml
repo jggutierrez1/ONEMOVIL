@@ -33,11 +33,14 @@
                 android:layout_height="wrap_content"
                 android:text="Start Preview" />
 
-            <Button
-                android:id="@+id/getpicture"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="getPicture" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/getpicture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentStart="true"
+            android:text="getPicture" />
     </RelativeLayout>
 </android.support.constraint.ConstraintLayout>

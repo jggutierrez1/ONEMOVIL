@@ -25,6 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:background="@color/Chartreuse"
                 android:text="TOMAR FOTO" />
 
             <!-- Record video button -->
@@ -45,6 +46,7 @@
                 android:id="@+id/btnSalir"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/Coral"
                 android:text="SALIR" />
         </LinearLayout>
 

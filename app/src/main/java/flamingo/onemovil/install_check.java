@@ -1,0 +1,131 @@
+package flamingo.onemovil;
+
+import android.content.Context;
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.Arrays;
+
+public class install_check extends AppCompatActivity {
+    private Button obtn_check_ok, obtn_check_exit;
+    private EditText ocheck_code;
+    private TextView InternetStatus;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_install_check);
+
+
+        Global.oActual_Context = null;
+        Global.oActual_Context = this.getApplicationContext();
+
+        obtn_check_ok = (Button) findViewById(R.id.btn_check_ok);
+        obtn_check_exit = (Button) findViewById(R.id.btn_check_exit);
+        ocheck_code = (EditText) findViewById(R.id.check_code);
+        InternetStatus = (TextView) findViewById(R.id.check_InternetStatus);
+        create_database();
+        Global.check_tables_device();
+
+        String cInternetAnswer = "";
+        Boolean bInternetConnected = false;
+        ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        if (null != activeNetwork) {
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                cInternetAnswer = "CONEXION INTERNET WIFI.";
+                bInternetConnected = true;
+            }
+
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                cInternetAnswer = "CONEXION INTERNET MOBIL DATA.";
+            }
+        } else {
+            cInternetAnswer = "SIN CONEXION A INTERNET.";
+        }
+        InternetStatus.setText(cInternetAnswer);
+        if (bInternetConnected == true) {
+            InternetStatus.setTextColor(Color.parseColor("#009900"));
+            getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffffff"));
+            obtn_check_ok.setEnabled(true);
+        } else {
+            getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffc2b3"));
+            InternetStatus.setTextColor(Color.parseColor("#ff0000"));
+            obtn_check_ok.setEnabled(false);
+        }
+
+        obtn_check_ok.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                String cClave = ocheck_code.getText().toString();
+                String cParsString = "";
+                String cResult = "";
+
+                if (cClave == "") {
+                    Toast.makeText(getApplicationContext(), "DEBE INGRESAR EL CODIGO DE ACTIVACION.", Toast.LENGTH_LONG).show();
+                    Global.ValidateOk = false;
+                    return;
+                } else {
+                    cParsString = "device=" + Global.cid_device + "&dbname=" + "" + "&clavee=" + cClave;
+                    cResult = Global.gen_execute_post(Global.SERVER_URL, "/flam/register_device.php", cParsString);
+                    int iResult = Integer.valueOf(cResult);
+                    if (iResult == 1) {
+                        Global.ValidateOk = true;
+
+                        Global.clear_tables_device();
+                        Global.active_device();
+
+                        finish();
+                        return;
+                    } else {
+                        Global.ValidateOk = false;
+                        Toast.makeText(getApplicationContext(), "CLAVE INVALIDA.", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+                }
+            }
+        });
+
+        obtn_check_exit.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Global.ValidateOk = false;
+                finish();
+                System.exit(0);
+            }
+        });
+
+    }
+
+    private void create_database() {
+        String myPath = Global.oActual_Context.getDatabasePath("one2009.db").getPath();
+        Global.oGen_Db = openOrCreateDatabase(myPath, Context.MODE_PRIVATE, null);
+    }
+}

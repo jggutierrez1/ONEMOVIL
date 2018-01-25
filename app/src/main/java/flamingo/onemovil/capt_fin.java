@@ -103,9 +103,6 @@ public class capt_fin extends AppCompatActivity {
         this.Valid_Data();
         this.Calc_Sub_Tot();
 
-        Calc_Tot1();
-        Calc_Tot2();
-
         this.olOp_tot_cole.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -231,8 +228,6 @@ public class capt_fin extends AppCompatActivity {
                 Valid_Data();
 
                 Calc_Sub_Tot();
-                Calc_Tot1();
-                Calc_Tot2();
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -249,8 +244,6 @@ public class capt_fin extends AppCompatActivity {
                 Valid_Data();
 
                 Calc_Sub_Tot();
-                Calc_Tot1();
-                Calc_Tot2();
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -267,9 +260,7 @@ public class capt_fin extends AppCompatActivity {
                 Valid_Data();
 
                 Calc_Sub_Tot();
-                Calc_Tot1();
-                Calc_Tot2();
-            }
+             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -285,9 +276,7 @@ public class capt_fin extends AppCompatActivity {
                 Valid_Data();
 
                 Calc_Sub_Tot();
-                Calc_Tot1();
-                Calc_Tot2();
-            }
+             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -303,8 +292,6 @@ public class capt_fin extends AppCompatActivity {
                 Valid_Data();
 
                 Calc_Sub_Tot();
-                Calc_Tot1();
-                Calc_Tot2();
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -321,8 +308,6 @@ public class capt_fin extends AppCompatActivity {
                 Valid_Data();
 
                 Calc_Sub_Tot();
-                Calc_Tot1();
-                Calc_Tot2();
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -339,9 +324,7 @@ public class capt_fin extends AppCompatActivity {
                 Valid_Data();
 
                 Calc_Sub_Tot();
-                Calc_Tot1();
-                Calc_Tot2();
-            }
+             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -357,8 +340,6 @@ public class capt_fin extends AppCompatActivity {
                 Valid_Data();
 
                 Calc_Sub_Tot();
-                Calc_Tot1();
-                Calc_Tot2();
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -389,8 +370,6 @@ public class capt_fin extends AppCompatActivity {
                 Valid_Data();
 
                 Calc_Sub_Tot();
-                Calc_Tot1();
-                Calc_Tot2();
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -914,37 +893,6 @@ public class capt_fin extends AppCompatActivity {
 
         this.oOp_tot_nloc.setText(ctot_nloc);
         this.oOp_tot_nemp.setText(ctot_nemp);
-    }
-
-    private void Calc_Tot1() {
- /*
-        Double dtotfin_bruto = 0.00;
-        Double dtotfin_prem = 0.00;
-        Double dtotfin_devo = 0.00;
-        Double dtotfin_otros = 0.00;
-        Double dtotfin_total = 0.00;
-
-        dtotfin_bruto = Double.parseDouble(this.oOp_tot_cole.getText().toString().replace(',', '.'));
-        dtotfin_prem = Double.parseDouble(this.oOp_tot_cred.getText().toString().replace(',', '.'));
-        dtotfin_devo = Double.parseDouble(this.oOp_tot_devo.getText().toString().replace(',', '.'));
-        dtotfin_otros = Double.parseDouble(this.oOp_tot_otro.getText().toString().replace(',', '.'));
-        dtotfin_total = (dtotfin_bruto - dtotfin_prem) + dtotfin_devo - dtotfin_otros;
-
-        this.ototfin_total.setText(Double.valueOf(dtotfin_total).toString());
-         */
-    }
-
-    private void Calc_Tot2() {
- /*
-        Double dtotfin_total = 0.00;
-        Double dtotfin_gast = 0.00;
-        Double dtotfin_neto = 0.00;
-
-        //dtotfin_total = Double.parseDouble(this.ototfin_total.getText().toString().replace(',', '.'));
-        dtotfin_neto = dtotfin_total - dtotfin_gast;
-
-        //this.ototfin_neto.setText(Double.valueOf(dtotfin_neto).toString());
-         */
     }
 
     @Override

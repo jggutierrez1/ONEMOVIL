@@ -208,7 +208,7 @@ public class uploadfiletoserver extends AppCompatActivity implements View.OnClic
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            tvFileName.setText("Archivo subido exitosamente.\n\n Puedes ver el archivo en:: \n\n" + Global.SERVER_URL_IMGS + fileName);
+                            tvFileName.setText("Archivo subido exitosamente.\n\n Puedes ver el archivo en:: \n\n" + Global.SERVER_DIR_IMGS + fileName);
                         }
                     });
                 }

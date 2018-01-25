@@ -43,6 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="65dp"
                     android:layout_weight="1"
+                    android:background="@color/Chartreuse"
                     android:text="PROCESAR" />
 
                 <Button
@@ -50,6 +51,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="65dp"
                     android:layout_weight="1"
+                    android:background="@color/Coral"
                     android:text="CANCELAR" />
             </LinearLayout>
 
@@ -63,7 +65,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="CLIENTE:"
-                android:textSize="14sp"
+                android:textSize="23sp"
                 android:textStyle="bold" />
 
             <Space
@@ -74,8 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autoText="false"
-                android:background="@color/colorPrimaryDark"
-                android:text="----------------------------"
+                android:background="?android:attr/colorEdgeEffect"
                 android:textAlignment="center"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -418,8 +419,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autoText="false"
-                android:background="@color/colorPrimaryDark"
-                android:text="----------------------------"
+                android:background="?android:attr/colorEdgeEffect"
                 android:textAlignment="center"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -486,8 +486,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autoText="false"
-                android:background="@color/colorPrimaryDark"
-                android:text="----------------------------"
+                android:background="?android:attr/colorEdgeEffect"
                 android:textAlignment="center"
                 android:textSize="14sp"
                 android:textStyle="bold" />

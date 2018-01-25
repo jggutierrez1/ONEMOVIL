@@ -41,6 +41,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="65dp"
                 android:layout_weight="1"
+                android:background="@color/Chartreuse"
                 android:text="GUARDAR" />
 
             <Button
@@ -48,6 +49,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="65dp"
                 android:layout_weight="1"
+                android:background="@color/Coral"
                 android:text="CANCELAR" />
 
         </LinearLayout>
@@ -58,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="CLIENTE:"
-            android:textSize="16sp"
+            android:textSize="23sp"
             android:textStyle="bold" />
 
         <TextView
@@ -67,13 +69,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="CHAPA:"
-            android:textSize="16sp"
+            android:textSize="23sp"
             android:textStyle="bold" />
 
         <!--                             ETIQUETA ENTRADA                                    -->
+
         <Space
             android:layout_width="match_parent"
-            android:layout_height="15dp" />
+            android:layout_height="10dp" />
+
+        <CheckBox
+            android:id="@+id/checkBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/Gold"
+            android:text="BAJA PRODUCCION"
+            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -85,7 +96,7 @@
                 android:layout_width="262dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="SEMANAS A REGISTRAR?:"
+                android:text="SEMANAS A COBRAR J.C.J.?:"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -97,7 +108,9 @@
                 android:ems="10"
                 android:inputType="textPersonName|number"
                 android:selectAllOnFocus="true"
-                android:text="1" />
+                android:text="1"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
 
@@ -105,9 +118,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoText="false"
-            android:background="@color/LimeGreen"
+            android:background="?android:attr/colorEdgeEffect"
             android:text="METROS DE ENTRADA"
             android:textAlignment="center"
+            android:textAllCaps="true"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -313,7 +327,7 @@
         <Space
             android:id="@+id/oSpaceb_esep"
             android:layout_width="match_parent"
-            android:layout_height="15dp" />
+            android:layout_height="10dp" />
 
         <!--                             ETIQUETA SALIDA                                    -->
 
@@ -321,9 +335,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoText="false"
-            android:background="@color/IndianRed"
+            android:background="?android:attr/colorEdgeEffect"
             android:text="METROS DE SALIDA"
             android:textAlignment="center"
+            android:textAllCaps="true"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -526,15 +541,16 @@
         <Space
             android:id="@+id/oSpaceb_ssep"
             android:layout_width="match_parent"
-            android:layout_height="15dp" />
+            android:layout_height="10dp" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoText="false"
-            android:background="@color/Green"
+            android:background="?android:attr/colorEdgeEffect"
             android:text="RESULTADOS"
             android:textAlignment="center"
+            android:textAllCaps="true"
             android:textSize="14sp"
             android:textStyle="bold" />
 

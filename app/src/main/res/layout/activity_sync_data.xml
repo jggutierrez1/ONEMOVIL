@@ -17,6 +17,21 @@
         tools:layout_editor_absoluteX="8dp"
         tools:layout_editor_absoluteY="8dp">
 
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="SINCRONIZADOR DE DATOS BASE."
+            android:textAlignment="center"
+            android:textAllCaps="true"
+            android:textSize="35sp"
+            android:textStyle="bold" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="25dp" />
+
         <TextView
             android:id="@+id/olurl"
             android:layout_width="match_parent"
@@ -37,15 +52,19 @@
             android:textSize="24sp"
             android:textStyle="bold" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="25dp" />
 
         <CheckBox
             android:id="@+id/ock_renew"
             android:layout_width="match_parent"
             android:layout_height="65dp"
             android:text="BORRAR Y CREAR TODO."
+            android:textSize="18sp" />
+
+        <CheckBox
+            android:id="@+id/ock_del_capt"
+            android:layout_width="match_parent"
+            android:layout_height="65dp"
+            android:text="BORRAR CAPTURAS REALIZADAS"
             android:textSize="18sp" />
 
         <Space
@@ -56,13 +75,15 @@
             android:id="@+id/obtn_proc"
             android:layout_width="match_parent"
             android:layout_height="65dp"
+            android:background="@color/Chartreuse"
             android:text="Procesar" />
 
         <Button
             android:id="@+id/obtn_json"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="VER JSON" />
+            android:text="VER JSON"
+            android:visibility="gone" />
 
         <EditText
             android:id="@+id/omemo"
@@ -75,6 +96,7 @@
             android:id="@+id/obtn_regr"
             android:layout_width="match_parent"
             android:layout_height="65dp"
+            android:background="@color/Coral"
             android:text="REGRESAR" />
     </LinearLayout>
     </ScrollView>

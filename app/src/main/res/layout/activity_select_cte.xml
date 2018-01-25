@@ -30,13 +30,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="65dp"
                 android:layout_weight="1"
-                android:text="REGRESAR" />
+                android:background="@color/Coral"
+                android:text="REGRESAR"
+                android:textColor="@color/Black" />
 
             <Button
                 android:id="@+id/obtn_sele_cte"
                 android:layout_width="wrap_content"
                 android:layout_height="65dp"
                 android:layout_weight="1"
+                android:background="@color/Chartreuse"
                 android:enabled="false"
                 android:text="SELECCIONAR" />
 

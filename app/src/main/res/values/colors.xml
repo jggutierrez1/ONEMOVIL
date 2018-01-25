@@ -21,13 +21,13 @@
     <color name="Moccasin">#FFE4B5</color>
     <color name="NavajoWhite">#FFDEAD</color>
     <color name="PeachPuff">#FFDAB9</color>
-    <color name="Gold">#FFD700</color>
+    <color name="Gold">#ffd700</color>
     <color name="Pink">#FFC0CB</color>
     <color name="LightPink">#FFB6C1</color>
     <color name="Orange">#FFA500</color>
     <color name="LightSalmon">#FFA07A</color>
     <color name="DarkOrange">#FF8C00</color>
-    <color name="Coral">#FF7F50</color>
+    <color name="Coral">#e7baaa</color>
     <color name="HotPink">#FF69B4</color>
     <color name="Tomato">#FF6347</color>
     <color name="OrangeRed">#FF4500</color>
@@ -82,7 +82,7 @@
     <color name="GreenYellow">#ADFF2F</color>
     <color name="LightBlue">#ADD8E6</color>
     <color name="DarkGray">#A9A9A9</color>
-    <color name="Brown">#A52A2A</color>
+    <color name="Brown">#a52a2a</color>
     <color name="Sienna">#A0522D</color>
     <color name="YellowGreen">#9ACD32</color>
     <color name="DarkOrchid">#9932CC</color>
@@ -102,7 +102,7 @@
     <color name="Purple">#800080</color>
     <color name="Maroon">#800000</color>
     <color name="Aquamarine">#7FFFD4</color>
-    <color name="Chartreuse">#7FFF00</color>
+    <color name="Chartreuse">#bded8d</color>
     <color name="LawnGreen">#7CFC00</color>
     <color name="MediumSlateBlue">#7B68EE</color>
     <color name="LightSlateGray">#778899</color>
@@ -111,7 +111,7 @@
     <color name="SlateBlue">#6A5ACD</color>
     <color name="DimGray">#696969</color>
     <color name="MediumAquamarine">#66CDAA</color>
-    <color name="CornflowerBlue">#6495ED</color>
+    <color name="CornflowerBlue">#6495ed</color>
     <color name="CadetBlue">#5F9EA0</color>
     <color name="DarkOliveGreen">#556B2F</color>
     <color name="Indigo">#4B0082</color>

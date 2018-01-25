@@ -1,5 +1,6 @@
 package flamingo.onemovil;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.provider.Settings;
@@ -18,6 +19,7 @@ public class login extends AppCompatActivity {
     TextView Intentos;
     int counter = 3;
     public final static int REQUEST_MEN = 1;
+    private final static int REQUEST_INSTALL_VALIED = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +44,19 @@ public class login extends AppCompatActivity {
 
         Intentos = (TextView) findViewById(R.id.ologin_intentos);
         Intentos.setVisibility(View.GONE);
+
+        if (Global.checkDataBase() == false) {
+            Intent Check_Install_Screen = new Intent(getApplicationContext(), install_check.class);
+            startActivityForResult(Check_Install_Screen, REQUEST_INSTALL_VALIED);
+        } else {
+            create_database();
+            //Global.clear_tables_device();
+            if (Global.check_device()<=0){
+                Intent Check_Install_Screen = new Intent(getApplicationContext(), install_check.class);
+                startActivityForResult(Check_Install_Screen, REQUEST_INSTALL_VALIED);
+            }
+        }
+
 
         btn_entar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,9 +103,25 @@ public class login extends AppCompatActivity {
                     break;
                 case RESULT_CANCELED:
                     finish();
+                    System.exit(0);
                     break;
             }
         }
+        if (requestCode == REQUEST_INSTALL_VALIED) {
+        }
+        switch (resultCode) {
+            case RESULT_OK:
+                Toast.makeText(this, "Se valido la clave", Toast.LENGTH_SHORT).show();
 
+                break;
+            case RESULT_CANCELED:
+                Toast.makeText(this, "CLAVE INVALIDA", Toast.LENGTH_SHORT).show();
+                break;
+        }
+    }
+
+    private void create_database() {
+        String myPath = Global.oActual_Context.getDatabasePath("one2009.db").getPath();
+        Global.oGen_Db = openOrCreateDatabase(myPath, Context.MODE_PRIVATE, null);
     }
 }

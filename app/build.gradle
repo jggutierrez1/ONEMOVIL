@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
+    //useLibrary 'org.apache.http.legacy'
     compileSdkVersion 26
     defaultConfig {
         applicationId "flamingo.onemovil"
@@ -26,5 +27,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.1'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
     compile files('libs/ini4j-0.5.4.jar')
-    apk files('libs/ini4j-0.5.4.jar')
+     apk files('libs/ini4j-0.5.4.jar')
 }

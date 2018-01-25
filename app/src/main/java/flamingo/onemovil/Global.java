@@ -7,12 +7,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
@@ -36,6 +38,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -50,6 +54,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+
+import javax.net.ssl.HttpsURLConnection;
 
 import static android.content.ContentValues.TAG;
 import static java.lang.System.exit;
@@ -90,10 +96,13 @@ public class Global {
     public static Intent oPictureActionIntent = null;
     public static SQLiteDatabase oGen_Db;
     public static Cursor oGen_Cursor;
-    public static String SERVER_URL = "http://190.140.40.242/flam/UploadToServer.php";
-    public static String SERVER_URL_IMGS = "http://190.140.40.242/flam/images/";
+    //public static String SERVER_URL = "http://190.140.40.242";
+    public static String SERVER_URL = "http://192.168.2.161";
+    public static String SERVER_URL_FLES = "http://192.168.2.161/flam/UploadToServer.php";
+    public static String SERVER_DIR_IMGS = "http://192.168.2.161/flam/images/";
     public static String stringResult = "";
     public static int iObj_Select = 0;
+    public static Boolean ValidateOk = false;
 
     public static void Init_Vars() {
         PACKAGE_NAME = "flamingo.onemovil";
@@ -105,10 +114,10 @@ public class Global {
 
         cStorageDirectoryPhoto = Environment.getExternalStorageDirectory() + cApp_Folder_Storage + "/IMG_METROS";
 
-        cApp_Data_Storage = "/data/" + PACKAGE_NAME + "/databases/";
+        cApp_Data_Storage = "/data/data/" + PACKAGE_NAME + "/databases/";
         cDataStorageDirectory = Environment.getDataDirectory() + cApp_Data_Storage;
 
-        cFileDbPathOrig = cApp_Data_Storage + "/one2009.db";
+        cFileDbPathOrig = cApp_Data_Storage + "one2009.db";
         cFileDbPathDest = cApp_Folder_Storage + "/one2009.db";
     }
 
@@ -707,7 +716,6 @@ public class Global {
         String twoHyphens = "--";
         String boundary = "*****";
 
-
         int bytesRead, bytesAvailable, bufferSize;
         byte[] buffer;
         int maxBufferSize = 1 * 1024 * 1024;
@@ -723,7 +731,7 @@ public class Global {
         } else {
             try {
                 FileInputStream fileInputStream = new FileInputStream(selectedFile);
-                URL url = new URL(Global.SERVER_URL);
+                URL url = new URL(SERVER_URL_FLES);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);//Allow Inputs
                 connection.setDoOutput(true);//Allow Outputs
@@ -776,7 +784,7 @@ public class Global {
 
                     Runnable runnable = new Runnable() {
                         public void run() {
-                            Toast.makeText(Global.oActual_Context, "File Upload completed.\n\n You can see the uploaded file here: \n\n" + Global.SERVER_URL + fileName, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(Global.oActual_Context, "File Upload completed.\n\n You can see the uploaded file here: \n\n" + SERVER_URL_FLES + fileName, Toast.LENGTH_SHORT).show();
                         }
                     };
 
@@ -852,5 +860,176 @@ public class Global {
         return Global.stringResult;
     }
 
+    public static String gen_execute_post(String cMyurl, String cWebServices, String parameters) {
+        HttpURLConnection connection;
+        OutputStreamWriter request = null;
+
+        URL url = null;
+        String response = null;
+        //String parameters = "table_no=0";
+        StrictMode.ThreadPolicy policy = new
+                StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        try {
+            //url = new URL("http://192.168.2.82/flam/get_all_data.php");
+            url = new URL(cMyurl + cWebServices);
+            Log.d(TAG, "CONECTADO A:[" + cMyurl + "]");
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setDoOutput(true);
+            connection.setDoInput(true);
+
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("Accept", "application/json;charset=UTF-8");
+
+            connection.setRequestMethod("POST");
+
+            request = new OutputStreamWriter(connection.getOutputStream());
+            request.write(parameters);
+            request.flush();
+            request.close();
+
+            int responseCode = connection.getResponseCode();
+            System.out.println("\nSending 'POST' request to URL : " + url);
+            System.out.println("Post parameters : " + parameters.toString());
+            System.out.println("Response Code : " + responseCode);
+
+
+            String line = "";
+            InputStreamReader isr = new InputStreamReader(connection.getInputStream(), "UTF-8");
+            BufferedReader reader = new BufferedReader(isr);
+            StringBuilder sb = new StringBuilder();
+            line = reader.readLine();
+            if (line != null) {
+                response = line;
+            }
+
+            //while ((line = reader.readLine()) != null) {
+            //sb.append(line + "\n");
+            //    sb.append(line);
+            //}
+            // Response from server after login process will be stored in response variable.
+            //response = sb.toString().trim();
+            System.out.println("Response String : " + response);
+
+            // You can perform UI operations here
+            //Toast.makeText(getApplicationContext(), "Message from Server: \n" + response, Toast.LENGTH_LONG).show();
+            isr.close();
+            reader.close();
+
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        return response;
+    }
+
+    public static String POST_Send_Register(String cClave) {
+        try {
+//            URL url = new URL("http://[ip]:[port]"); //in the real code, there is an ip and a port
+            String cFullUrlWebs = SERVER_URL + "/flam/register_device.php";
+            Log.i("MSG", SERVER_URL);
+            Log.i("MSG", cFullUrlWebs);
+
+            URL url = new URL(cFullUrlWebs); //in the real code, there is an ip and a port
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setDoOutput(true);
+            conn.setDoInput(true);
+            conn.connect();
+
+            JSONObject jsonParam = new JSONObject();
+            jsonParam.put("device", Global.cid_device);
+            jsonParam.put("dbname", "");
+            jsonParam.put("clavee", cClave);
+
+            DataOutputStream os = new DataOutputStream(conn.getOutputStream());
+            String encode = URLEncoder.encode(jsonParam.toString(), "UTF-8");
+            //os.writeBytes(encode);
+            os.writeBytes(jsonParam.toString());
+
+            os.flush();
+            os.close();
+
+            Log.i("STATUS", String.valueOf(conn.getResponseCode()));
+            Log.i("MSG", conn.getResponseMessage());
+            String Response = conn.getResponseMessage();
+
+            conn.disconnect();
+            return Response;
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            return "ERROR AL ENVIAR LA PETICION ";
+        }
+    }
+
+    public static boolean checkDataBase() {
+        SQLiteDatabase checkDB = null;
+        try {
+              checkDB = SQLiteDatabase.openDatabase(cFileDbPathOrig, null, SQLiteDatabase.OPEN_READONLY);
+            checkDB.close();
+            return true;
+        } catch (SQLiteException e) {
+            return false;
+            // database doesn't exist yet.
+        }
+    }
+
+    public static void check_tables_device() {
+        String cSql_Ln = "";
+        cSql_Ln += "CREATE TABLE IF NOT EXISTS dispositivos (";
+        cSql_Ln += "id INTEGER NOT NULL,";
+        cSql_Ln += "serial VARCHAR(50) NOT NULL DEFAULT '',";
+        cSql_Ln += "clave_install VARCHAR(30) NULL DEFAULT 'FLAM111118',";
+        cSql_Ln += "fecha_pacceso DATETIME NULL DEFAULT NULL,";
+        cSql_Ln += "fecha_uacces DATETIME NULL DEFAULT NULL,";
+        cSql_Ln += "dbname VARCHAR(30) NULL DEFAULT NULL,";
+        cSql_Ln += "corre_ant INT(10) NULL DEFAULT 0,";
+        cSql_Ln += "corre_ult INT(10) NULL DEFAULT 0,";
+        cSql_Ln += "corre_act INT(10) NULL DEFAULT 0,";
+        cSql_Ln += "clave_metros VARCHAR(30) NULL DEFAULT '6545465465465546',";
+        cSql_Ln += "clave_montos VARCHAR(30) NULL DEFAULT '6545465465465530',";
+        cSql_Ln += "CONSTRAINT dispositivos PRIMARY KEY (id))";
+        Global.oGen_Db.execSQL(cSql_Ln);
+    }
+
+    public static void active_device() {
+        String cSql_Ln = "";
+        android.text.format.DateFormat cNow = new android.text.format.DateFormat();
+        cNow.format("yyyy-MM-dd hh:mm:ss", new java.util.Date());
+
+        cSql_Ln += "INSERT INTO dispositivos(serial, fecha_pacceso,clave_install,corre_ant,corre_ult,corre_act) VALUES ";
+        cSql_Ln += "('" + Global.cid_device + "','" + cNow + "','FLAM111118',0,0,0)";
+        Global.oGen_Db.execSQL(cSql_Ln);
+    }
+
+    public static void clear_tables_device() {
+        String cSql_Ln = "DELETE FROM dispositivos";
+        Global.oGen_Db.execSQL(cSql_Ln);
+    }
+
+    public static int check_device() {
+        android.text.format.DateFormat cNow = new android.text.format.DateFormat();
+        cNow.format("yyyy-MM-dd hh:mm:ss", new java.util.Date());
+
+        String cSql_Ln = "SELECT serial, fecha_pacceso,clave_install FROM dispositivos WHERE serial='" + Global.cid_device + "'";
+        Global.oGen_Cursor = Global.oGen_Db.rawQuery(cSql_Ln, null);
+        Global.oGen_Cursor.moveToFirst();
+        int iRecords = Global.oGen_Cursor.getCount();
+        Global.oGen_Cursor.close();
+        return iRecords;
+    }
+
+    public static  boolean isFilePresent(String fileNamePath) {
+        //tring path = Global.oActual_Context.getFilesDir().getAbsolutePath() + "/" + fileName;
+        File file = new File(fileNamePath);
+        return file.exists();
+    }
 }
 
