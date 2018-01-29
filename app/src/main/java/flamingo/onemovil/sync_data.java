@@ -658,7 +658,7 @@ public class sync_data extends AppCompatActivity {
         cSql_Ln += "op_emp_id  INTEGER NULL DEFAULT 0,";
         cSql_Ln += "id_device VARCHAR(30) NOT NULL DEFAULT 'MANUAL',";
         cSql_Ln += "op_semanas INTEGER NULL DEFAULT 1,";
-        cSql_Ln += "op_image_name CHAR(50) NULL DEFAULT NULL,";
+        cSql_Ln += "op_image_name CHAR(80) NULL DEFAULT NULL,";
         cSql_Ln += "CONSTRAINT  operacion_PRIMARY PRIMARY KEY(id_op))";
         db2.execSQL(cSql_Ln);
 

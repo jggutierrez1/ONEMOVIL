@@ -118,7 +118,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoText="false"
-            android:background="?android:attr/colorEdgeEffect"
+            android:background="?attr/colorPrimaryDark"
             android:text="METROS DE ENTRADA"
             android:textAlignment="center"
             android:textAllCaps="true"
@@ -152,11 +152,7 @@
                 android:text="0"
                 android:textSize="18sp"
                 tools:layout_editor_absoluteX="182dp"
-                tools:layout_editor_absoluteY="147dp" /><![CDATA[
-
-            />
-
-        ]]>
+                tools:layout_editor_absoluteY="147dp" />
         </LinearLayout>
 
         <!--  ANTERIOR [A] -->
@@ -335,7 +331,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoText="false"
-            android:background="?android:attr/colorEdgeEffect"
+            android:background="?attr/colorPrimaryDark"
             android:text="METROS DE SALIDA"
             android:textAlignment="center"
             android:textAllCaps="true"
@@ -547,7 +543,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:autoText="false"
-            android:background="?android:attr/colorEdgeEffect"
+            android:background="?attr/colorPrimaryDark"
             android:text="RESULTADOS"
             android:textAlignment="center"
             android:textAllCaps="true"

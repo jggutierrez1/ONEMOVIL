@@ -59,7 +59,6 @@ import java.util.Locale;
 
 public class capt_data extends AppCompatActivity {
 
-    public final static int REQUEST_CAMERA = 1;
     private static final String TAG = capt_data.class.getSimpleName();
     private Button btn_hide_capt, btn_foto_capt, btn_save_capt, btn_cancel_capt;
     private EditText ea_act, ea_ant, ea_dif;
@@ -75,7 +74,7 @@ public class capt_data extends AppCompatActivity {
     private LinearLayout layoutb_eact, layoutb_eant, layoutb_edif, layoutb_sact, layoutb_sant, layoutb_sdif;
     private Space Spaceb_esep, Spaceb_ssep;
     private SQLiteDatabase db4;
-    private Cursor data;
+    private Cursor data4;
     private String cSqlLn = "";
     private String op_chapa, op_modelo, op_serie, maqlnk_id, cte_nombre_loc, cte_nombre_com,
             maqtc_denom_e, maqtc_denom_s;
@@ -87,6 +86,7 @@ public class capt_data extends AppCompatActivity {
     //private double ftot_cole, ftot_prem;
     private int iMetroA_EntDif, iMetroB_EntDif, iMetroA_SalDif, iMetroB_SalDif;
     private final static int REQUEST_GET_PASS = 5;
+    public final static int REQUEST_CAMERA = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -596,6 +596,12 @@ public class capt_data extends AppCompatActivity {
                 db4.execSQL(cSql_Ln);
                 db4.close();
 
+                cSql_Ln = "";
+                cSql_Ln += "UPDATE dispositivos SET ";
+                cSql_Ln += " corre_act ='" + String.valueOf(Global.Correl_Device) + "' ";
+                cSql_Ln += "WHERE serial ='" + Global.cid_device + "'";
+                Global.Query_Update(cSql_Ln);
+
                 Clear_Screen();
 
                 Intent i = getIntent();
@@ -905,9 +911,9 @@ public class capt_data extends AppCompatActivity {
         Log.d("SQL", cSqlLn);
         //System.out.print(cSqlLn);
 
-        data = db4.rawQuery(cSqlLn, null);
+        data4 = db4.rawQuery(cSqlLn, null);
 
-        if ((data == null) || (data.getCount() == 0)) {
+        if ((data4 == null) || (data4.getCount() == 0)) {
             Toast.makeText(getApplicationContext(), "El código de máquina no existe o no tiene un cliente asignado", Toast.LENGTH_LONG).show();
             return false;
         } else {
@@ -916,76 +922,76 @@ public class capt_data extends AppCompatActivity {
     }
 
     private void MaquinaValid(Boolean bIsNew) {
-        data.moveToFirst();
+        data4.moveToFirst();
         op_serie = "0";
 
-        //this.lab_cte.setText("CLIENTE: " + data.getString(data.getColumnIndex("cte_nombre_loc")));
-        //this.lab_cha.setText("CHAPA  : " + data.getString(data.getColumnIndex("maqtc_chapa")));
+        //this.lab_cte.setText("CLIENTE: " + data4.getString(data.getColumnIndex("cte_nombre_loc")));
+        //this.lab_cha.setText("CHAPA  : " + data4.getString(data.getColumnIndex("maqtc_chapa")));
 
         this.lab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
         this.lab_cha.setText("CHAPA  : [" + Global.cMaq_Id + "]/[" + Global.cMaq_De + "]");
 
-        op_chapa = data.getString(data.getColumnIndex("maqtc_chapa"));
+        op_chapa = data4.getString(data4.getColumnIndex("maqtc_chapa"));
 
-        op_emp_id = data.getInt(data.getColumnIndex("emp_id"));
-        maqlnk_id = data.getString(data.getColumnIndex("MaqLnk_Id"));
+        op_emp_id = data4.getInt(data4.getColumnIndex("emp_id"));
+        maqlnk_id = data4.getString(data4.getColumnIndex("MaqLnk_Id"));
 
-        Denom_Ent_Fac = data.getInt(data.getColumnIndex("den_fact_e"));
-        Denom_Sal_Fac = data.getInt(data.getColumnIndex("den_fact_s"));
+        Denom_Ent_Fac = data4.getInt(data4.getColumnIndex("den_fact_e"));
+        Denom_Sal_Fac = data4.getInt(data4.getColumnIndex("den_fact_s"));
 
-        fDenom_Ent_Val = data.getDouble(data.getColumnIndex("den_valore"));
-        fDenom_Sal_Val = data.getDouble(data.getColumnIndex("den_valors"));
+        fDenom_Ent_Val = data4.getDouble(data4.getColumnIndex("den_valore"));
+        fDenom_Sal_Val = data4.getDouble(data4.getColumnIndex("den_valors"));
 
-        if (data.getDouble(data.getColumnIndex("cte_poc_ret")) == 0)
+        if (data4.getDouble(data4.getColumnIndex("cte_poc_ret")) == 0)
             Porc_Loc = 1;
         else
-            Porc_Loc = data.getDouble(data.getColumnIndex("cte_poc_ret"));
+            Porc_Loc = data4.getDouble(data4.getColumnIndex("cte_poc_ret"));
 
-        op_modelo = data.getString(data.getColumnIndex("maqtc_modelo"));
-        cte_nombre_loc = data.getString(data.getColumnIndex("cte_nombre_loc"));
-        cte_nombre_com = data.getString(data.getColumnIndex("cte_nombre_com"));
-        cte_pag_jcj = data.getInt(data.getColumnIndex("cte_pag_jcj"));
-        cte_pag_spac = data.getInt(data.getColumnIndex("cte_pag_spac"));
+        op_modelo = data4.getString(data4.getColumnIndex("maqtc_modelo"));
+        cte_nombre_loc = data4.getString(data4.getColumnIndex("cte_nombre_loc"));
+        cte_nombre_com = data4.getString(data4.getColumnIndex("cte_nombre_com"));
+        cte_pag_jcj = data4.getInt(data4.getColumnIndex("cte_pag_jcj"));
+        cte_pag_spac = data4.getInt(data4.getColumnIndex("cte_pag_spac"));
 
-        cte_pag_impm = data.getInt(data.getColumnIndex("cte_pag_impm"));
-        op_cporc_Loc = data.getDouble(data.getColumnIndex("cte_poc_ret"));
+        cte_pag_impm = data4.getInt(data4.getColumnIndex("cte_pag_impm"));
+        op_cporc_Loc = data4.getDouble(data4.getColumnIndex("cte_poc_ret"));
 
-        maqtc_denom_e = data.getString(data.getColumnIndex("maqtc_denom_e"));
-        maqtc_denom_s = data.getString(data.getColumnIndex("maqtc_denom_s"));
-        maqtc_tipomaq = data.getInt(data.getColumnIndex("maqtc_tipomaq"));
-        den_fact_e = data.getInt(data.getColumnIndex("den_fact_e"));
-        den_fact_s = data.getInt(data.getColumnIndex("den_fact_s"));
-        den_valore = data.getDouble(data.getColumnIndex("den_valore"));
-        den_valors = data.getDouble(data.getColumnIndex("den_valors"));
+        maqtc_denom_e = data4.getString(data4.getColumnIndex("maqtc_denom_e"));
+        maqtc_denom_s = data4.getString(data4.getColumnIndex("maqtc_denom_s"));
+        maqtc_tipomaq = data4.getInt(data4.getColumnIndex("maqtc_tipomaq"));
+        den_fact_e = data4.getInt(data4.getColumnIndex("den_fact_e"));
+        den_fact_s = data4.getInt(data4.getColumnIndex("den_fact_s"));
+        den_valore = data4.getDouble(data4.getColumnIndex("den_valore"));
+        den_valors = data4.getDouble(data4.getColumnIndex("den_valors"));
 
         //if (self.otOperaciones.State = dsInsert) {
         if (bIsNew == true) {
 
             if (cte_pag_jcj == 0)
-                Op_tot_impjcj = (data.getDouble(data.getColumnIndex("emp_cargo_jcj")) / 4);
+                Op_tot_impjcj = (data4.getDouble(data4.getColumnIndex("emp_cargo_jcj")) / 4);
 
             if (cte_pag_impm == 0)
-                Op_tot_impmunic = data.getDouble(data.getColumnIndex("mun_impuesto"));
+                Op_tot_impmunic = data4.getDouble(data4.getColumnIndex("mun_impuesto"));
         }
 
-        switch (data.getInt(data.getColumnIndex("maqtc_metros"))) {
+        switch (data4.getInt(data4.getColumnIndex("maqtc_metros"))) {
             case 1:
                 if (bIsNew == true) {
                     // Entradas A
                     this.ea_act.setEnabled(true);
                     this.ea_act.setText("0");
-                    this.ea_ant.setText(data.getString(data.getColumnIndex("maqtc_m1e_act")));
+                    this.ea_ant.setText(data4.getString(data4.getColumnIndex("maqtc_m1e_act")));
                     // Salidas A
                     this.sa_act.setEnabled(true);
                     this.sa_act.setText("0");
-                    this.sa_ant.setText(data.getString(data.getColumnIndex("maqtc_m1s_act")));
+                    this.sa_ant.setText(data4.getString(data4.getColumnIndex("maqtc_m1s_act")));
 
-                    if (data.getInt(data.getColumnIndex("maqtc_m1e_ant")) == 0)
+                    if (data4.getInt(data4.getColumnIndex("maqtc_m1e_ant")) == 0)
                         ea_ant.setEnabled(true);
                     else
                         ea_ant.setEnabled(false);
 
-                    if (data.getInt(data.getColumnIndex("maqtc_m1s_ant")) == 0)
+                    if (data4.getInt(data4.getColumnIndex("maqtc_m1s_ant")) == 0)
                         sa_ant.setEnabled(true);
                     else
                         sa_ant.setEnabled(false);
@@ -995,14 +1001,14 @@ public class capt_data extends AppCompatActivity {
                     this.ea_act.setEnabled(true);
                     this.ea_ant.setEnabled(true);
 
-                    this.ea_act.setText(data.getString(data.getColumnIndex("maqtc_m1e_act")));
-                    this.ea_ant.setText(data.getString(data.getColumnIndex("maqtc_m1e_ant")));
+                    this.ea_act.setText(data4.getString(data4.getColumnIndex("maqtc_m1e_act")));
+                    this.ea_ant.setText(data4.getString(data4.getColumnIndex("maqtc_m1e_ant")));
                     // Salidas A
                     this.sa_act.setEnabled(true);
                     this.sa_ant.setEnabled(true);
 
-                    this.sa_act.setText(data.getString(data.getColumnIndex("maqtc_m1s_act")));
-                    this.sa_ant.setText(data.getString(data.getColumnIndex("maqtc_m1s_ant")));
+                    this.sa_act.setText(data4.getString(data4.getColumnIndex("maqtc_m1s_act")));
+                    this.sa_ant.setText(data4.getString(data4.getColumnIndex("maqtc_m1s_ant")));
                 }
 
                 // Entradas B
@@ -1056,18 +1062,18 @@ public class capt_data extends AppCompatActivity {
                     // Entradas A
                     this.ea_act.setEnabled(true);
                     this.ea_act.setText("0");
-                    this.ea_ant.setText(data.getString(data.getColumnIndex("maqtc_m1e_act")));
+                    this.ea_ant.setText(data4.getString(data4.getColumnIndex("maqtc_m1e_act")));
                     // Salidas A
                     this.sa_act.setEnabled(true);
                     this.sa_act.setText("0");
-                    this.sa_ant.setText(data.getString(data.getColumnIndex("maqtc_m1s_act")));
+                    this.sa_ant.setText(data4.getString(data4.getColumnIndex("maqtc_m1s_act")));
 
-                    if (data.getInt(data.getColumnIndex("maqtc_m1e_ant")) == 0)
+                    if (data4.getInt(data4.getColumnIndex("maqtc_m1e_ant")) == 0)
                         this.ea_ant.setEnabled(true);
                     else
                         this.ea_ant.setEnabled(false);
 
-                    if (data.getInt(data.getColumnIndex("maqtc_m1s_ant")) == 0)
+                    if (data4.getInt(data4.getColumnIndex("maqtc_m1s_ant")) == 0)
                         this.sa_ant.setEnabled(true);
                     else
                         this.sa_ant.setEnabled(false);
@@ -1075,19 +1081,19 @@ public class capt_data extends AppCompatActivity {
                     // Entradas B
                     this.eb_act.setEnabled(true);
                     this.eb_act.setText("0");
-                    this.eb_ant.setText(data.getString(data.getColumnIndex("maqtc_m2e_act")));
+                    this.eb_ant.setText(data4.getString(data4.getColumnIndex("maqtc_m2e_act")));
                     // Salidas B
 
                     this.sb_act.setEnabled(true);
                     this.sb_act.setText("0");
-                    this.sb_ant.setText(data.getString(data.getColumnIndex("maqtc_m2s_act")));
+                    this.sb_ant.setText(data4.getString(data4.getColumnIndex("maqtc_m2s_act")));
 
-                    if (data.getInt(data.getColumnIndex("maqtc_m2e_ant")) == 0)
+                    if (data4.getInt(data4.getColumnIndex("maqtc_m2e_ant")) == 0)
                         this.eb_ant.setEnabled(true);
                     else
                         this.eb_ant.setEnabled(false);
 
-                    if (data.getInt(data.getColumnIndex("maqtc_m2s_ant")) == 0)
+                    if (data4.getInt(data4.getColumnIndex("maqtc_m2s_ant")) == 0)
                         this.sb_ant.setEnabled(true);
                     else
                         this.sb_ant.setEnabled(false);
@@ -1148,7 +1154,6 @@ public class capt_data extends AppCompatActivity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-
 
     private String getDateTime() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(
