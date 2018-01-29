@@ -17,6 +17,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -86,9 +90,8 @@ public class sync_data extends AppCompatActivity {
             btn_proc.setEnabled(false);
         }
 
-        //myurl = "http://192.168.2.82";
-        myurl = "http://190.140.40.242";
-        lurl.setText("CONECTADO A:[" + myurl + "]");
+        myurl = Global.SERVER_URL;
+        lurl.setText("CONECTADO A:[" + Global.SERVER_URL + "]");
 
         String databasePath = getDatabasePath("one2009.db").getPath();
         db2 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
@@ -97,6 +100,9 @@ public class sync_data extends AppCompatActivity {
 
             @Override
             public void onClick(View arg0) {
+                String cParsString = "";
+                String cSql_Ln = "";
+
                 memo.setText("");
                 btn_proc.setEnabled(false);
                 btn_regr.setEnabled(false);
@@ -120,10 +126,20 @@ public class sync_data extends AppCompatActivity {
                 //    7:'rutas'
                 String cCmd = "";
 
+                cSql_Ln = "SELECT emp_id FROM device_db.dispositivos WHERE serial='" + Global.cid_device + "'";
+                String myEmp = Global.Rem_Query_Result("device_db", cSql_Ln, 0, "emp_id");
+
+                cParsString = "";
+                cParsString += "table_no=0";
+                cParsString += "&emp_id=" + myEmp;
+                String script = Global.gen_execute_post(Global.SERVER_URL, "/flam/get_all_data.php", cParsString);
+
+                /*
                 execute_post();
 
                 String script = memo.getText().toString();
                 memo.setText("");
+                */
 
                 String[] queries = script.split(";");
                 for (String query : queries) {
@@ -137,11 +153,14 @@ public class sync_data extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), "Error al ejecutar el comando:" + cCmd, Toast.LENGTH_LONG).show();
                     }
                 }
+                script = null;
+                queries = null;
+
                 Toast.makeText(getApplicationContext(), "PROCESO FINALIZADO.", Toast.LENGTH_LONG).show();
                 memo.setText("");
-                memo.append(repeat('-', 30));
-                memo.append(CenterString("RESUMEN DE SINCRONIZACION", 30));
-                memo.append(repChar('-', 30));
+                memo.append(Global.repeat('-', 30));
+                memo.append(Global.CenterString("RESUMEN DE SINCRONIZACION", 30));
+                memo.append(Global.repChar('-', 30));
                 memo.append("REGISTROS EN EMPRESA       :" + Lite_Query_Result("SELECT COUNT(*) AS CNT FROM empresas") + "\n");
                 memo.append("REGISTROS EN CLIENTES      :" + Lite_Query_Result("SELECT COUNT(*) AS CNT FROM clientes") + "\n");
                 memo.append("REGISTROS EN DENOMINACIONES:" + Lite_Query_Result("SELECT COUNT(*) AS CNT FROM denominaciones") + "\n");
@@ -149,7 +168,61 @@ public class sync_data extends AppCompatActivity {
                 memo.append("REGISTROS EN MAQUINAS LNK  :" + Lite_Query_Result("SELECT COUNT(*) AS CNT FROM maquinas_lnk") + "\n");
                 memo.append("REGISTROS EN MINUCIPIOS    :" + Lite_Query_Result("SELECT COUNT(*) AS CNT FROM municipios") + "\n");
                 memo.append("REGISTROS EN RUTAS         :" + Lite_Query_Result("SELECT COUNT(*) AS CNT FROM rutas") + "\n");
-                memo.append(repeat('-', 30));
+                memo.append(Global.repeat('-', 30));
+
+                cSql_Ln = "SELECT * FROM device_db.dispositivos WHERE serial='" + Global.cid_device + "'";
+                String cJsonResult = Global.Rem_Query_Result("device_db", cSql_Ln, 1, "");
+
+                JSONArray mainObject = null;
+                try {
+                    mainObject = new JSONArray(cJsonResult);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                cJsonResult = null;
+
+                try {
+                    JSONObject c = mainObject.getJSONObject(0);
+
+                    String cRem_Emp_id = c.getString("emp_id");
+                    String cRem_Db_Name = c.getString("dbname");
+                    String cRem_Corre_Act = c.getString("corre_act");
+                    String cRem_Clave_Metros = c.getString("clave_metros");
+                    String cRem_Clave_Montos = c.getString("clave_montos");
+
+                    cSql_Ln = "";
+                    cSql_Ln += "UPDATE dispositivos SET ";
+                    cSql_Ln += " emp_id      ='" + cRem_Emp_id + "',";
+                    cSql_Ln += " clave_metros='" + cRem_Clave_Metros + "',";
+                    cSql_Ln += " clave_montos='" + cRem_Clave_Montos + "',";
+                    cSql_Ln += " dbname      ='" + cRem_Db_Name + "' ";
+                    cSql_Ln += "WHERE serial ='" + Global.cid_device + "'";
+                    Global.Query_Update(cSql_Ln);
+
+                    String cActual_Corre = Global.Query_Result("SELECT IFNULL(corre_act,0) AS corre_act FROM dispositivos WHERE serial ='" + Global.cid_device + "'", "corre_act");
+                    if (cActual_Corre == "") {
+                        cActual_Corre = "0";
+                    }
+                    int iRem_Corre_Act = Integer.parseInt(cRem_Corre_Act);
+                    int iActual_Corre = Integer.parseInt(cActual_Corre);
+
+                    if (iActual_Corre < iRem_Corre_Act) {
+                        cSql_Ln = "";
+                        cSql_Ln += "UPDATE dispositivos SET ";
+                        cSql_Ln += " corre_act ='" + cRem_Corre_Act + "' ";
+                        cSql_Ln += "WHERE serial ='" + Global.cid_device + "'";
+                        Global.Query_Update(cSql_Ln);
+                    }
+                    cParsString = "device=" + Global.cid_device;
+                    cJsonResult = Global.gen_execute_post(Global.SERVER_URL, "/flam/update_last_access.php", cParsString);
+                    Global.logLargeString(cJsonResult);
+
+                    Global.Get_Config();
+
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
 
                 btn_regr.setEnabled(true);
 
@@ -233,44 +306,6 @@ public class sync_data extends AppCompatActivity {
             // Error
         }
 
-    }
-
-    public String repChar(char c, int reps) {
-        String adder = Character.toString(c);
-        String result = "";
-        while (reps > 0) {
-            if (reps % 2 == 1) {
-                result += adder;
-            }
-            adder += adder;
-            reps /= 2;
-        }
-        return result;
-    }
-
-    public String CenterString(String s, int size) {
-        return center(s, size, ' ');
-    }
-
-    public String center(String s, int size, char pad) {
-        if (s == null || size <= s.length())
-            return s;
-
-        StringBuilder sb = new StringBuilder(size);
-        for (int i = 0; i < (size - s.length()) / 2; i++) {
-            sb.append(pad);
-        }
-        sb.append(s);
-        while (sb.length() < size) {
-            sb.append(pad);
-        }
-        return sb.toString();
-    }
-
-    public String repeat(char what, int howmany) {
-        char[] chars = new char[howmany];
-        Arrays.fill(chars, what);
-        return new String(chars);
     }
 
     public String Lite_Query_Result(String cSqlCmd) {
@@ -623,6 +658,7 @@ public class sync_data extends AppCompatActivity {
         cSql_Ln += "op_emp_id  INTEGER NULL DEFAULT 0,";
         cSql_Ln += "id_device VARCHAR(30) NOT NULL DEFAULT 'MANUAL',";
         cSql_Ln += "op_semanas INTEGER NULL DEFAULT 1,";
+        cSql_Ln += "op_image_name CHAR(50) NULL DEFAULT NULL,";
         cSql_Ln += "CONSTRAINT  operacion_PRIMARY PRIMARY KEY(id_op))";
         db2.execSQL(cSql_Ln);
 

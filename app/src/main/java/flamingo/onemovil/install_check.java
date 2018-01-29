@@ -1,35 +1,16 @@
 package flamingo.onemovil;
 
 import android.content.Context;
-import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.util.Arrays;
 
 public class install_check extends AppCompatActivity {
     private Button obtn_check_ok, obtn_check_exit;
@@ -49,8 +30,9 @@ public class install_check extends AppCompatActivity {
         obtn_check_exit = (Button) findViewById(R.id.btn_check_exit);
         ocheck_code = (EditText) findViewById(R.id.check_code);
         InternetStatus = (TextView) findViewById(R.id.check_InternetStatus);
-        create_database();
-        Global.check_tables_device();
+
+        this.create_database();
+        Global.check_tables_device(true);
 
         String cInternetAnswer = "";
         Boolean bInternetConnected = false;
@@ -92,14 +74,14 @@ public class install_check extends AppCompatActivity {
                     Global.ValidateOk = false;
                     return;
                 } else {
-                    cParsString = "device=" + Global.cid_device + "&dbname=" + "" + "&clavee=" + cClave;
+                    cParsString = "device=" + Global.cid_device + "&clavee=" + cClave;
                     cResult = Global.gen_execute_post(Global.SERVER_URL, "/flam/register_device.php", cParsString);
                     int iResult = Integer.valueOf(cResult);
                     if (iResult == 1) {
                         Global.ValidateOk = true;
 
                         Global.clear_tables_device();
-                        Global.active_device();
+                        Global.active_device(cClave);
 
                         finish();
                         return;

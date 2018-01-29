@@ -485,13 +485,10 @@ public class capt_data extends AppCompatActivity {
 
             @Override
             public void onClick(View arg0) {
-
-                android.text.format.DateFormat cNow = new android.text.format.DateFormat();
-                cNow.format("yyyy-MM-dd hh:mm:ss", new java.util.Date());
-
-                String cNow2 = getNow();
+                String cNow2 = Global.getNow();
 
                 String cSql_Ln = "";
+                String CadenaMaq = "[" + Global.cCte_Id + "]_[" + Global.cMaq_Id + "]_IMG_";
 
                 cSql_Ln = "";
                 cSql_Ln += "DELETE FROM operacion WHERE id_device='" + Global.cid_device + "' and  op_chapa='" + op_chapa + "';";
@@ -510,6 +507,8 @@ public class capt_data extends AppCompatActivity {
                 if (cte_pag_impm == 0) {
                     Op_tot_impmunic2 = (Op_tot_impmunic * Op_semanas);
                 }
+                Global.Correl_Device++;
+                String Op_nodoc = Global.cid_device.substring(Global.cid_device.length() - 3, Global.cid_device.length()) + String.format("%08d", Global.Correl_Device);
 
                 cSql_Ln = "";
                 cSql_Ln += "INSERT INTO operacion ( ";
@@ -531,7 +530,7 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "op_tot_cred,op_cal_cred,";
                 cSql_Ln += "op_fecha_alta,op_fecha_modif,";
                 cSql_Ln += "op_tot_impmunic,op_tot_impjcj,";
-                cSql_Ln += "op_emp_id,id_device,op_semanas) VALUES (";
+                cSql_Ln += "op_emp_id,id_device,op_semanas,op_nodoc,op_image_name) VALUES (";
                 cSql_Ln += "'" + Global.cCte_Id + "',";
                 cSql_Ln += "'" + cte_nombre_loc + "',";
                 cSql_Ln += "'" + cte_nombre_com + "',";
@@ -582,7 +581,15 @@ public class capt_data extends AppCompatActivity {
 
                 cSql_Ln += "'" + op_emp_id + "',";
                 cSql_Ln += "'" + Global.cid_device + "',";
-                cSql_Ln += "'" + Op_semanas + "');";
+                cSql_Ln += "'" + Op_semanas + "',";
+                cSql_Ln += "'" + Op_nodoc + "',";
+
+                if (Global.cLastFilePhoto.toLowerCase().contains(CadenaMaq.trim().toLowerCase())) {
+                    cSql_Ln += "'" + Global.cLastFilePhoto + "'";
+                } else {
+                    cSql_Ln += "''";
+                }
+                cSql_Ln += ");";
 
                 Log.e("SQL", cSql_Ln);
                 //System.out.print(cSql_Ln);
@@ -644,7 +651,7 @@ public class capt_data extends AppCompatActivity {
                         int ipass = data.getIntExtra("PASSWORD", -1);
                         Log.e("TAG", Integer.valueOf(ipass).toString());
 
-                        if (ipass == 1234) {
+                        if (ipass == Integer.valueOf(Global.PasswChgMeters)) {
                             switch (Global.iObj_Select) {
                                 case 0:
                                     this.ea_ant.setEnabled(false);
@@ -766,7 +773,7 @@ public class capt_data extends AppCompatActivity {
 
         fTot = (this.iMetroA_EntDif + this.iMetroB_EntDif) / fpFac_e;
 
-        cTot=String.format("%.2f",fTot);
+        cTot = String.format("%.2f", fTot);
 
         if (iForce == 1) {
             this.tot_cole.setText(cTot);
@@ -791,7 +798,7 @@ public class capt_data extends AppCompatActivity {
         fpFac_s = (this.Denom_Sal_Fac == 0 ? 1 : this.Denom_Sal_Fac);
 
         fTot = ((this.iMetroA_SalDif + this.iMetroB_SalDif) / fpFac_s) * (this.fDenom_Sal_Val == 0 ? 1 : this.fDenom_Sal_Val);
-        cTot=String.format("%.2f",fTot);
+        cTot = String.format("%.2f", fTot);
 
         if (iForce == 1) {
             this.tot_cred.setText(cTot);
@@ -1142,12 +1149,6 @@ public class capt_data extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private String getNow() {
-        // set the format to sql date time
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date date = new Date();
-        return dateFormat.format(date);
-    }
 
     private String getDateTime() {
         SimpleDateFormat dateFormat = new SimpleDateFormat(

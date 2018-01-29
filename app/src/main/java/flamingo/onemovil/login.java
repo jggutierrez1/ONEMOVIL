@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +18,7 @@ public class login extends AppCompatActivity {
     EditText User, Pass;
 
     TextView Intentos;
+    ImageView oImagen;
     int counter = 3;
     public final static int REQUEST_MEN = 1;
     private final static int REQUEST_INSTALL_VALIED = 12;
@@ -42,6 +44,8 @@ public class login extends AppCompatActivity {
         User = (EditText) findViewById(R.id.oLogin_User);
         Pass = (EditText) findViewById(R.id.oLogin_Pass);
 
+        oImagen = (ImageView) findViewById(R.id.imageView);
+
         Intentos = (TextView) findViewById(R.id.ologin_intentos);
         Intentos.setVisibility(View.GONE);
 
@@ -51,12 +55,12 @@ public class login extends AppCompatActivity {
         } else {
             create_database();
             //Global.clear_tables_device();
-            if (Global.check_device()<=0){
+            if (Global.check_device() <= 0) {
                 Intent Check_Install_Screen = new Intent(getApplicationContext(), install_check.class);
                 startActivityForResult(Check_Install_Screen, REQUEST_INSTALL_VALIED);
             }
         }
-
+        Global.Get_Config();
 
         btn_entar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,6 +93,16 @@ public class login extends AppCompatActivity {
                 finish();
             }
         });
+
+        oImagen.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Global.clear_tables_device();
+                finish();
+                System.exit(0);
+            }
+        });
+
     }
 
     @Override

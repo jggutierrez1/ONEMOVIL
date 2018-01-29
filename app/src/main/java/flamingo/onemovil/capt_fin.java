@@ -260,7 +260,7 @@ public class capt_fin extends AppCompatActivity {
                 Valid_Data();
 
                 Calc_Sub_Tot();
-             }
+            }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -276,7 +276,7 @@ public class capt_fin extends AppCompatActivity {
                 Valid_Data();
 
                 Calc_Sub_Tot();
-             }
+            }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -324,7 +324,7 @@ public class capt_fin extends AppCompatActivity {
                 Valid_Data();
 
                 Calc_Sub_Tot();
-             }
+            }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -898,14 +898,13 @@ public class capt_fin extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == REQUEST_GET_PASS) {
             switch (resultCode) {
                 case RESULT_OK:
                     int ipass = data.getIntExtra("PASSWORD", -1);
                     Log.e("TAG", Integer.valueOf(ipass).toString());
 
-                    if (ipass == 4321) {
+                    if (ipass == Integer.valueOf(Global.PasswChgAmmout)) {
                         switch (Global.iObj_Select) {
                             case 0:
                                 this.oOp_tot_cole.setEnabled(false);

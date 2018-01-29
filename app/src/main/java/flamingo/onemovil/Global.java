@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -47,13 +48,17 @@ import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
 import java.lang.String;
 import java.sql.ResultSetMetaData;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.Date;
+import java.util.Random;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -103,6 +108,9 @@ public class Global {
     public static String stringResult = "";
     public static int iObj_Select = 0;
     public static Boolean ValidateOk = false;
+    public static String PasswChgAmmout = "";
+    public static String PasswChgMeters = "";
+    public static int Correl_Device;
 
     public static void Init_Vars() {
         PACKAGE_NAME = "flamingo.onemovil";
@@ -119,6 +127,24 @@ public class Global {
 
         cFileDbPathOrig = cApp_Data_Storage + "one2009.db";
         cFileDbPathDest = cApp_Folder_Storage + "/one2009.db";
+    }
+
+    public static void Get_Config() {
+        String cSql_Ln = "SELECT corre_act,clave_metros,clave_montos,emp_id FROM dispositivos WHERE serial='" + Global.cid_device + "' ";
+        Global.oGen_Cursor = Global.oGen_Db.rawQuery(cSql_Ln, null);
+        Global.oGen_Cursor.moveToFirst();
+        int iRecords = Global.oGen_Cursor.getCount();
+        if (iRecords > 0) {
+            Global.Correl_Device = Global.oGen_Cursor.getInt(Global.oGen_Cursor.getColumnIndex("corre_act"));
+            Global.PasswChgAmmout = Global.oGen_Cursor.getString(Global.oGen_Cursor.getColumnIndex("clave_montos"));
+            Global.PasswChgMeters = Global.oGen_Cursor.getString(Global.oGen_Cursor.getColumnIndex("clave_metros"));
+            Global.cEmp_Id = Global.oGen_Cursor.getString(Global.oGen_Cursor.getColumnIndex("emp_id"));
+        } else {
+            Global.Correl_Device = 0;
+            Global.PasswChgAmmout = Global.GenerateRandomNumber(5);
+            Global.PasswChgMeters = Global.GenerateRandomNumber(5);
+        }
+        Global.oGen_Cursor.close();
     }
 
     public static void Chech_App_Folders() {
@@ -899,17 +925,11 @@ public class Global {
             InputStreamReader isr = new InputStreamReader(connection.getInputStream(), "UTF-8");
             BufferedReader reader = new BufferedReader(isr);
             StringBuilder sb = new StringBuilder();
-            line = reader.readLine();
-            if (line != null) {
-                response = line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
             }
-
-            //while ((line = reader.readLine()) != null) {
-            //sb.append(line + "\n");
-            //    sb.append(line);
-            //}
+            response = sb.toString().trim();
             // Response from server after login process will be stored in response variable.
-            //response = sb.toString().trim();
             System.out.println("Response String : " + response);
 
             // You can perform UI operations here
@@ -928,51 +948,10 @@ public class Global {
         return response;
     }
 
-    public static String POST_Send_Register(String cClave) {
-        try {
-//            URL url = new URL("http://[ip]:[port]"); //in the real code, there is an ip and a port
-            String cFullUrlWebs = SERVER_URL + "/flam/register_device.php";
-            Log.i("MSG", SERVER_URL);
-            Log.i("MSG", cFullUrlWebs);
-
-            URL url = new URL(cFullUrlWebs); //in the real code, there is an ip and a port
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.connect();
-
-            JSONObject jsonParam = new JSONObject();
-            jsonParam.put("device", Global.cid_device);
-            jsonParam.put("dbname", "");
-            jsonParam.put("clavee", cClave);
-
-            DataOutputStream os = new DataOutputStream(conn.getOutputStream());
-            String encode = URLEncoder.encode(jsonParam.toString(), "UTF-8");
-            //os.writeBytes(encode);
-            os.writeBytes(jsonParam.toString());
-
-            os.flush();
-            os.close();
-
-            Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-            Log.i("MSG", conn.getResponseMessage());
-            String Response = conn.getResponseMessage();
-
-            conn.disconnect();
-            return Response;
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-            return "ERROR AL ENVIAR LA PETICION ";
-        }
-    }
-
     public static boolean checkDataBase() {
         SQLiteDatabase checkDB = null;
         try {
-              checkDB = SQLiteDatabase.openDatabase(cFileDbPathOrig, null, SQLiteDatabase.OPEN_READONLY);
+            checkDB = SQLiteDatabase.openDatabase(cFileDbPathOrig, null, SQLiteDatabase.OPEN_READONLY);
             checkDB.close();
             return true;
         } catch (SQLiteException e) {
@@ -981,31 +960,46 @@ public class Global {
         }
     }
 
-    public static void check_tables_device() {
+    public static void check_tables_device(Boolean bDrop) {
         String cSql_Ln = "";
-        cSql_Ln += "CREATE TABLE IF NOT EXISTS dispositivos (";
-        cSql_Ln += "id INTEGER NOT NULL,";
-        cSql_Ln += "serial VARCHAR(50) NOT NULL DEFAULT '',";
-        cSql_Ln += "clave_install VARCHAR(30) NULL DEFAULT 'FLAM111118',";
-        cSql_Ln += "fecha_pacceso DATETIME NULL DEFAULT NULL,";
-        cSql_Ln += "fecha_uacces DATETIME NULL DEFAULT NULL,";
-        cSql_Ln += "dbname VARCHAR(30) NULL DEFAULT NULL,";
-        cSql_Ln += "corre_ant INT(10) NULL DEFAULT 0,";
-        cSql_Ln += "corre_ult INT(10) NULL DEFAULT 0,";
-        cSql_Ln += "corre_act INT(10) NULL DEFAULT 0,";
-        cSql_Ln += "clave_metros VARCHAR(30) NULL DEFAULT '6545465465465546',";
-        cSql_Ln += "clave_montos VARCHAR(30) NULL DEFAULT '6545465465465530',";
-        cSql_Ln += "CONSTRAINT dispositivos PRIMARY KEY (id))";
-        Global.oGen_Db.execSQL(cSql_Ln);
+        if (bDrop == true) {
+            cSql_Ln = "";
+            cSql_Ln += "DROP TABLE IF EXISTS dispositivos;";
+            try {
+                Global.oGen_Db.execSQL(cSql_Ln);
+            } catch (SQLiteException e) {
+                Global.logLargeString(e.toString());
+            }
+
+            cSql_Ln = "";
+            cSql_Ln += "CREATE TABLE IF NOT EXISTS dispositivos (";
+            cSql_Ln += "id INTEGER NOT NULL,";
+            cSql_Ln += "serial VARCHAR(50) NOT NULL DEFAULT '',";
+            cSql_Ln += "clave_install VARCHAR(30) NULL DEFAULT 'FLAM111118',";
+            cSql_Ln += "fecha_pacceso DATETIME NULL DEFAULT NULL,";
+            cSql_Ln += "fecha_uacces DATETIME NULL DEFAULT NULL,";
+            cSql_Ln += "dbname VARCHAR(30) NULL DEFAULT 'one2009_1',";
+            cSql_Ln += "corre_ant INT(10) NULL DEFAULT 0,";
+            cSql_Ln += "corre_ult INT(10) NULL DEFAULT 0,";
+            cSql_Ln += "corre_act INT(10) NULL DEFAULT 0,";
+            cSql_Ln += "clave_metros VARCHAR(30) NULL DEFAULT '6545465465465546',";
+            cSql_Ln += "clave_montos VARCHAR(30) NULL DEFAULT '6545465465465530',";
+            cSql_Ln += "emp_id INT(3) NULL DEFAULT 1,";
+            cSql_Ln += "CONSTRAINT dispositivos PRIMARY KEY (id))";
+            try {
+                Global.oGen_Db.execSQL(cSql_Ln);
+            } catch (SQLiteException e) {
+                Global.logLargeString(e.toString());
+            }
+        }
     }
 
-    public static void active_device() {
+    public static void active_device(String cClave) {
         String cSql_Ln = "";
-        android.text.format.DateFormat cNow = new android.text.format.DateFormat();
-        cNow.format("yyyy-MM-dd hh:mm:ss", new java.util.Date());
+        String cNow = Global.getNow();
 
         cSql_Ln += "INSERT INTO dispositivos(serial, fecha_pacceso,clave_install,corre_ant,corre_ult,corre_act) VALUES ";
-        cSql_Ln += "('" + Global.cid_device + "','" + cNow + "','FLAM111118',0,0,0)";
+        cSql_Ln += "('" + Global.cid_device + "','" + cNow + "','" + cClave + "',0,0,0)";
         Global.oGen_Db.execSQL(cSql_Ln);
     }
 
@@ -1015,10 +1009,9 @@ public class Global {
     }
 
     public static int check_device() {
-        android.text.format.DateFormat cNow = new android.text.format.DateFormat();
-        cNow.format("yyyy-MM-dd hh:mm:ss", new java.util.Date());
+        String cNow = Global.getNow();
 
-        String cSql_Ln = "SELECT serial, fecha_pacceso,clave_install FROM dispositivos WHERE serial='" + Global.cid_device + "'";
+        String cSql_Ln = "SELECT serial, fecha_pacceso, clave_install FROM dispositivos WHERE serial='" + Global.cid_device + "'";
         Global.oGen_Cursor = Global.oGen_Db.rawQuery(cSql_Ln, null);
         Global.oGen_Cursor.moveToFirst();
         int iRecords = Global.oGen_Cursor.getCount();
@@ -1026,10 +1019,97 @@ public class Global {
         return iRecords;
     }
 
-    public static  boolean isFilePresent(String fileNamePath) {
+    public static boolean isFilePresent(String fileNamePath) {
         //tring path = Global.oActual_Context.getFilesDir().getAbsolutePath() + "/" + fileName;
         File file = new File(fileNamePath);
         return file.exists();
     }
+
+    public static String CenterString(String s, int size) {
+        return center(s, size, ' ');
+    }
+
+    public static String center(String s, int size, char pad) {
+        if (s == null || size <= s.length())
+            return s;
+
+        StringBuilder sb = new StringBuilder(size);
+        for (int i = 0; i < (size - s.length()) / 2; i++) {
+            sb.append(pad);
+        }
+        sb.append(s);
+        while (sb.length() < size) {
+            sb.append(pad);
+        }
+        return sb.toString();
+    }
+
+    public static String repeat(char what, int howmany) {
+        char[] chars = new char[howmany];
+        Arrays.fill(chars, what);
+        return new String(chars);
+    }
+
+    public static String repChar(char c, int reps) {
+        String adder = Character.toString(c);
+        String result = "";
+        while (reps > 0) {
+            if (reps % 2 == 1) {
+                result += adder;
+            }
+            adder += adder;
+            reps /= 2;
+        }
+        return result;
+    }
+
+    public static String Query_Result(String Sql, String FieldResult) {
+        String cValue = "";
+        Global.oGen_Cursor = Global.oGen_Db.rawQuery(Sql, null);
+        Global.oGen_Cursor.moveToFirst();
+        int iRecords = Global.oGen_Cursor.getCount();
+        int iColumIndex = Global.oGen_Cursor.getColumnIndex(FieldResult);
+        if (iRecords > 0) {
+            if (Global.oGen_Cursor.isNull(iColumIndex) == true) {
+                cValue = "";
+            } else {
+                cValue = Global.oGen_Cursor.getString(iColumIndex);
+            }
+        } else {
+            cValue = "";
+        }
+        Global.oGen_Cursor.close();
+        return cValue;
+    }
+
+    public static String Rem_Query_Result(String cDatabase, String Sql_Cmd, int All_rows, String FieldResult) {
+        String cParsString = "";
+        cParsString += "database=" + cDatabase;
+        cParsString += "&sql=" + Sql_Cmd;
+        cParsString += "&key=1";
+        cParsString += "&all_rows=" + String.valueOf(All_rows);
+        cParsString += "&fieldname=" + FieldResult;
+
+        String RetValue = Global.gen_execute_post(Global.SERVER_URL, "/flam/execute_sql.php", cParsString);
+        return RetValue;
+    }
+
+    public static void Query_Update(String Sql) {
+        Global.oGen_Db.execSQL(Sql);
+    }
+
+    public static String GenerateRandomNumber(int charLength) {
+        return String.valueOf(charLength < 1 ? 0 : new Random()
+                .nextInt((9 * (int) Math.pow(10, charLength - 1)) - 1)
+                + (int) Math.pow(10, charLength - 1));
+    }
+
+    public static String getNow() {
+        // set the format to sql date time
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
+    }
+
 }
 
