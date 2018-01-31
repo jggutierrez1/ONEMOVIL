@@ -59,8 +59,9 @@
             style="@style/Widget.AppCompat.TextView.SpinnerItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/Gold"
             android:text="CLIENTE:"
-            android:textSize="23sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
@@ -68,8 +69,9 @@
             style="@style/Widget.AppCompat.TextView.SpinnerItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/Gold"
             android:text="CHAPA:"
-            android:textSize="23sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <!--                             ETIQUETA ENTRADA                                    -->
@@ -79,12 +81,13 @@
             android:layout_height="10dp" />
 
         <CheckBox
-            android:id="@+id/checkBox"
+            android:id="@+id/obaja_prod"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/Gold"
+            android:background="@color/Tomato"
             android:text="BAJA PRODUCCION"
-            android:textStyle="bold" />
+            android:textSize="18sp"
+            android:textStyle="italic" />
 
         <LinearLayout
             android:layout_width="match_parent"

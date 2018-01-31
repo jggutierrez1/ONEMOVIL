@@ -38,6 +38,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -56,11 +57,13 @@ import java.text.SimpleDateFormat;
 
 import java.util.Date;
 import java.util.Locale;
+import android.text.format.DateFormat;
 
 public class capt_data extends AppCompatActivity {
 
     private static final String TAG = capt_data.class.getSimpleName();
     private Button btn_hide_capt, btn_foto_capt, btn_save_capt, btn_cancel_capt;
+    private CheckBox oBaja_prod;
     private EditText ea_act, ea_ant, ea_dif;
     private EditText eb_act, eb_ant, eb_dif;
     private EditText sa_act, sa_ant, sa_dif;
@@ -130,6 +133,8 @@ public class capt_data extends AppCompatActivity {
         this.oSemanas = (EditText) findViewById(R.id.osemanas);
         this.oSemanas.setSelectAllOnFocus(true);
 
+        this.oBaja_prod = (CheckBox) findViewById(R.id.obaja_prod);
+
         this.ea_act = (EditText) findViewById(R.id.oea_act);
         this.ea_act.setSelectAllOnFocus(true);
         this.ea_ant = (EditText) findViewById(R.id.oea_ant);
@@ -172,6 +177,14 @@ public class capt_data extends AppCompatActivity {
 
         this.MaquinaValid(true);
 
+        this.ea_act.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ea_act.getText().toString() == "")
+                    ea_act.setText("0");
+            }
+        });
+
         this.oSemanas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -181,12 +194,10 @@ public class capt_data extends AppCompatActivity {
         });
 
 
-        this.lea_ant.setOnClickListener(new View.OnClickListener() {
+        this.oBaja_prod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Global.iObj_Select = 1;
-                Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
-                startActivityForResult(Int_GetPass, REQUEST_GET_PASS);
+                do_Baja_ProdClick();
             }
         });
 
@@ -490,8 +501,18 @@ public class capt_data extends AppCompatActivity {
                 String cSql_Ln = "";
                 String CadenaMaq = "[" + Global.cCte_Id + "]_[" + Global.cMaq_Id + "]_IMG_";
 
+/*
+                Date date = new Date();
+                String day          = (String) DateFormat.format("dd",   date); // 20
+                String monthNumber  = (String) DateFormat.format("MM",   date); // 06
+                String year         = (String) DateFormat.format("yyyy", date()); // 2013
+*/
                 cSql_Ln = "";
-                cSql_Ln += "DELETE FROM operacion WHERE id_device='" + Global.cid_device + "' and  op_chapa='" + op_chapa + "';";
+                cSql_Ln += "" +
+                        "DELETE FROM operacion " +
+                        "WHERE id_device='" + Global.cid_device + "' " +
+                        "AND  op_chapa  ='" + op_chapa + "'; " +
+
                 Log.e("SQL", cSql_Ln);
                 //System.out.print(cSql_Ln);
                 db4.execSQL(cSql_Ln);
@@ -530,7 +551,9 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "op_tot_cred,op_cal_cred,";
                 cSql_Ln += "op_fecha_alta,op_fecha_modif,";
                 cSql_Ln += "op_tot_impmunic,op_tot_impjcj,";
-                cSql_Ln += "op_emp_id,id_device,op_semanas,op_nodoc,op_image_name) VALUES (";
+                cSql_Ln += "op_emp_id,id_device,";
+                cSql_Ln += "op_semanas,op_nodoc,";
+                cSql_Ln += "op_baja_prod, op_image_name) VALUES (";
                 cSql_Ln += "'" + Global.cCte_Id + "',";
                 cSql_Ln += "'" + cte_nombre_loc + "',";
                 cSql_Ln += "'" + cte_nombre_com + "',";
@@ -582,7 +605,9 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "'" + op_emp_id + "',";
                 cSql_Ln += "'" + Global.cid_device + "',";
                 cSql_Ln += "'" + Op_semanas + "',";
+
                 cSql_Ln += "'" + Op_nodoc + "',";
+                cSql_Ln += "'" + (oBaja_prod.isChecked() == true ? "1" : "0") + "',";
 
                 if (Global.cLastFilePhoto.toLowerCase().contains(CadenaMaq.trim().toLowerCase())) {
                     cSql_Ln += "'" + Global.cLastFilePhoto + "'";
@@ -1207,5 +1232,49 @@ public class capt_data extends AppCompatActivity {
             sb_act.setText("0");
         }
     }
+
+    private void do_Baja_ProdClick() {
+
+        if (this.oBaja_prod.isChecked() == true) {
+
+            this.tot_cole.setText("0.00");
+            op_cal_colect = 0.00;
+            this.tot_cred.setText("0.00");
+            op_cal_cred = 0.00;
+
+            this.ea_act.setText(ea_ant.getText().toString());
+            this.sa_act.setText(sa_ant.getText().toString());
+
+            this.eb_act.setText(eb_ant.getText().toString());
+            this.sb_act.setText(eb_ant.getText().toString());
+            // ----------------------------------------------------------------------------------
+            this.Calc_Sub_Tot();
+
+            // ----------------------------------------------------------------------------------
+
+            this.eb_act.setEnabled(false);
+            this.sb_act.setEnabled(false);
+            this.ea_act.setEnabled(false);
+            this.sa_act.setEnabled(false);
+        } else {
+
+            this.tot_cole.setText("0.00");
+            op_cal_colect = 0.00;
+            this.tot_cred.setText("0.00");
+            op_cal_cred = 0.00;
+
+            this.ea_act.setText("0");
+            this.sa_act.setText("0");
+
+            this.eb_act.setText("0");
+            this.sb_act.setText("0");
+
+            this.eb_act.setEnabled(true);
+            this.sb_act.setEnabled(true);
+            this.ea_act.setEnabled(true);
+            this.sa_act.setEnabled(true);
+        }
+    }
+
 
 }

@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="flamingo.onemovil.menu">
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
@@ -31,7 +32,8 @@
                 android:id="@+id/oDeviceId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="ID. DISPOSITIVO:" />
+                android:text="ID. DISPOSITIVO:"
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/oLabel"
@@ -48,12 +50,6 @@
                 android:text="Name" />
 
             <Button
-                android:id="@+id/obtn_conf"
-                android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:text="CONFIGURAR" />
-
-            <Button
                 android:id="@+id/obtn_upd"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
@@ -63,43 +59,50 @@
                 android:id="@+id/obtn_start"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
+                android:enabled="false"
                 android:text="INICIAR COLECTA" />
 
             <Button
                 android:id="@+id/obtn_maq"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
+                android:enabled="false"
                 android:text="SELECCIONAR MAQUINA" />
 
             <Button
                 android:id="@+id/obtn_capt"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
+                android:enabled="false"
                 android:text="REGISTRAR METROS MAQUINAS" />
 
             <Button
                 android:id="@+id/obtn_canc_colec"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
+                android:enabled="false"
                 android:text="DESCARTAR COLECTA" />
 
             <Button
                 android:id="@+id/obtn_fin_colec"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
+                android:enabled="false"
                 android:text="FINALIZAR COLECTA" />
 
             <Button
                 android:id="@+id/obtn_repo"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
+                android:enabled="false"
                 android:text="REPORTES" />
 
             <Button
                 android:id="@+id/obtn_descar"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
-                android:text="DESCARGAR ENTRADAS" />
+                android:enabled="false"
+                android:text="ENVIAR COLECTAS" />
 
             <Space
                 android:layout_width="match_parent"

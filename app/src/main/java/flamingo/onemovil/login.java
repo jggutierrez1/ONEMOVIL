@@ -17,6 +17,7 @@ public class login extends AppCompatActivity {
     Button btn_entar, btn_cance;
     EditText User, Pass;
 
+    private TextView DeviceId;
     TextView Intentos;
     ImageView oImagen;
     int counter = 3;
@@ -49,11 +50,15 @@ public class login extends AppCompatActivity {
         Intentos = (TextView) findViewById(R.id.ologin_intentos);
         Intentos.setVisibility(View.GONE);
 
+        DeviceId = (TextView) findViewById(R.id.login_device);
+        DeviceId.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
+
         if (Global.checkDataBase() == false) {
+            this.create_database();
             Intent Check_Install_Screen = new Intent(getApplicationContext(), install_check.class);
             startActivityForResult(Check_Install_Screen, REQUEST_INSTALL_VALIED);
         } else {
-            create_database();
+            this.create_database();
             //Global.clear_tables_device();
             if (Global.check_device() <= 0) {
                 Intent Check_Install_Screen = new Intent(getApplicationContext(), install_check.class);

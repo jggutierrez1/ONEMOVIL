@@ -56,7 +56,7 @@ public class sync_data extends AppCompatActivity {
         lurl = (TextView) findViewById(R.id.olurl);
         InternetStatus = (TextView) findViewById(R.id.oInternetStatus);
 
-        ock_rene.setChecked(false);
+        ock_rene.setChecked(true);
         //InternetStatus.setTextColor(Color.rgb(200,0,0));
         //InternetStatus.setTextColor(Color.parseColor("#009900"));
 
@@ -106,7 +106,7 @@ public class sync_data extends AppCompatActivity {
                 memo.setText("");
                 btn_proc.setEnabled(false);
                 btn_regr.setEnabled(false);
-                Create_Sql_Tables();
+                Global.Create_Sql_Tables(ock_rene.isChecked(), ock_delc.isChecked());
 
                 db2.execSQL("DELETE FROM empresas");
                 db2.execSQL("DELETE FROM clientes");
@@ -158,9 +158,9 @@ public class sync_data extends AppCompatActivity {
 
                 Toast.makeText(getApplicationContext(), "PROCESO FINALIZADO.", Toast.LENGTH_LONG).show();
                 memo.setText("");
-                memo.append(Global.repeat('-', 30));
-                memo.append(Global.CenterString("RESUMEN DE SINCRONIZACION", 30));
-                memo.append(Global.repChar('-', 30));
+                memo.append(Global.repeat('-', 80) + "\n");
+                memo.append(Global.CenterString("RESUMEN DE SINCRONIZACION", 30) + "\n");
+                memo.append(Global.repChar('-', 80) + "\n");
                 memo.append("REGISTROS EN EMPRESA       :" + Lite_Query_Result("SELECT COUNT(*) AS CNT FROM empresas") + "\n");
                 memo.append("REGISTROS EN CLIENTES      :" + Lite_Query_Result("SELECT COUNT(*) AS CNT FROM clientes") + "\n");
                 memo.append("REGISTROS EN DENOMINACIONES:" + Lite_Query_Result("SELECT COUNT(*) AS CNT FROM denominaciones") + "\n");
@@ -168,7 +168,7 @@ public class sync_data extends AppCompatActivity {
                 memo.append("REGISTROS EN MAQUINAS LNK  :" + Lite_Query_Result("SELECT COUNT(*) AS CNT FROM maquinas_lnk") + "\n");
                 memo.append("REGISTROS EN MINUCIPIOS    :" + Lite_Query_Result("SELECT COUNT(*) AS CNT FROM municipios") + "\n");
                 memo.append("REGISTROS EN RUTAS         :" + Lite_Query_Result("SELECT COUNT(*) AS CNT FROM rutas") + "\n");
-                memo.append(Global.repeat('-', 30));
+                memo.append(Global.repeat('-', 80) + "\n");
 
                 cSql_Ln = "SELECT * FROM device_db.dispositivos WHERE serial='" + Global.cid_device + "'";
                 String cJsonResult = Global.Rem_Query_Result("device_db", cSql_Ln, 1, "");
@@ -344,7 +344,7 @@ public class sync_data extends AppCompatActivity {
         return false;
     }
 
-    public void Create_Sql_Tables() {
+    public void Create_Sql_Tables2() {
         String cSql_Ln = "";
 
         if (ock_rene.isChecked() == true) {

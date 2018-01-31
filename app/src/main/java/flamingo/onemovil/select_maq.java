@@ -23,8 +23,7 @@ import java.util.ArrayList;
 public class select_maq extends AppCompatActivity {
 
     private Button btn_regr_maq, btn_sele_maq, btn_foto_maq;
-    ;
-    private TextView text_fnd;
+    private TextView olab_cte02;
     private ListView lst_maq;
     private SQLiteDatabase db4;
     private Cursor data;
@@ -46,6 +45,9 @@ public class select_maq extends AppCompatActivity {
 
         lst_maq = (ListView) findViewById(R.id.olst_maq);
         lst_maq.setClickable(true);
+
+        this.olab_cte02 = (TextView) findViewById(R.id.lab_cte02);
+        this.olab_cte02.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
 
         String databasePath = getDatabasePath("one2009.db").getPath();
         db4 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);

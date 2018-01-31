@@ -13,6 +13,23 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="8dp">
 
+        <TextView
+            android:id="@+id/lab_cte02"
+            style="@style/Widget.AppCompat.TextView.SpinnerItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:background="@color/Gold"
+            android:text="CLIENTE:"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="normal" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_weight="0" />
+
         <ListView
             android:id="@+id/olst_maq"
             android:layout_width="match_parent"
@@ -40,7 +57,8 @@
                 android:layout_height="65dp"
                 android:layout_weight="1"
                 android:enabled="false"
-                android:text="FOTO METROS" />
+                android:text="FOTO METROS"
+                android:visibility="gone" />
 
             <Button
                 android:id="@+id/obtn_sele_maq"

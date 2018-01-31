@@ -26,10 +26,10 @@
     <color name="LightPink">#FFB6C1</color>
     <color name="Orange">#FFA500</color>
     <color name="LightSalmon">#FFA07A</color>
-    <color name="DarkOrange">#FF8C00</color>
+    <color name="DarkOrange">#ff8c00</color>
     <color name="Coral">#e7baaa</color>
     <color name="HotPink">#FF69B4</color>
-    <color name="Tomato">#FF6347</color>
+    <color name="Tomato">#ff6347</color>
     <color name="OrangeRed">#FF4500</color>
     <color name="DeepPink">#FF1493</color>
     <color name="Fuchsia">#FF00FF</color>

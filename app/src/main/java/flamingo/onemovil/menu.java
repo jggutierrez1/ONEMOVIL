@@ -41,7 +41,7 @@ import org.json.JSONArray;
 
 public class menu extends AppCompatActivity {
 
-    private Button btn_conf, btn_upd, btn_start, btn_maq, btn_capt, btn_repo, btn_exit, btn_canc_colec, btn_fin_colec;
+    private Button btn_upd, btn_start, btn_maq, btn_capt, btn_repo, btn_exit, btn_canc_colec, btn_fin_colec;
     private ImageView mImageView;
     private TextView DeviceId;
     private SQLiteDatabase db;
@@ -90,7 +90,6 @@ public class menu extends AppCompatActivity {
             exist = appFolder.exists();
         }
 
-        btn_conf = (Button) findViewById(R.id.obtn_conf);
         btn_upd = (Button) findViewById(R.id.obtn_upd);
         btn_start = (Button) findViewById(R.id.obtn_start);
         btn_maq = (Button) findViewById(R.id.obtn_maq);
@@ -106,8 +105,20 @@ public class menu extends AppCompatActivity {
         myTextbox = (EditText) findViewById(R.id.oEntry);
 
         createDatabase();
-        Create_Sql_Tables();
+        Global.Create_Sql_Tables(false, false);
+
+        //Create_Sql_Tables();
+        if (Global.Clients_Is_Empty() == false) {
+            this.btn_start.setEnabled(true);
+            this.btn_maq.setEnabled(true);
+            this.btn_capt.setEnabled(true);
+            this.btn_repo.setEnabled(true);
+            this.btn_canc_colec.setEnabled(true);
+            this.btn_fin_colec.setEnabled(true);
+
+        }
         findBT();
+
         btn_exit.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -118,28 +129,6 @@ public class menu extends AppCompatActivity {
                 db.close();
                 finish();
                 System.exit(0);
-            }
-        });
-
-
-        btn_conf.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                /*
-                String Sql="SELECT * FROM operacion limit 200";
-                String aValue=Global.getJsonResults2(Sql,"operacion");
-                Toast.makeText(getApplicationContext(), aValue , Toast.LENGTH_SHORT).show();
-                */
-
-                /*
-                Intent Int_TakePhoto = new Intent(getApplicationContext(), take_photo.class);
-                startActivity(Int_TakePhoto);
-                */
-                Intent Int_Uploadfiles = new Intent(getApplicationContext(), uploadfiletoserver.class);
-                startActivity(Int_Uploadfiles);
-
-
             }
         });
 
@@ -163,6 +152,10 @@ public class menu extends AppCompatActivity {
         btn_maq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Global.cCte_Id == "") {
+                    Toast.makeText(getApplicationContext(), "DEBE SELECCIONAR UN CLIENTE PRIMERO.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 Intent Int_MaqScreen = new Intent(getApplicationContext(), select_maq.class);
                 startActivityForResult(Int_MaqScreen, REQUEST_SEL_MAQ);
             }
@@ -171,7 +164,16 @@ public class menu extends AppCompatActivity {
         btn_capt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Global.iObj_Select=0;
+                if (Global.cCte_Id == "") {
+                    Toast.makeText(getApplicationContext(), "DEBE SELECCIONAR UN CLIENTE PRIMERO.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (Global.cMaq_Id == "") {
+                    Toast.makeText(getApplicationContext(), "DEBE SELECCIONAR UNA MAQUINA RIMERO.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Global.iObj_Select = 0;
                 Intent Int_CapScreen = new Intent(getApplicationContext(), capt_data.class);
                 startActivityForResult(Int_CapScreen, REQUEST_INI_CAP);
             }
@@ -179,7 +181,12 @@ public class menu extends AppCompatActivity {
         btn_fin_colec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Global.iObj_Select=0;
+                if (Global.cCte_Id == "") {
+                    Toast.makeText(getApplicationContext(), "DEBE SELECCIONAR UN CLIENTE PRIMERO.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                Global.iObj_Select = 0;
                 Intent Capf_MaqScreen = new Intent(getApplicationContext(), capt_fin.class);
                 startActivityForResult(Capf_MaqScreen, REQUEST_END_CAP);
 
@@ -191,15 +198,15 @@ public class menu extends AppCompatActivity {
         btn_canc_colec.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dialogBox("ESTA SEGURO QUE DESEA DESCARTAR TODAS LAS ENTRADAS REALIZADAS EN EL EQUIPO.");
-                if (iGlobalRes == 1) {
+                //dialogBox("ESTA SEGURO QUE DESEA DESCARTAR TODAS LAS ENTRADAS REALIZADAS EN EL EQUIPO.");
+                //if (iGlobalRes == 1) {
                     String cSql_Ln = "DELETE FROM operacion WHERE id_device='" + Global.cid_device + "'";
                     db.execSQL(cSql_Ln);
                     Toast.makeText(getApplicationContext(), "LOS DATOS FUERON ELIMINADOS.", Toast.LENGTH_SHORT).show();
 
-                } else {
-                    Toast.makeText(getApplicationContext(), "SE CANCELO LA ACCION.", Toast.LENGTH_SHORT).show();
-                }
+                //} else {
+                //    Toast.makeText(getApplicationContext(), "SE CANCELO LA ACCION.", Toast.LENGTH_SHORT).show();
+                //}
             }
         });
 
@@ -288,6 +295,23 @@ public class menu extends AppCompatActivity {
             }
 
         }
+
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (Global.Clients_Is_Empty() == false) {
+            btn_start.setEnabled(true);
+            btn_maq.setEnabled(true);
+            btn_capt.setEnabled(true);
+            btn_repo.setEnabled(true);
+            btn_canc_colec.setEnabled(true);
+            btn_fin_colec.setEnabled(true);
+
+        }
     }
 
     protected void createDatabase() {
@@ -296,7 +320,7 @@ public class menu extends AppCompatActivity {
         db = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
     }
 
-    public void Create_Sql_Tables() {
+    public void Create_Sql_Tables2() {
         // -----------------------------------CLIENTES------------------------------------------------------//
 
         cSql_Ln = "";

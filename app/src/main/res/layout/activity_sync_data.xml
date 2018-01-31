@@ -57,6 +57,7 @@
             android:id="@+id/ock_renew"
             android:layout_width="match_parent"
             android:layout_height="65dp"
+            android:checked="true"
             android:text="BORRAR Y CREAR TODO."
             android:textSize="18sp" />
 

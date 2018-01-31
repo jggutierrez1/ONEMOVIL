@@ -21,7 +21,6 @@ import java.util.ArrayList;
 public class select_cte extends AppCompatActivity {
 
     private Button btn_regr_cte, btn_sele_cte, btn_clear_cte, btn_find_cte;
-    private TextView text_fnd;
     private ListView olst_cte2;
     private SQLiteDatabase db3;
     private Cursor data;
@@ -37,14 +36,14 @@ public class select_cte extends AppCompatActivity {
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
 
-        btn_regr_cte = (Button) findViewById(R.id.obtn_regr_cte);
-        btn_sele_cte = (Button) findViewById(R.id.obtn_sele_cte);
+        this.btn_regr_cte = (Button) findViewById(R.id.obtn_regr_cte);
+        this.btn_sele_cte = (Button) findViewById(R.id.obtn_sele_cte);
         //btn_clear_cte = (Button) findViewById(R.id.obtn_clear);
         //btn_find_cte = (Button) findViewById(R.id.obtn_find);
-        //text_fnd_cte = (TextView) findViewById(R.id.otext_fnd);
+        this.olst_cte2 = (ListView) findViewById(R.id.olst_cte);
 
-        olst_cte2 = (ListView) findViewById(R.id.olst_cte);
-        olst_cte2.setClickable(true);
+        this.olst_cte2.setClickable(true);
+
 
         String databasePath = getDatabasePath("one2009.db").getPath();
         db3 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
