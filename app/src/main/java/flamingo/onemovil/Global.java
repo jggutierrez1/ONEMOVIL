@@ -58,7 +58,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Random;
+import java.util.StringTokenizer;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -101,10 +103,10 @@ public class Global {
     public static Intent oPictureActionIntent = null;
     public static SQLiteDatabase oGen_Db;
     public static Cursor oGen_Cursor;
-    //public static String SERVER_URL = "http://190.140.40.242";
-    public static String SERVER_URL = "http://192.168.2.161";
-    public static String SERVER_URL_FLES = "http://192.168.2.161/flam/UploadToServer.php";
-    public static String SERVER_DIR_IMGS = "http://192.168.2.161/flam/images/";
+    public static String SERVER_URL = "http://190.140.40.242";
+    //public static String SERVER_URL = "http://192.168.2.161";
+    public static String SERVER_URL_FLES = "http://190.140.40.242/flam/UploadToServer.php";
+    public static String SERVER_DIR_IMGS = "http://190.140.40.242/flam/images/";
     public static String stringResult = "";
     public static int iObj_Select = 0;
     public static Boolean ValidateOk = false;
@@ -145,6 +147,7 @@ public class Global {
             Global.PasswChgMeters = Global.GenerateRandomNumber(5);
         }
         Global.oGen_Cursor.close();
+        Locale.setDefault(new Locale("en", "US"));
     }
 
     public static void Chech_App_Folders() {
@@ -471,7 +474,7 @@ public class Global {
                                 break;
                             case Cursor.FIELD_TYPE_STRING: {
                                 String sValue1 = cursor.getString(i);
-                                String sValue2 = sValue1.trim().replaceAll(" ", "_");
+                                String sValue2 = sValue1.trim().replaceAll(" ", "^");
                                 rowObject.put(colName, sValue2);
                             }
                             break;
@@ -515,7 +518,7 @@ public class Global {
                                 break;
                             case Cursor.FIELD_TYPE_STRING: {
                                 String sValue1 = crs.getString(i);
-                                String sValue2 = sValue1.trim().replaceAll(" ", "_");
+                                String sValue2 = sValue1.trim().replaceAll(" ", "^");
                                 row.put(colName, sValue2);
                             }
                             break;
@@ -557,6 +560,7 @@ public class Global {
         resultSet = getJsonResults(cSql_Cmd);
         try {
             resultSet2.put(cTableName, resultSet);
+            resultSet2.put("tot_regs", resultSet.length());
             Global.logLargeString(resultSet.toString());
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
@@ -679,43 +683,6 @@ public class Global {
         return cSql_Insert_Fin;
 
 
-    }
-
-    public static String POST_Send_Json(String url_server, String Json) {
-        try {
-//            URL url = new URL("http://[ip]:[port]"); //in the real code, there is an ip and a port
-            URL url = new URL(url_server); //in the real code, there is an ip and a port
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setRequestProperty("Accept", "application/json");
-            conn.setDoOutput(true);
-            conn.setDoInput(true);
-            conn.connect();
-
-            JSONObject jsonParam = new JSONObject();
-            jsonParam.put("EMPRESA", 0);
-            jsonParam.put("MACHINE", Global.cid_device);
-            jsonParam.put("DATA", Json);
-
-            DataOutputStream os = new DataOutputStream(conn.getOutputStream());
-            String encode = URLEncoder.encode(jsonParam.toString(), "UTF-8");
-            //os.writeBytes(encode);
-            os.writeBytes(jsonParam.toString());
-
-            os.flush();
-            os.close();
-
-            Log.i("STATUS", String.valueOf(conn.getResponseCode()));
-            Log.i("MSG", conn.getResponseMessage());
-            String Response = conn.getResponseMessage();
-
-            conn.disconnect();
-            return Response;
-        } catch (Exception e) {
-            Log.e(TAG, e.getMessage());
-            return "ERROR AL ENVIAR EL JSON ";
-        }
     }
 
     public void UploadFile2() {
@@ -1127,7 +1094,6 @@ public class Global {
         return bResult;
     }
 
-
     public static void Create_Sql_Tables(Boolean bDropTables, Boolean bDropColects) {
         String cSql_Ln = "";
 
@@ -1294,6 +1260,7 @@ public class Global {
         cSql_Ln += "maqtc_m2s_act INTEGER NULL DEFAULT 0,";
         cSql_Ln += "maqtc_m2s_ant INTEGER NULL DEFAULT 0,";
         cSql_Ln += "maqtc_m1s_act INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "maqtc_semanas_imp INTEGER NULL DEFAULT '0',";
         cSql_Ln += "maqtc_fecha_alta DATETIME NULL ,";
         cSql_Ln += "maqtc_fecha_modif DATETIME NULL ,";
         cSql_Ln += "u_usuario_alta CHAR(20) NULL DEFAULT 'ANONIMO',";
@@ -1440,10 +1407,11 @@ public class Global {
         cSql_Ln += "u_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln += "u_usuario_modif  CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln += "op_emp_id  INTEGER NULL DEFAULT 0,";
-        cSql_Ln += "op_baja_prod INT(1) NOT NULL DEFAULT 0,";
+        cSql_Ln += "op_baja_prod INTEGER(1) NOT NULL DEFAULT 0,";
         cSql_Ln += "id_device VARCHAR(30) NOT NULL DEFAULT 'MANUAL',";
-        cSql_Ln += "op_semanas INTEGER NULL DEFAULT 1,";
+        cSql_Ln += "op_semanas_imp INTEGER NULL DEFAULT 1,";
         cSql_Ln += "op_image_name CHAR(80) NULL DEFAULT NULL,";
+        cSql_Ln += "op_usermodify INTEGER NULL DEFAULT 0,";
         cSql_Ln += "CONSTRAINT  operacion_PRIMARY PRIMARY KEY(id_op))";
         Global.oGen_Db.execSQL(cSql_Ln);
 
@@ -1456,5 +1424,5 @@ public class Global {
         cSql_Ln = "CREATE INDEX IF NOT EXISTS MaqLnk_Id ON operacion ('MaqLnk_Id')";
         Global.oGen_Db.execSQL(cSql_Ln);
     }
-}
 
+}

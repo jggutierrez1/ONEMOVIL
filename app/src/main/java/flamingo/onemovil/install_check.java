@@ -15,7 +15,7 @@ import android.widget.Toast;
 public class install_check extends AppCompatActivity {
     private Button obtn_check_ok, obtn_check_exit;
     private EditText ocheck_code;
-    private TextView InternetStatus;
+    private TextView InternetStatus,DeviceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +30,8 @@ public class install_check extends AppCompatActivity {
         obtn_check_exit = (Button) findViewById(R.id.btn_check_exit);
         ocheck_code = (EditText) findViewById(R.id.check_code);
         InternetStatus = (TextView) findViewById(R.id.check_InternetStatus);
+        DeviceId = (TextView) findViewById(R.id.install_device);
+        DeviceId.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
 
         this.create_database();
         Global.check_tables_device(true);
@@ -76,6 +78,9 @@ public class install_check extends AppCompatActivity {
                 } else {
                     cParsString = "device=" + Global.cid_device + "&clavee=" + cClave;
                     cResult = Global.gen_execute_post(Global.SERVER_URL, "/flam/register_device.php", cParsString);
+                    if (cResult == "") {
+                        cResult = "0";
+                    }
                     int iResult = Integer.valueOf(cResult);
                     if (iResult == 1) {
                         Global.ValidateOk = true;
@@ -99,7 +104,7 @@ public class install_check extends AppCompatActivity {
             @Override
             public void onClick(View arg0) {
                 Global.ValidateOk = false;
-                finish();
+                finishAffinity();
                 System.exit(0);
             }
         });

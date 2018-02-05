@@ -34,9 +34,11 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.channels.FileChannel;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class capt_fin extends AppCompatActivity {
     private Button obtn_print_maq, obtn_totfin_hide, obtn_totfin_save, obtn_totfin_canc;
@@ -58,11 +60,12 @@ public class capt_fin extends AppCompatActivity {
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
 
-        this.olab_cte = (TextView) findViewById(R.id.lab_cte);
+        Locale.setDefault(new Locale("en", "US"));
+
+        this.olab_cte = (TextView) findViewById(R.id.capf_lab_cte);
         this.olOp_tot_cole = (TextView) findViewById(R.id.lop_tot_cole);
         this.olOp_tot_cred = (TextView) findViewById(R.id.lop_tot_cred);
         this.olop_tot_jcj = (TextView) findViewById(R.id.lop_tot_jcj);
-
 
         this.obtn_totfin_hide = (Button) findViewById(R.id.btn_totfin_hide);
         this.obtn_print_maq = (Button) findViewById(R.id.btn_print_maq);
@@ -453,23 +456,23 @@ public class capt_fin extends AppCompatActivity {
                 String ctot_nloc = "0.00";
                 String ctot_nemp = "0.00";
 
-                dtot_cole = Double.parseDouble(oOp_tot_cole.getText().toString().replace(',', '.'));
-                dtot_timb = Double.parseDouble(oOp_tot_timb.getText().toString().replace(',', '.'));
-                dtot_impm = Double.parseDouble(oOp_tot_impm.getText().toString().replace(',', '.'));
-                dtot__jcj = Double.parseDouble(oOp_tot_jcj.getText().toString().replace(',', '.'));
-                dtot_tecn = Double.parseDouble(oOp_tot_tenc.getText().toString().replace(',', '.'));
-                dtot_devo = Double.parseDouble(oOp_tot_devo.getText().toString().replace(',', '.'));
-                dtot_otro = Double.parseDouble(oOp_tot_otro.getText().toString().replace(',', '.'));
-                dtot_cred = Double.parseDouble(oOp_tot_cred.getText().toString().replace(',', '.'));
-                dSub_tota = Double.parseDouble(oOp_tot_subt.getText().toString().replace(',', '.'));
-                dtot_impu = Double.parseDouble(oOp_tot_impu.getText().toString().replace(',', '.'));
-                dtot_tota = Double.parseDouble(oOp_tot_tota.getText().toString().replace(',', '.'));
+                dtot_cole = Double.valueOf(oOp_tot_cole.getText().toString()).doubleValue();
+                dtot_timb = Double.valueOf(oOp_tot_timb.getText().toString()).doubleValue();
+                dtot_impm = Double.valueOf(oOp_tot_impm.getText().toString()).doubleValue();
+                dtot__jcj = Double.valueOf(oOp_tot_jcj.getText().toString()).doubleValue();
+                dtot_tecn = Double.valueOf(oOp_tot_tenc.getText().toString()).doubleValue();
+                dtot_devo = Double.valueOf(oOp_tot_devo.getText().toString()).doubleValue();
+                dtot_otro = Double.valueOf(oOp_tot_otro.getText().toString()).doubleValue();
+                dtot_cred = Double.valueOf(oOp_tot_cred.getText().toString()).doubleValue();
+                dSub_tota = Double.valueOf(oOp_tot_subt.getText().toString()).doubleValue();
+                dtot_impu = Double.valueOf(oOp_tot_impu.getText().toString()).doubleValue();
+                dtot_tota = Double.valueOf(oOp_tot_tota.getText().toString()).doubleValue();
                 //-------------------------------------------------------------------------------------------------------//
-                dtot_bloc = Double.parseDouble(oOp_tot_bloc.getText().toString().replace(',', '.'));
-                dtot_bemp = Double.parseDouble(oOp_tot_bemp.getText().toString().replace(',', '.'));
+                dtot_bloc = Double.valueOf(oOp_tot_bloc.getText().toString()).doubleValue();
+                dtot_bemp = Double.valueOf(oOp_tot_bemp.getText().toString()).doubleValue();
                 //-------------------------------------------------------------------------------------------------------//
-                dtot_nloc = Double.parseDouble(oOp_tot_nloc.getText().toString().replace(',', '.'));
-                dtot_nemp = Double.parseDouble(oOp_tot_nemp.getText().toString().replace(',', '.'));
+                dtot_nloc = Double.valueOf(oOp_tot_nloc.getText().toString()).doubleValue();
+                dtot_nemp = Double.valueOf(oOp_tot_nemp.getText().toString()).doubleValue();
 
 
                 ctot_cole = String.format("%.2f", dtot_cole);
@@ -490,7 +493,14 @@ public class capt_fin extends AppCompatActivity {
                 ctot_nloc = String.format("%.2f", dtot_nloc);
                 ctot_nemp = String.format("%.2f", dtot_nemp);
 
-                oData5 = oDb5.rawQuery("SELECT COUNT(op_chapa) AS cnt FROM operacion WHERE cte_id='" + Global.cCte_Id + "'", null);
+                cSql_Ln = "" +
+                        "SELECT " +
+                        "   COUNT(op_chapa) AS cnt " +
+                        "FROM operacion " +
+                        "WHERE IFNULL(op_baja_prod,0)=0 " +
+                        "AND   cte_id='" + Global.cCte_Id + "' ";
+
+                oData5 = oDb5.rawQuery(cSql_Ln, null);
                 if (oData5.getCount() == 0) {
                 } else {
                     oData5.moveToFirst();
@@ -511,6 +521,30 @@ public class capt_fin extends AppCompatActivity {
                 Log.e("date1", cDateMysql);
                 Log.e("corre", cNumDoc);
 
+                cSql_Ln = "UPDATE operacion SET ";
+                cSql_Ln += " op_tot_brutoloc = 0.00,";
+                cSql_Ln += " op_tot_brutoemp = 0.00,";
+                cSql_Ln += " op_tot_netoloc  = 0.00,";
+                cSql_Ln += " op_tot_netoemp  = 0.00,";
+                cSql_Ln += " op_tot_timbres  = 0.00,";
+                cSql_Ln += " op_tot_impmunic = 0.00,";
+                cSql_Ln += " op_tot_impjcj   = 0.00,";
+                cSql_Ln += " op_tot_tec      = 0.00,";
+                cSql_Ln += " op_tot_dev      = 0.00,";
+                cSql_Ln += " op_tot_otros    = 0.00,";
+                cSql_Ln += " op_tot_sub      = 0.00,";
+                cSql_Ln += " op_tot_itbm     = 0.00,";
+                cSql_Ln += " op_tot_tot      = 0.00,";
+                cSql_Ln += " op_nodoc        ='" + cNumDoc + "',";
+                cSql_Ln += " op_fecha        ='" + cDateMysql + "',";
+                cSql_Ln += " u_usuario_alta  ='TABLET',";
+                cSql_Ln += " op_fecha_alta   ='" + cDateMysql + "', ";
+                cSql_Ln += " op_usermodify   = 1 ";
+                cSql_Ln += "WHERE IFNULL(op_baja_prod,0)=1 ";
+                cSql_Ln += "AND   cte_id      ='" + Global.cCte_Id + "'";
+                Global.logLargeString(cSql_Ln);
+                oDb5.execSQL(cSql_Ln);
+
                 if (iRegs_Cnt > 0) {
                     cRegs_Cnt = Integer.valueOf(iRegs_Cnt).toString().trim();
 
@@ -525,7 +559,7 @@ public class capt_fin extends AppCompatActivity {
                     else
                         cSql_Ln += " op_tot_impmunic=(" + ctot_impm + "/" + cRegs_Cnt + "), ";
 
-                    cSql_Ln += " op_tot_impjcj  =(IFNULL(op_semanas,1)*37.50), ";
+                    cSql_Ln += " op_tot_impjcj  =(IFNULL(op_semanas_imp,1)*37.50), ";
 
                     if (dtot_tecn == 0.00)
                         cSql_Ln += " op_tot_tec     =0.00, ";
@@ -548,8 +582,39 @@ public class capt_fin extends AppCompatActivity {
                     cSql_Ln += " op_nodoc       ='" + cNumDoc + "',";
                     cSql_Ln += " op_fecha       ='" + cDateMysql + "',";
                     cSql_Ln += " u_usuario_alta ='TABLET',";
-                    cSql_Ln += " op_fecha_alta  ='" + cDateMysql + "' ";
-                    cSql_Ln += "WHERE cte_id='" + Global.cCte_Id + "'";
+                    cSql_Ln += " op_fecha_alta  ='" + cDateMysql + "', ";
+                    cSql_Ln += " op_usermodify  =1 ";
+                    cSql_Ln += "WHERE IFNULL(op_baja_prod,0)=0 ";
+                    cSql_Ln += "AND   cte_id      ='" + Global.cCte_Id + "'";
+                    Global.logLargeString(cSql_Ln);
+                    oDb5.execSQL(cSql_Ln);
+
+                    cSql_Ln = "" +
+                            "UPDATE operacion SET " +
+                            " op_tot_brutoloc = CASE WHEN (op_cporc_Loc == 100) THEN (0.00)       ELSE (op_tot_tot * (op_cporc_Loc / 100)) END " +
+                            "WHERE IFNULL(op_baja_prod,0)=0 " +
+                            "AND   cte_id      ='" + Global.cCte_Id + "'";
+                    oDb5.execSQL(cSql_Ln);
+
+                    cSql_Ln = "" +
+                            "UPDATE operacion SET " +
+                            " op_tot_brutoemp = CASE WHEN (op_cporc_Loc == 100) THEN (op_tot_tot) ELSE (op_tot_tot-op_tot_brutoloc) END " +
+                            "WHERE IFNULL(op_baja_prod,0)=0 " +
+                            "AND   cte_id      ='" + Global.cCte_Id + "'";
+                    oDb5.execSQL(cSql_Ln);
+
+                    cSql_Ln = "" +
+                            "UPDATE operacion SET " +
+                            " op_tot_netoloc  = (op_tot_dev + op_tot_otros + op_tot_cred + op_tot_brutoloc) " +
+                            "WHERE IFNULL(op_baja_prod,0)=0 " +
+                            "AND   cte_id      ='" + Global.cCte_Id + "'";
+                    oDb5.execSQL(cSql_Ln);
+
+                    cSql_Ln = "" +
+                            "UPDATE operacion SET " +
+                            " op_tot_netoemp  = (op_tot_timbres + op_tot_impmunic + op_tot_impjcj + op_tot_tec + op_tot_brutoemp) " +
+                            "WHERE IFNULL(op_baja_prod,0)=0 " +
+                            "AND   cte_id      ='" + Global.cCte_Id + "'";
                     oDb5.execSQL(cSql_Ln);
                 }
                 /*
@@ -577,6 +642,67 @@ public class capt_fin extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_GET_PASS) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    int ipass = data.getIntExtra("PASSWORD", -1);
+                    Log.e("TAG", Integer.valueOf(ipass).toString());
+
+                    if (ipass == Integer.valueOf(Global.PasswChgAmmout)) {
+                        switch (Global.iObj_Select) {
+                            case 0:
+                                this.oOp_tot_cole.setEnabled(false);
+                                this.oOp_tot_cred.setEnabled(false);
+                                this.oOp_tot_jcj.setEnabled(false);
+                                break;
+                            case 1:
+                                this.oOp_tot_cole.setEnabled(true);
+                                this.oOp_tot_cole.selectAll();
+                                this.oOp_tot_cole.requestFocus();
+                                break;
+                            case 2:
+                                this.oOp_tot_cred.setEnabled(true);
+                                this.oOp_tot_cred.selectAll();
+                                this.oOp_tot_cred.requestFocus();
+                                break;
+                            case 3:
+                                this.oOp_tot_jcj.setEnabled(true);
+                                this.oOp_tot_jcj.selectAll();
+                                this.oOp_tot_jcj.requestFocus();
+                                break;
+                        }
+                        //Toast.makeText(this, "CONTRASEÑA VALIDA", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "CONTRASEÑA INCORRECTA", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case RESULT_CANCELED:
+                    switch (Global.iObj_Select) {
+                        case 0:
+                            this.oOp_tot_cole.setEnabled(false);
+                            this.oOp_tot_cred.setEnabled(false);
+                            this.oOp_tot_jcj.setEnabled(false);
+                            break;
+                        case 1:
+                            this.oOp_tot_cole.setEnabled(false);
+                            break;
+                        case 2:
+                            this.oOp_tot_cred.setEnabled(false);
+                            break;
+                        case 3:
+                            this.oOp_tot_jcj.setEnabled(false);
+                            break;
+                    }
+                    Toast.makeText(this, "Canceló la operación.", Toast.LENGTH_SHORT).show();
+                    break;
+
+            }
+        }
     }
 
     private void Clear_Screen() {
@@ -659,16 +785,18 @@ public class capt_fin extends AppCompatActivity {
     }
 
     private void Find_Values() {
+
         String cSql_Ln = "";
 
         cSql_Ln = "";
         cSql_Ln += "SELECT ";
         cSql_Ln += "    SUM(op_tot_colect) AS op_tot_colect, ";
         cSql_Ln += "    SUM(op_tot_cred) AS op_tot_cred, ";
-        cSql_Ln += "    SUM(37.50*op_semanas) AS op_tot_jcj ";
+        cSql_Ln += "    SUM(op_semanas_imp)*37.50 AS op_tot_jcj ";
         cSql_Ln += "FROM operacion ";
-        cSql_Ln += "WHERE id_device='" + Global.cid_device + "' ";
-        cSql_Ln += "AND   cte_id   ='" + Global.cCte_Id + "' ";
+        cSql_Ln += "WHERE id_device    ='" + Global.cid_device + "' ";
+        cSql_Ln += "AND   cte_id       ='" + Global.cCte_Id + "' ";
+        cSql_Ln += "AND   IFNULL(op_baja_prod,0) =0 ";
 
         Log.e("SQL", cSql_Ln);
         oData5 = oDb5.rawQuery(cSql_Ln, null);
@@ -683,9 +811,14 @@ public class capt_fin extends AppCompatActivity {
             Double ftotfin_prem = oData5.getDouble(oData5.getColumnIndex("op_tot_cred"));
             Double dtot_jcj = oData5.getDouble(oData5.getColumnIndex("op_tot_jcj"));
 
-            this.oOp_tot_cole.setText(Double.valueOf(ftotfin_bruto).toString());
-            this.oOp_tot_cred.setText(Double.valueOf(ftotfin_prem).toString());
-            this.oOp_tot_jcj.setText(Double.valueOf(dtot_jcj).toString());
+            String ctotfin_bruto = String.format("%.2f", ftotfin_bruto);
+            String ctotfin_prem = String.format("%.2f", ftotfin_prem);
+            String ctot_jcj = String.format("%.2f", dtot_jcj);
+
+
+            this.oOp_tot_cole.setText(ctotfin_bruto);
+            this.oOp_tot_cred.setText(ctotfin_prem);
+            this.oOp_tot_jcj.setText(ctot_jcj);
         }
         oData5.close();
     }
@@ -839,25 +972,25 @@ public class capt_fin extends AppCompatActivity {
         String ctot_nemp = "";
 
         //-------------------------------------------------------------------------------------------------------//
-        dtot_timb = Double.parseDouble(this.oOp_tot_timb.getText().toString().replace(',', '.'));
-        dtot_impm = Double.parseDouble(this.oOp_tot_impm.getText().toString().replace(',', '.'));
-        dtot__jcj = Double.parseDouble(this.oOp_tot_jcj.getText().toString().replace(',', '.'));
-        dtot_tecn = Double.parseDouble(this.oOp_tot_tenc.getText().toString().replace(',', '.'));
+        dtot_timb = Double.valueOf(this.oOp_tot_timb.getText().toString()).doubleValue();
+        dtot_impm = Double.valueOf(this.oOp_tot_impm.getText().toString()).doubleValue();
+        dtot__jcj = Double.valueOf(this.oOp_tot_jcj.getText().toString()).doubleValue();
+        dtot_tecn = Double.valueOf(this.oOp_tot_tenc.getText().toString()).doubleValue();
         dtot_sum1 = (dtot_timb + dtot_impm + dtot__jcj + dtot_tecn);
         //-------------------------------------------------------------------------------------------------------//
-        dtot_devo = Double.parseDouble(this.oOp_tot_devo.getText().toString().replace(',', '.'));
-        dtot_otro = Double.parseDouble(this.oOp_tot_otro.getText().toString().replace(',', '.'));
-        dtot_cred = Double.parseDouble(this.oOp_tot_cred.getText().toString().replace(',', '.'));
+        dtot_devo = Double.valueOf(this.oOp_tot_devo.getText().toString()).doubleValue();
+        dtot_otro = Double.valueOf(this.oOp_tot_otro.getText().toString()).doubleValue();
+        dtot_cred = Double.valueOf(this.oOp_tot_cred.getText().toString()).doubleValue();
         dtot_sum2 = (dtot_devo + dtot_otro + dtot_cred);
         //-------------------------------------------------------------------------------------------------------//
-        dtot_cole = Double.parseDouble(this.oOp_tot_cole.getText().toString().replace(',', '.'));
+        dtot_cole = Double.valueOf(this.oOp_tot_cole.getText().toString()).doubleValue();
         //-------------------------------------------------------------------------------------------------------//
         dSub_tota = (dtot_cole - dtot_sum1 - dtot_sum2);
         cSub_tota = String.format("%.2f", dSub_tota);
         //-------------------------------------------------------------------------------------------------------//
         this.oOp_tot_subt.setText(cSub_tota);
 
-        dtot_impu = Double.parseDouble(this.oOp_tot_impu.getText().toString().replace(',', '.'));
+        dtot_impu = Double.valueOf(this.oOp_tot_impu.getText().toString()).doubleValue();
 
         dtot_tota = dSub_tota - dtot_impu;
         ctot_tota = String.format("%.2f", dtot_tota);
@@ -893,67 +1026,6 @@ public class capt_fin extends AppCompatActivity {
 
         this.oOp_tot_nloc.setText(ctot_nloc);
         this.oOp_tot_nemp.setText(ctot_nemp);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_GET_PASS) {
-            switch (resultCode) {
-                case RESULT_OK:
-                    int ipass = data.getIntExtra("PASSWORD", -1);
-                    Log.e("TAG", Integer.valueOf(ipass).toString());
-
-                    if (ipass == Integer.valueOf(Global.PasswChgAmmout)) {
-                        switch (Global.iObj_Select) {
-                            case 0:
-                                this.oOp_tot_cole.setEnabled(false);
-                                this.oOp_tot_cred.setEnabled(false);
-                                this.oOp_tot_jcj.setEnabled(false);
-                                break;
-                            case 1:
-                                this.oOp_tot_cole.setEnabled(true);
-                                this.oOp_tot_cole.selectAll();
-                                this.oOp_tot_cole.requestFocus();
-                                break;
-                            case 2:
-                                this.oOp_tot_cred.setEnabled(true);
-                                this.oOp_tot_cred.selectAll();
-                                this.oOp_tot_cred.requestFocus();
-                                break;
-                            case 3:
-                                this.oOp_tot_jcj.setEnabled(true);
-                                this.oOp_tot_jcj.selectAll();
-                                this.oOp_tot_jcj.requestFocus();
-                                break;
-                        }
-                        //Toast.makeText(this, "CONTRASEÑA VALIDA", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "CONTRASEÑA INCORRECTA", Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-                case RESULT_CANCELED:
-                    switch (Global.iObj_Select) {
-                        case 0:
-                            this.oOp_tot_cole.setEnabled(false);
-                            this.oOp_tot_cred.setEnabled(false);
-                            this.oOp_tot_jcj.setEnabled(false);
-                            break;
-                        case 1:
-                            this.oOp_tot_cole.setEnabled(false);
-                            break;
-                        case 2:
-                            this.oOp_tot_cred.setEnabled(false);
-                            break;
-                        case 3:
-                            this.oOp_tot_jcj.setEnabled(false);
-                            break;
-                    }
-                    Toast.makeText(this, "Canceló la operación.", Toast.LENGTH_SHORT).show();
-                    break;
-
-            }
-        }
     }
 
 }

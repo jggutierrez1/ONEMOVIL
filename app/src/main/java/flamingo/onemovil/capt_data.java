@@ -57,6 +57,7 @@ import java.text.SimpleDateFormat;
 
 import java.util.Date;
 import java.util.Locale;
+
 import android.text.format.DateFormat;
 
 public class capt_data extends AppCompatActivity {
@@ -82,7 +83,7 @@ public class capt_data extends AppCompatActivity {
     private String op_chapa, op_modelo, op_serie, maqlnk_id, cte_nombre_loc, cte_nombre_com,
             maqtc_denom_e, maqtc_denom_s;
     private double op_colect, op_cred, op_cal_colect, op_cal_cred, op_cporc_Loc, Op_tot_impjcj, Op_tot_impmunic, den_valore, den_valors;
-    private int op_emp_id, den_fact_e, den_fact_s, maqtc_tipomaq, Op_ea_metroac, Op_ea_metroan, Op_sa_metroac, Op_sa_metroan, Op_semanas;
+    private int op_emp_id, den_fact_e, den_fact_s, maqtc_tipomaq, Op_ea_metroac, Op_ea_metroan, Op_sa_metroac, Op_sa_metroan, op_semanas_imp;
     private boolean bFoundMach;
     private int cte_pag_jcj, cte_pag_spac, cte_pag_impm, Denom_Ent_Fac, Denom_Sal_Fac;
     private double fDenom_Ent_Val, fDenom_Sal_Val, Porc_Loc;
@@ -98,6 +99,8 @@ public class capt_data extends AppCompatActivity {
 
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
+
+        Locale.setDefault(new Locale("en", "US"));
 
         this.btn_hide_capt = (Button) findViewById(R.id.obtn_hide_capt);
         this.btn_foto_capt = (Button) findViewById(R.id.obtn_foto_capt);
@@ -501,6 +504,9 @@ public class capt_data extends AppCompatActivity {
                 String cSql_Ln = "";
                 String CadenaMaq = "[" + Global.cCte_Id + "]_[" + Global.cMaq_Id + "]_IMG_";
 
+                Double dtot_cole = Double.valueOf(tot_cole.getText().toString()).doubleValue();
+                Double dtot_cred = Double.valueOf(tot_cred.getText().toString()).doubleValue();
+
 /*
                 Date date = new Date();
                 String day          = (String) DateFormat.format("dd",   date); // 20
@@ -511,22 +517,22 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "" +
                         "DELETE FROM operacion " +
                         "WHERE id_device='" + Global.cid_device + "' " +
-                        "AND  op_chapa  ='" + op_chapa + "'; " +
+                        "AND  op_chapa  ='" + op_chapa + "'; ";
 
                 Log.e("SQL", cSql_Ln);
                 //System.out.print(cSql_Ln);
                 db4.execSQL(cSql_Ln);
-                Op_semanas = Integer.parseInt(oSemanas.getText().toString());
+                op_semanas_imp = Integer.parseInt(oSemanas.getText().toString());
 
                 double Op_tot_impjcj2 = 0.00;
                 double Op_tot_impmunic2 = 0.00;
 
                 if (cte_pag_jcj == 0) {
-                    Op_tot_impjcj2 = (Op_tot_impjcj * Op_semanas);
+                    Op_tot_impjcj2 = (Op_tot_impjcj * op_semanas_imp);
                 }
 
                 if (cte_pag_impm == 0) {
-                    Op_tot_impmunic2 = (Op_tot_impmunic * Op_semanas);
+                    Op_tot_impmunic2 = (Op_tot_impmunic * op_semanas_imp);
                 }
                 Global.Correl_Device++;
                 String Op_nodoc = Global.cid_device.substring(Global.cid_device.length() - 3, Global.cid_device.length()) + String.format("%08d", Global.Correl_Device);
@@ -552,7 +558,7 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "op_fecha_alta,op_fecha_modif,";
                 cSql_Ln += "op_tot_impmunic,op_tot_impjcj,";
                 cSql_Ln += "op_emp_id,id_device,";
-                cSql_Ln += "op_semanas,op_nodoc,";
+                cSql_Ln += "op_semanas_imp,op_nodoc,";
                 cSql_Ln += "op_baja_prod, op_image_name) VALUES (";
                 cSql_Ln += "'" + Global.cCte_Id + "',";
                 cSql_Ln += "'" + cte_nombre_loc + "',";
@@ -593,10 +599,10 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "'0',";
 
                 cSql_Ln += "'" + op_cal_colect + "',";
-                cSql_Ln += "'" + String.format("%.2f", Double.parseDouble(tot_cole.getText().toString())) + "',";
+                cSql_Ln += "'" + String.format("%.2f", dtot_cole) + "',";
 
                 cSql_Ln += "'" + op_cal_cred + "',";
-                cSql_Ln += "'" + String.format("%.2f", Double.parseDouble(tot_cred.getText().toString())) + "',";
+                cSql_Ln += "'" + String.format("%.2f", dtot_cred) + "',";
                 cSql_Ln += "'" + cNow2 + "',";
                 cSql_Ln += "'" + cNow2 + "',";
                 cSql_Ln += "'" + Op_tot_impjcj2 + "',";
@@ -604,7 +610,7 @@ public class capt_data extends AppCompatActivity {
 
                 cSql_Ln += "'" + op_emp_id + "',";
                 cSql_Ln += "'" + Global.cid_device + "',";
-                cSql_Ln += "'" + Op_semanas + "',";
+                cSql_Ln += "'" + op_semanas_imp + "',";
 
                 cSql_Ln += "'" + Op_nodoc + "',";
                 cSql_Ln += "'" + (oBaja_prod.isChecked() == true ? "1" : "0") + "',";

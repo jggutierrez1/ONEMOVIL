@@ -60,7 +60,7 @@
                 android:layout_height="15dp" />
 
             <TextView
-                android:id="@+id/lab_cte"
+                android:id="@+id/capf_lab_cte"
                 style="@style/Widget.AppCompat.TextView.SpinnerItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -76,7 +76,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autoText="false"
-                android:background="?android:attr/colorEdgeEffect"
+                android:background="?attr/colorPrimary"
                 android:textAlignment="center"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -419,7 +419,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autoText="false"
-                android:background="?android:attr/colorEdgeEffect"
+                android:background="?attr/colorPrimary"
                 android:textAlignment="center"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -486,7 +486,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autoText="false"
-                android:background="?android:attr/colorEdgeEffect"
+                android:background="?attr/colorPrimary"
                 android:textAlignment="center"
                 android:textSize="14sp"
                 android:textStyle="bold" />

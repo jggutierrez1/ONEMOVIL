@@ -16,9 +16,7 @@ import android.widget.Toast;
 public class login extends AppCompatActivity {
     Button btn_entar, btn_cance;
     EditText User, Pass;
-
-    private TextView DeviceId;
-    TextView Intentos;
+    TextView DeviceId,ologin_emp,Intentos;
     ImageView oImagen;
     int counter = 3;
     public final static int REQUEST_MEN = 1;
@@ -53,6 +51,8 @@ public class login extends AppCompatActivity {
         DeviceId = (TextView) findViewById(R.id.login_device);
         DeviceId.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
 
+        ologin_emp = (TextView) findViewById(R.id.login_emp);
+
         if (Global.checkDataBase() == false) {
             this.create_database();
             Intent Check_Install_Screen = new Intent(getApplicationContext(), install_check.class);
@@ -66,6 +66,8 @@ public class login extends AppCompatActivity {
             }
         }
         Global.Get_Config();
+
+        ologin_emp.setText("["+Global.Query_Result("SELECT emp_descripcion FROM empresas WHERE emp_id='" + Global.cEmp_Id + "'", "emp_descripcion")+"]");
 
         btn_entar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +97,8 @@ public class login extends AppCompatActivity {
         btn_cance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                finishAffinity();
+                System.exit(0);
             }
         });
 

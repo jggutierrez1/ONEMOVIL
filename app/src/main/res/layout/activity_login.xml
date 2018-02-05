@@ -11,112 +11,116 @@
         android:layout_height="fill_parent"
         android:fillViewport="true"> <!--IMPORTANT otherwise backgrnd img. will not fill the whole screen -->
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-
-            <TextView
-                android:id="@+id/textview"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_alignStart="@+id/textView"
-                android:layout_marginTop="60dp"
-                android:text="Acceso al Sistema"
-                android:textSize="35dp" />
-
-            <TextView
-                android:id="@+id/textView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textview"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="28dp"
-                android:text="CENTRAL GAMES"
-                android:textColor="#ff7aff24"
-                android:textSize="35dp" />
-
-            <EditText
-                android:id="@+id/oLogin_User"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/imageView"
-                android:layout_marginTop="46dp"
-                android:focusable="true"
-                android:hint="Entre el nombre"
-                android:inputType="textNoSuggestions"
-                android:text="admin"
-                android:textColorHighlight="#ff7eff15"
-                android:textColorHint="#ffff25e6" />
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/textView"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="52dp"
-                android:src="@drawable/descarga" />
-
-            <EditText
-                android:id="@+id/oLogin_Pass"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignEnd="@+id/oLogin_User"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignRight="@+id/oLogin_User"
-                android:layout_below="@+id/oLogin_User"
-                android:ems="10"
-                android:hint="Clave"
-                android:inputType="textPassword|textNoSuggestions"
-                android:text="admin"
-                android:textColorHint="#ffff299f" />
-
-            <TextView
-                android:id="@+id/ologin_intentos"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_below="@+id/oLogin_Pass"
-                android:text="Intentos:"
-                android:textSize="25dp" />
-
-            <Button
-                android:id="@+id/obtn_login_entrar"
-                android:layout_width="wrap_content"
-                android:layout_height="65dp"
-                android:layout_alignParentBottom="true"
-                android:layout_toLeftOf="@+id/textview"
-                android:layout_toStartOf="@+id/textview"
-                android:background="@color/Chartreuse"
-                android:text="Entrar" />
-
-            <Button
-                android:id="@+id/obtn_login_cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="65dp"
-                android:layout_alignParentBottom="true"
-                android:layout_toEndOf="@+id/textview"
-                android:layout_toRightOf="@+id/textview"
-                android:background="@color/Coral"
-                android:text="Salir" />
-
-        </RelativeLayout>
     </ScrollView>
 
-    <TextView
-        android:id="@+id/login_device"
-        android:layout_width="752dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="ID. DISPOSITIVO:"
-        android:textSize="18sp"
         tools:layout_editor_absoluteX="8dp"
-        tools:layout_editor_absoluteY="0dp" />
+        tools:layout_editor_absoluteY="0dp">
+
+
+        <TextView
+            android:id="@+id/login_device"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="ID. DISPOSITIVO:"
+            android:textSize="18sp"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <TextView
+            android:id="@+id/textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login_device"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="37dp"
+            android:text="Acceso al Sistema"
+            android:textAlignment="center"
+            android:textSize="35dp" />
+
+        <TextView
+            android:id="@+id/login_emp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textview"
+            android:layout_marginTop="16dp"
+            android:text="CENTRAL GAMES"
+            android:textAlignment="center"
+            android:textColor="#ff7aff24"
+            android:textSize="35dp" />
+
+        <EditText
+            android:id="@+id/oLogin_User"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/imageView"
+            android:layout_marginTop="46dp"
+            android:focusable="true"
+            android:hint="Entre el nombre"
+            android:inputType="textNoSuggestions"
+            android:text="admin"
+            android:textColorHighlight="#ff7eff15"
+            android:textColorHint="#ffff25e6" />
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/login_emp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="29dp"
+            android:src="@drawable/descarga" />
+
+        <EditText
+            android:id="@+id/oLogin_Pass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/oLogin_User"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignRight="@+id/oLogin_User"
+            android:layout_below="@+id/oLogin_User"
+            android:ems="10"
+            android:hint="Clave"
+            android:inputType="textPassword|textNoSuggestions"
+            android:text="admin"
+            android:textColorHint="#ffff299f" />
+
+        <TextView
+            android:id="@+id/ologin_intentos"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/oLogin_Pass"
+            android:text="Intentos:"
+            android:textSize="25dp" />
+
+        <Button
+            android:id="@+id/obtn_login_entrar"
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toStartOf="@+id/imageView"
+            android:background="@color/Chartreuse"
+            android:text="Entrar" />
+
+        <Button
+            android:id="@+id/obtn_login_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:layout_alignParentBottom="true"
+            android:layout_toEndOf="@+id/imageView"
+            android:background="@color/Coral"
+            android:text="Salir" />
+
+    </RelativeLayout>
+
 </android.support.constraint.ConstraintLayout>

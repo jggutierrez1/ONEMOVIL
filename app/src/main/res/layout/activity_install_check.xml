@@ -12,6 +12,15 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/install_device"
+            android:layout_width="752dp"
+            android:layout_height="wrap_content"
+            android:text="ID. DISPOSITIVO:"
+            android:textSize="18sp"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <TextView
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -29,6 +29,16 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/olempresa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="EMPRESA:"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="30sp"
+                android:textStyle="bold|italic" />
+
+            <TextView
                 android:id="@+id/oDeviceId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -101,7 +111,6 @@
                 android:id="@+id/obtn_descar"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
-                android:enabled="false"
                 android:text="ENVIAR COLECTAS" />
 
             <Space
