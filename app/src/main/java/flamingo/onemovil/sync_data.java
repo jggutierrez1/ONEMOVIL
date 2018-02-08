@@ -131,7 +131,7 @@ public class sync_data extends AppCompatActivity {
 
                 cParsString = "";
                 cParsString += "table_no=0";
-                cParsString += "&emp_id=" + myEmp;
+                cParsString += "&emp_id=0";
                 String script = Global.gen_execute_post(Global.SERVER_URL, "/flam/get_all_data.php", cParsString);
 
                 String[] queries = script.split(";");

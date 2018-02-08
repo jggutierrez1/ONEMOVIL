@@ -1030,9 +1030,9 @@ public class Global {
         return result;
     }
 
-    public static String Query_Result(String Sql, String FieldResult) {
+    public static String Query_Result(String cSql, String FieldResult) {
         String cValue = "";
-        Global.oGen_Cursor = Global.oGen_Db.rawQuery(Sql, null);
+        Global.oGen_Cursor = Global.oGen_Db.rawQuery(cSql, null);
         Global.oGen_Cursor.moveToFirst();
         int iRecords = Global.oGen_Cursor.getCount();
         int iColumIndex = Global.oGen_Cursor.getColumnIndex(FieldResult);
@@ -1425,4 +1425,42 @@ public class Global {
         Global.oGen_Db.execSQL(cSql_Ln);
     }
 
+    public static void Create_Sql_Tables_Emp(){
+        String cSql_Ln = "";
+        // ---------------------------------EMPRESA----------------------------------------------------------------//
+        cSql_Ln = "";
+        cSql_Ln += "CREATE TABLE IF NOT EXISTS empresas ( ";
+        cSql_Ln += "emp_id INTEGER NOT NULL,";
+        cSql_Ln += "emp_descripcion CHAR(85) NULL DEFAULT '',";
+        cSql_Ln += "emp_ruc CHAR(85) NULL DEFAULT '',";
+        cSql_Ln += "emp_dv CHAR(10) NULL DEFAULT '',";
+        cSql_Ln += "emp_carpeta_reportes VARCHAR (120) NULL DEFAULT '',";
+        cSql_Ln += "emp_telefono1 CHAR(12) NULL DEFAULT '',";
+        cSql_Ln += "emp_telefono2 CHAR(12) NULL DEFAULT '',";
+        cSql_Ln += "emp_fax CHAR(12) NULL DEFAULT '',";
+        cSql_Ln += "emp_direccion TEXT NULL,";
+        cSql_Ln += "emp_apartado TEXT NULL,";
+        cSql_Ln += "emp_email CHAR(100) NULL DEFAULT '',";
+        cSql_Ln += "separa_mil CHAR(1) NULL DEFAULT ',',";
+        cSql_Ln += "separa_dec CHAR(1) NULL DEFAULT '.',";
+        cSql_Ln += "emp_imagen BLOB NULL,";
+        cSql_Ln += "emp_imagen_path VARCHAR(120) NULL DEFAULT '',";
+        cSql_Ln += "emp_inactivo INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "emp_cargo_jcj NUMERIC(12, 2) NULL DEFAULT 0,";
+        cSql_Ln += "emp_cargo_spac NUMERIC(12, 2) NULL DEFAULT 0,";
+        cSql_Ln += "emp_fecha_alta DATETIME NULL ,";
+        cSql_Ln += "emp_fecha_modif DATETIME NULL ,";
+        cSql_Ln += "u_usuario_alta CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "CONSTRAINT empresas_PRIMARY PRIMARY KEY (emp_id))";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS emp_inactivo ON empresas ('emp_inactivo')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS emp_descripcion ON empresas ('emp_descripcion')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+        // ----------------------------------FIN EMPRESAS---------------------------------------------------//
+
+    }
 }

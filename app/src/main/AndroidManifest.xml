@@ -24,27 +24,21 @@
         android:theme="@style/AppTheme">
         <activity android:name=".login">
             <intent-filter>
-                <action android:name="android.intent.action.MEDIA_MOUNTED" />
-
-                <data android:scheme="file" />
-
-                <action android:name="android.intent.action.MAIN" />
-
+                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".capt_data" />
-        <activity android:name=".capt_fin" />
-        <activity android:name=".menu" />
-        <activity android:name=".print_data" />
-        <activity android:name=".select_cte" />
-        <activity android:name=".select_maq" />
-        <activity android:name=".sync_data" />
-        <activity android:name=".take_photo" />
-        <activity android:name=".uploadfiletoserver" />
-        <activity android:name=".calculadora" />
-        <activity android:name=".get_password" />
-        <activity android:name=".install_check"></activity>
+        <activity android:name=".capt_data"/>
+        <activity android:name=".capt_fin"/>
+        <activity android:name=".menu"/>
+        <activity android:name=".print_data"/>
+        <activity android:name=".select_cte"/>
+        <activity android:name=".select_maq"/>
+        <activity android:name=".sync_data"/>
+        <activity android:name=".take_photo"/>
+        <activity android:name=".uploadfiletoserver"/>
+         <activity android:name=".get_password"/>
+        <activity android:name=".install_check"/>
     </application>
 
 </manifest>
