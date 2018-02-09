@@ -2,6 +2,7 @@ package flamingo.onemovil;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -31,6 +32,9 @@ public class select_cte extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_cte);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
         getWindow().getDecorView().getRootView().setBackgroundColor(Color.rgb(204, 217, 255));
 
         Global.oActual_Context = null;

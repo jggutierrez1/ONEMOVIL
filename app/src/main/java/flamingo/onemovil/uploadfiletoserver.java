@@ -3,6 +3,7 @@ package flamingo.onemovil;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -38,6 +39,9 @@ public class uploadfiletoserver extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uploadfiletoserver);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
         ivAttachment = (ImageView) findViewById(R.id.ivAttachment);
         bUpload = (Button) findViewById(R.id.b_upload);
         bExit = (Button) findViewById(R.id.b_salir);

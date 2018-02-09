@@ -2,6 +2,7 @@ package flamingo.onemovil;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,8 @@ public class login extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
         Global.cid_device = Settings.Secure.getString(this.getContentResolver(), Settings.Secure.ANDROID_ID);
         Global.cid_device = Global.cid_device.toUpperCase();
@@ -109,6 +112,7 @@ public class login extends AppCompatActivity {
                 Global.clear_tables_device();
                 finish();
                 System.exit(0);
+                android.os.Process.killProcess(android.os.Process.myPid());
             }
         });
 
