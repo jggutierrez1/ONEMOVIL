@@ -27,14 +27,13 @@
             android:excludeFromRecents="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".capt_data" />
         <activity android:name=".capt_fin" />
-        <activity
-            android:name=".menu"
-            android:excludeFromRecents="true" />
+        <activity android:name=".menu" />
         <activity android:name=".print_data" />
         <activity android:name=".select_cte" />
         <activity android:name=".select_maq" />
@@ -43,6 +42,7 @@
         <activity android:name=".uploadfiletoserver" />
         <activity android:name=".get_password" />
         <activity android:name=".install_check" />
+        <activity android:name=".select_emp"></activity>
     </application>
 
 </manifest>

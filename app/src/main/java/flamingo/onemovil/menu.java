@@ -4,12 +4,12 @@ import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 
-import java.io.FileReader;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 import android.app.AlertDialog;
@@ -17,10 +17,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Environment;
 import android.os.Handler;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -29,21 +29,16 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.provider.Settings.Secure;
-import android.content.Context;
 
-import java.io.FileInputStream;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 
-import org.ini4j.InvalidFileFormatException;
-import org.ini4j.Wini;
-import org.json.JSONArray;
-
 public class menu extends AppCompatActivity {
 
-    private Button btn_upd, btn_start, btn_maq, btn_capt, btn_repo, btn_descar, btn_exit, btn_canc_colec, btn_fin_colec;
+    private Button btn_upd, btn_emp, btn_cte, btn_maq, btn_capt, btn_send, btn_exit, btn_ccol, btn_fcol;
     private ImageView mImageView;
     private TextView DeviceId, lempresa;
 
@@ -51,6 +46,7 @@ public class menu extends AppCompatActivity {
     private String cSql_Ln;
     private String mCurrentPhotoPath;
 
+    private final static int REQUEST_SEL_EMP = 5;
     private final static int REQUEST_SEL_CTE = 1;
     private final static int REQUEST_SEL_MAQ = 2;
     private final static int REQUEST_INI_CAP = 3;
@@ -98,15 +94,15 @@ public class menu extends AppCompatActivity {
         }
 
         btn_upd = (Button) findViewById(R.id.obtn_upd);
-        btn_start = (Button) findViewById(R.id.obtn_start);
+        btn_emp = (Button) findViewById(R.id.obtn_emp);
+        btn_cte = (Button) findViewById(R.id.obtn_cte);
         btn_maq = (Button) findViewById(R.id.obtn_maq);
         btn_capt = (Button) findViewById(R.id.obtn_capt);
-        btn_repo = (Button) findViewById(R.id.obtn_repo);
-        btn_descar = (Button) findViewById(R.id.obtn_descar);
+        btn_send = (Button) findViewById(R.id.obtn_send);
 
+        btn_ccol = (Button) findViewById(R.id.obtn_canc_colec);
+        btn_fcol = (Button) findViewById(R.id.obtn_fin_colec);
         btn_exit = (Button) findViewById(R.id.obtn_exit);
-        btn_canc_colec = (Button) findViewById(R.id.obtn_canc_colec);
-        btn_fin_colec = (Button) findViewById(R.id.obtn_fin_colec);
 
         DeviceId = (TextView) findViewById(R.id.oDeviceId);
         DeviceId.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
@@ -118,17 +114,9 @@ public class menu extends AppCompatActivity {
         createDatabase();
         Global.Create_Sql_Tables(false, false);
 
+        Global.cEmp_Id = "";
         //Create_Sql_Tables();
-        if (Global.Clients_Is_Empty() == false) {
-            this.btn_start.setEnabled(true);
-            this.btn_maq.setEnabled(true);
-            this.btn_capt.setEnabled(true);
-            this.btn_repo.setEnabled(true);
-            this.btn_canc_colec.setEnabled(true);
-            this.btn_fin_colec.setEnabled(true);
-
-        }
-        findBT();
+        this.Color_Sig_Paso(0);
 
         btn_exit.setOnClickListener(new View.OnClickListener() {
 
@@ -152,9 +140,22 @@ public class menu extends AppCompatActivity {
             }
         });
 
-        btn_start.setOnClickListener(new View.OnClickListener() {
+        btn_emp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent Int_EmpScreen = new Intent(getApplicationContext(), select_emp.class);
+                startActivityForResult(Int_EmpScreen, REQUEST_SEL_EMP);
+            }
+        });
+
+        btn_cte.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Global.cEmp_Id == "") {
+                    Toast.makeText(getApplicationContext(), "DEBE SELECCIONAR UNA EMPRESA PRIMERO.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 Intent Int_CteScreen = new Intent(getApplicationContext(), select_cte.class);
                 startActivityForResult(Int_CteScreen, REQUEST_SEL_CTE);
             }
@@ -189,7 +190,7 @@ public class menu extends AppCompatActivity {
                 startActivityForResult(Int_CapScreen, REQUEST_INI_CAP);
             }
         });
-        btn_fin_colec.setOnClickListener(new View.OnClickListener() {
+        btn_fcol.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (Global.cCte_Id == "") {
@@ -206,7 +207,7 @@ public class menu extends AppCompatActivity {
             }
         });
 
-        btn_canc_colec.setOnClickListener(new View.OnClickListener() {
+        btn_ccol.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //dialogBox("ESTA SEGURO QUE DESEA DESCARTAR TODAS LAS ENTRADAS REALIZADAS EN EL EQUIPO.");
@@ -214,18 +215,21 @@ public class menu extends AppCompatActivity {
                 String cSql_Ln = "DELETE FROM operacion WHERE id_device='" + Global.cid_device + "'";
                 db.execSQL(cSql_Ln);
                 Toast.makeText(getApplicationContext(), "LOS DATOS FUERON ELIMINADOS.", Toast.LENGTH_SHORT).show();
-
+                Mostrat_Status_Subir();
                 //} else {
                 //    Toast.makeText(getApplicationContext(), "SE CANCELO LA ACCION.", Toast.LENGTH_SHORT).show();
                 //}
             }
         });
 
-        btn_descar.setOnClickListener(new View.OnClickListener() {
+        btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String cJsonResult = null;
-                String Sql_Ln = "" +
+                String Sql_Ln = "";
+                String PEMP_ID = "";
+
+                Sql_Ln = "" +
                         "SELECT " +
                         "IFNULL(cte_id         ,' ')  AS cte_id, " +
                         "IFNULL(cte_nombre_loc ,' ')  AS cte_nombre_loc, " +
@@ -287,7 +291,7 @@ public class menu extends AppCompatActivity {
                         "IFNULL(op_image_name,' ')    AS op_image_name , " +
                         "IFNULL(op_usermodify,0)      AS op_usermodify   " +
                         "FROM operacion " +
-                        "WHERE id_device   ='" + Global.cid_device + "' "+
+                        "WHERE id_device   ='" + Global.cid_device + "' " +
                         "AND  op_usermodify='1' ";
 
                 Global.logLargeString(Sql_Ln);
@@ -297,20 +301,43 @@ public class menu extends AppCompatActivity {
                 Global.logLargeString(cJsonResult);
 
                 String cParsString = "";
-                cParsString += "dbname=one2009_1";
-                cParsString += "&emp_id=" + Global.cEmp_Id;
+                cParsString += "dbname=one2009_2";
                 cParsString += "&device=" + Global.cid_device;
                 cParsString += "&Json=" + cJsonResult;
                 String script = Global.gen_execute_post(Global.SERVER_URL, "/flam/subir_datos.php", cParsString);
                 Global.logLargeString(script);
                 if (script.contentEquals("1")) {
                     Toast.makeText(getApplicationContext(), "LOS DATOS SE SUBIERON CORRECTAMENTE.", Toast.LENGTH_SHORT).show();
-                    String cSql_Ln = "DELETE FROM operacion WHERE id_device='" + Global.cid_device + "'";
+                    String cSql_Ln = "DELETE FROM operacion " +
+                            "WHERE id_device ='" + Global.cid_device + "' " +
+                            "AND   op_emp_id ='" + PEMP_ID + "' ";
                     db.execSQL(cSql_Ln);
                 } else {
                     Toast.makeText(getApplicationContext(), "NO SE PUDIERON SUBIR LOS DATOS CORRECTAMENTE.", Toast.LENGTH_SHORT).show();
                 }
 
+                cSql_Ln = "" +
+                        "SELECT IFNULL(op_image_name,'') AS op_image_name " +
+                        "FROM operacion " +
+                        "WHERE id_device ='" + Global.cid_device + "' " +
+                        "AND   op_emp_id ='" + PEMP_ID + "' " +
+                        "AND   IFNULL(op_image_name,'')<>''";
+/*
+                Global.Genobj = null;
+                Global.Genobj = new JSONObject();
+
+                Cursor oCur_Im = db.rawQuery(cSql_Ln, null);
+                oCur_Im.moveToFirst();
+
+                do {
+                    try {
+                        Global.Genobj.put("img", Global.cStorageDirectoryPhoto + "" + oCur_Im.getString(0));
+                    } catch (JSONException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                } while (oCur_Im.moveToNext());
+*/
             }
         });
 
@@ -322,14 +349,64 @@ public class menu extends AppCompatActivity {
         // check if the request code is same as what is passed  here it is 2
 
         {
+            if (requestCode == REQUEST_SEL_EMP) {
+                //Valida la seleccion del cliente.
+                switch (resultCode) {
+                    case RESULT_OK:
+                        //Toast.makeText(this, "Aceptó la empresa:[" + Global.cEmp_Id.trim() + "]/" + Global.cEmp_De.trim(), Toast.LENGTH_SHORT).show();
+                        //btn_emp.setEnabled(false);
+
+                        this.btn_cte.setEnabled(true);
+
+                        this.lempresa.setText(Global.cEmp_De);
+                        this.btn_emp.setText("INICIAR COLECTA [" + Global.cEmp_De + "]");
+                        this.btn_cte.setText("SELECCIONAR CLIENTE [?]");
+                        this.btn_maq.setText("SELECCIONAR MAQUINA [?]");
+
+                        this.Color_Sig_Paso(1);
+                        //Pasa a seleccionar el cliente
+                        this.Mostrat_Status_Subir();
+
+                        break;
+                    case RESULT_CANCELED:
+
+                        Global.cEmp_Id = "";
+                        Global.cEmp_De = "";
+                        this.btn_cte.setEnabled(false);
+
+                        //Toast.makeText(this, "Rechazó la empresa.", Toast.LENGTH_SHORT).show();
+                        this.btn_emp.setText("INICIAR COLECTA [?]");
+                        this.btn_cte.setText("SELECCIONAR CLIENTE [?]");
+                        this.btn_maq.setText("SELECCIONAR MAQUINA [?]");
+
+                        this.Color_Sig_Paso(0);
+                        //Pasa a seleccionar la empresa
+
+                        break;
+                }
+            }
+
             //Se no ha habido fallo:
             if (requestCode == REQUEST_SEL_CTE) {
                 //Valida la seleccion del cliente.
                 switch (resultCode) {
                     case RESULT_OK:
-                        Toast.makeText(this, "Aceptó el cliente:[" + Global.cCte_Id.trim() + "]/" + Global.cCte_De.trim(), Toast.LENGTH_SHORT).show();
-                        //btn_start.setEnabled(false);
-                        btn_start.setTextColor(getApplication().getResources().getColor(R.color.Blue));
+                        //Toast.makeText(this, "Aceptó el cliente:[" + Global.cCte_Id.trim() + "]/" + Global.cCte_De.trim(), Toast.LENGTH_SHORT).show();
+                        //btn_emp.setEnabled(false);
+
+                        this.btn_maq.setEnabled(true);
+                        this.btn_capt.setEnabled(true);
+                        this.btn_ccol.setEnabled(true);
+                        this.btn_fcol.setEnabled(true);
+
+                        this.btn_cte.setText("CLIENTE [" + Global.cCte_De + "]");
+                        this.btn_fcol.setText("FINALIZAR COLECTA [" + Global.cCte_De + "]");
+
+                        this.Mostrat_Colectas();
+
+                        //Pasa a seleccionar la maquina
+                        this.Color_Sig_Paso(2);
+                        this.Mostrat_Status_Subir();
 
                         break;
                     case RESULT_CANCELED:
@@ -337,9 +414,18 @@ public class menu extends AppCompatActivity {
                         Global.cCte_Id = "";
                         Global.cCte_De = "";
 
-                        Toast.makeText(this, "Rechazó el cliente.", Toast.LENGTH_SHORT).show();
-                        btn_start.setTextColor(getApplication().getResources().getColor(R.color.Black));
-                        //btn_start.setEnabled(true);
+                        //Toast.makeText(this, "Rechazó el cliente.", Toast.LENGTH_SHORT).show();
+
+                        this.btn_maq.setEnabled(false);
+                        this.btn_capt.setEnabled(false);
+                        this.btn_ccol.setEnabled(false);
+                        this.btn_fcol.setEnabled(false);
+
+                        this.Mostrat_Colectas();
+
+                        //Pasa a seleccionar el cliente
+                        this.Color_Sig_Paso(2);
+
                         break;
                 }
             }
@@ -348,18 +434,28 @@ public class menu extends AppCompatActivity {
                 //Se procesa la devolución
                 switch (resultCode) {
                     case RESULT_OK:
-                        Toast.makeText(this, "Aceptó la máquina: [" + Global.cMaq_Id + "]/[" + Global.cMaq_De + "]", Toast.LENGTH_SHORT).show();
-                        //btn_start.setEnabled(false);
-                        //btn_maq.setEnabled(false);
-                        btn_maq.setTextColor(getApplication().getResources().getColor(R.color.Blue));
+                        //Toast.makeText(this, "Aceptó la máquina: [" + Global.cMaq_Id + "]/[" + Global.cMaq_De + "]", Toast.LENGTH_SHORT).show();
+                        this.btn_maq.setText("MAQUINA: [" + Global.cMaq_Id + "]/[" + Global.cMaq_De + "]");
+                        this.Mostrat_Colectas();
+
+                        //Pasa a seleccionar finalizar colecta
+                        this.Color_Sig_Paso(3);
+                        this.Mostrat_Colectas();
+                        this.Mostrat_Status_Subir();
+
                         break;
                     case RESULT_CANCELED:
                         Global.cMaq_Id = "";
                         Global.cMaq_De = "";
 
-                        Toast.makeText(this, "Rechazó la máquina.", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(this, "Rechazó la máquina.", Toast.LENGTH_SHORT).show();
                         //btn_capt.setEnabled(true);
-                        btn_maq.setTextColor(getApplication().getResources().getColor(R.color.Black));
+
+                        this.Mostrat_Colectas();
+
+                        //Pasa a seleccionar la maquina
+                        this.Color_Sig_Paso(2);
+
                         break;
                 }
             }
@@ -370,13 +466,17 @@ public class menu extends AppCompatActivity {
                     case RESULT_OK:
                         //cId_Maq = data.getStringExtra("MAQ_ID");
                         Toast.makeText(this, "SE GUARDARON LOS DATOS DE MANERA SATISFACTORIAMENTE [" + Global.cCte_Id + "]+[" + Global.cMaq_Id + "]", Toast.LENGTH_SHORT).show();
-                        //btn_start.setEnabled(false);
+                        //btn_emp.setEnabled(false);
                         //btn_maq.setEnabled(true);
+                        this.Color_Sig_Paso(2);
+                        this.Mostrat_Status_Subir();
+
                         break;
                     case RESULT_CANCELED:
-                        //btn_start.setEnabled(false);
+                        //btn_emp.setEnabled(false);
                         //btn_maq.setEnabled(true);
                         Toast.makeText(this, "SE CANCELO LA CAPTURA", Toast.LENGTH_SHORT).show();
+
                         break;
                 }
             }
@@ -386,14 +486,18 @@ public class menu extends AppCompatActivity {
                 switch (resultCode) {
                     case RESULT_OK:
                         //Toast.makeText(this, "Aceptó las condiciones [" + cId_Maq + "]", Toast.LENGTH_SHORT).show();
-                        btn_start.setEnabled(true);
-                        btn_maq.setEnabled(true);
-                        btn_start.setTextColor(getApplication().getResources().getColor(R.color.Black));
+                        this.btn_emp.setEnabled(true);
+                        this.btn_maq.setEnabled(true);
+
+                        this.Color_Sig_Paso(2);
+
                         break;
                     case RESULT_CANCELED:
-                        btn_start.setEnabled(true);
-                        btn_maq.setEnabled(true);
+                        this.btn_emp.setEnabled(true);
+                        this.btn_maq.setEnabled(true);
                         //Toast.makeText(this, "Rechazó las condiciones", Toast.LENGTH_SHORT).show();
+
+                        this.Color_Sig_Paso(2);
                         break;
                 }
             }
@@ -406,15 +510,88 @@ public class menu extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-
+/*
         if (Global.Clients_Is_Empty() == false) {
-            btn_start.setEnabled(true);
+            btn_emp.setEnabled(true);
             btn_maq.setEnabled(true);
             btn_capt.setEnabled(true);
-            btn_repo.setEnabled(true);
-            btn_canc_colec.setEnabled(true);
-            btn_fin_colec.setEnabled(true);
+            btn_ccol.setEnabled(true);
+            btn_fcol.setEnabled(true);
 
+        }
+*/
+    }
+
+    private void Color_Sig_Paso(int Opt) {
+
+        switch (Opt) {
+            case 0:
+                Global.cEmp_Id = "0";
+                Global.cEmp_De = "";
+
+                Global.cCte_Id = "NINGUNO";
+                Global.cMaq_Id = "NINGUNO";
+
+                btn_emp.setTextColor(getApplication().getResources().getColor(R.color.Blue));
+                btn_emp.setTextSize(18);
+                btn_emp.setText("INICIAR COLECTA [?]");
+
+                btn_cte.setTextColor(getApplication().getResources().getColor(R.color.Black));
+                btn_cte.setTextSize(14);
+                btn_cte.setText("SELECCIONAR CLIENTE");
+
+                btn_maq.setTextColor(getApplication().getResources().getColor(R.color.Black));
+                btn_maq.setTextSize(14);
+                btn_maq.setText("SELECCIONAR MAQUINA");
+
+                btn_capt.setTextColor(getApplication().getResources().getColor(R.color.Black));
+                btn_capt.setTextSize(14);
+                break;
+            case 1:
+                Global.cCte_Id = "NINGUNO";
+                Global.cMaq_Id = "NINGUNO";
+                btn_emp.setTextColor(getApplication().getResources().getColor(R.color.Black));
+                btn_emp.setTextSize(14);
+
+                btn_cte.setTextColor(getApplication().getResources().getColor(R.color.Blue));
+                btn_cte.setTextSize(18);
+                btn_cte.setText("SELECCIONAR CLIENTE [?]");
+                btn_fcol.setText("FINALIZAR COLECTA");
+
+                btn_maq.setTextColor(getApplication().getResources().getColor(R.color.Black));
+                btn_maq.setTextSize(14);
+
+                btn_capt.setTextColor(getApplication().getResources().getColor(R.color.Black));
+                btn_capt.setTextSize(14);
+                break;
+            case 2:
+                Global.cMaq_Id = "NINGUNO";
+                btn_emp.setTextColor(getApplication().getResources().getColor(R.color.Black));
+                btn_emp.setTextSize(14);
+
+                btn_cte.setTextColor(getApplication().getResources().getColor(R.color.Black));
+                btn_cte.setTextSize(14);
+
+                btn_maq.setTextColor(getApplication().getResources().getColor(R.color.Blue));
+                btn_maq.setTextSize(18);
+                btn_maq.setText("SELECCIONAR MAQUINA [?]");
+
+                btn_capt.setTextColor(getApplication().getResources().getColor(R.color.Black));
+                btn_capt.setTextSize(14);
+                break;
+            case 3:
+                btn_emp.setTextColor(getApplication().getResources().getColor(R.color.Black));
+                btn_emp.setTextSize(14);
+
+                btn_cte.setTextColor(getApplication().getResources().getColor(R.color.Black));
+                btn_cte.setTextSize(14);
+
+                btn_maq.setTextColor(getApplication().getResources().getColor(R.color.Black));
+                btn_maq.setTextSize(14);
+
+                btn_capt.setTextColor(getApplication().getResources().getColor(R.color.Blue));
+                btn_capt.setTextSize(18);
+                break;
         }
     }
 
@@ -459,66 +636,10 @@ public class menu extends AppCompatActivity {
         return 1;
     }
 
-    // this will find a bluetooth printer device
-    void findBT() {
-
-        try {
-            mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-            if (mBluetoothAdapter == null) {
-                myLabel.setText("No bluetooth adapter available");
-            }
-
-            if (!mBluetoothAdapter.isEnabled()) {
-                Intent enableBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                startActivityForResult(enableBluetooth, 0);
-            }
-
-            Set<BluetoothDevice> pairedDevices = mBluetoothAdapter.getBondedDevices();
-
-            if (pairedDevices.size() > 0) {
-                for (BluetoothDevice device : pairedDevices) {
-
-                    // BlueTooth Printer is the name of the bluetooth printer device
-                    // we got this name from the list of paired devices
-                    if (device.getName().equals("BlueTooth Printer")) {
-                        mmDevice = device;
-                        break;
-                    }
-                }
-            }
-
-            myLabel.setText("Bluetooth device found.[" + mmDevice + "]");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    // tries to open a connection to the bluetooth printer device
-    void openBT() throws IOException {
-        try {
-
-            // Standard SerialPortService ID
-            UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
-            mmSocket = mmDevice.createRfcommSocketToServiceRecord(uuid);
-            mmSocket.connect();
-            mmOutputStream = mmSocket.getOutputStream();
-            mmInputStream = mmSocket.getInputStream();
-
-            beginListenForData();
-
-            myLabel.setText("Bluetooth Opened");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     /*
- * after opening a connection to bluetooth printer device,
- * we have to listen and check if a data were sent to be printed.
- */
+* after opening a connection to bluetooth printer device,
+* we have to listen and check if a data were sent to be printed.
+*/
     void beginListenForData() {
         try {
             final Handler handler = new Handler();
@@ -604,6 +725,66 @@ public class menu extends AppCompatActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void Mostrat_Colectas() {
+        String cSql_ln = "";
+        String cCount = "";
+        String cChapa = "";
+
+        cSql_ln = "" +
+                "SELECT " +
+                "   IFNULL(COUNT(IFNULL(op_chapa,0)),0) as cnt " +
+                "FROM operacion " +
+                "WHERE (id_device='" + Global.cid_device + "') " +
+                "AND   (op_emp_id='" + Global.cEmp_Id + "')";
+        cCount = Global.Query_Result(cSql_ln, "cnt");
+        if (cCount == "") {
+            cCount = "0";
+        }
+
+        cSql_ln = "" +
+                "SELECT " +
+                "   IFNULL(op_chapa,'') as op_chapa " +
+                "FROM operacion " +
+                "WHERE (id_device='" + Global.cid_device + "') " +
+                "AND   (op_emp_id='" + Global.cEmp_Id + "') " +
+                "AND   (cte_id   ='" + Global.cCte_Id + "') " +
+                "AND   (op_chapa ='" + Global.cMaq_Id + "')";
+        cChapa = Global.Query_Result(cSql_ln, "op_chapa");
+
+        if (cChapa != "")
+            btn_capt.setText("REGISTRAR METROS MAQUINAS [" + cCount + "] *" + cChapa + " YA FUE REGISTRADA*");
+        else
+            btn_capt.setText("REGISTRAR METROS MAQUINAS [" + cCount + "] ");
+
+    }
+
+    private void Mostrat_Colectas_Completas() {
+        String cSql_ln = "" +
+                "SELECT " +
+                "   COUNT(op_chapa) as cnt " +
+                "FROM operacion " +
+                "WHERE (id_device='" + Global.cid_device + "') " +
+                "AND   (op_emp_id='" + Global.cEmp_Id + "')";
+        String cValue = Global.Query_Result(cSql_ln, "cnt");
+
+        btn_capt.setText("REGISTRAR METROS MAQUINAS [" + cValue + "]");
+
+    }
+
+    private void Mostrat_Status_Subir() {
+        String cSql_ln = "" +
+                "SELECT " +
+                "   COUNT(op_chapa) as cnt " +
+                "FROM operacion " +
+                "WHERE (id_device='" + Global.cid_device + "') " +
+                "AND   (op_emp_id='" + Global.cEmp_Id + "') " +
+                "AND   (op_usermodify=1)";
+        String cValue = Global.Query_Result(cSql_ln, "cnt");
+
+        btn_send.setEnabled(true);
+        btn_send.setText("ENVIAR COLECTAS [" + cValue + "]");
     }
 
 

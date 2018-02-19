@@ -66,11 +66,17 @@
                 android:text="CARGAR DATOS BASICOS" />
 
             <Button
-                android:id="@+id/obtn_start"
+                android:id="@+id/obtn_emp"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="INICIAR COLECTA [EMPRESA]" />
+
+            <Button
+                android:id="@+id/obtn_cte"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
                 android:enabled="false"
-                android:text="INICIAR COLECTA" />
+                android:text="SELECCIONAR CLIENTE" />
 
             <Button
                 android:id="@+id/obtn_maq"
@@ -101,16 +107,11 @@
                 android:text="FINALIZAR COLECTA" />
 
             <Button
-                android:id="@+id/obtn_repo"
+                android:id="@+id/obtn_send"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
+                android:editable="false"
                 android:enabled="false"
-                android:text="REPORTES" />
-
-            <Button
-                android:id="@+id/obtn_descar"
-                android:layout_width="match_parent"
-                android:layout_height="65dp"
                 android:text="ENVIAR COLECTAS" />
 
             <Space

@@ -30,11 +30,15 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
 
 import android.os.Handler;
 import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.concurrent.RunnableFuture;
 import java.util.logging.LogRecord;
@@ -68,6 +72,8 @@ public class print_data extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_print_data);
 
+        Locale.setDefault(new Locale("en", "US"));
+
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
 
@@ -92,6 +98,14 @@ public class print_data extends AppCompatActivity {
 
         this.oDb6 = openOrCreateDatabase(cDatabasePath, Context.MODE_PRIVATE, null);
 
+        try {
+            disconnectBT();
+            FindBluetoothDevice();
+            openBluetoothPrinter();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+
         switch (Global.iPrn_Data) {
             case 1: {
                 Listar_Maquinas();
@@ -99,6 +113,8 @@ public class print_data extends AppCompatActivity {
             }
             break;
             case 2: {
+                Listar_Maquinas();
+                Listar_Montos();
             }
             break;
             default: {
@@ -132,7 +148,10 @@ public class print_data extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Imprimir_Maquinas();
-                Imprimir_Montos();
+                if (Global.iPrn_Data == 1)
+                    Imprimir_Montos();
+                if (Global.iPrn_Data == 2)
+                    Imprimir_Montos2();
 
 /*                try {
                     printData();
@@ -146,6 +165,13 @@ public class print_data extends AppCompatActivity {
         btnRegr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                try {
+                    disconnectBT();
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+
                 Intent i = getIntent();
                 setResult(RESULT_CANCELED, i);
                 oDb6.close();
@@ -370,6 +396,8 @@ public class print_data extends AppCompatActivity {
         if ((oData1 == null) || (oData1.getCount() == 0)) {
             return false;
         } else {
+            printString(Global.center(Global.cEmp_De.toUpperCase(), 30, ' '));
+            printString("");
             printString("LISTADO DE MAQUINAS COLECTADAS");
             printString("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
             printString("______________________________");
@@ -377,7 +405,9 @@ public class print_data extends AppCompatActivity {
             do {
                 printString(oData1.getString(0).trim());
             } while (oData1.moveToNext());
-            printString("______________________________");
+            printString("");
+            printString("");
+
             return true;
         }
     }
@@ -389,14 +419,44 @@ public class print_data extends AppCompatActivity {
         } else {
             printString("");
             oData2.moveToFirst();
+            printString("==============================");
             do {
                 printString("Colectado : " + String.format("%12.2f", oData2.getDouble(0)).trim());
                 printString("Credito   : " + String.format("%12.2f", oData2.getDouble(1)).trim());
                 printString("Diferencia: " + String.format("%12.2f", oData2.getDouble(2)).trim());
             } while (oData2.moveToNext());
-            printString("______________________________");
+            printString("==============================");
 
             return true;
         }
+    }
+
+    private boolean Imprimir_Montos2() {
+        if (Global.iPrn_Data == 2) {
+            try {
+
+                printString("==============================");
+                printString("COLECTADO :" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_cole")));
+                printString("TIMBRES   :" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_timb")));
+                printString("IMUESTOS  :" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_impm")));
+                printString("J.C.J     :" + String.format("%10.2f%n", Global.Genobj.getDouble("dot__jcj")));
+                printString("SERV. TEC.:" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_tecn")));
+                printString("TOT. DEVO.:" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_devo")));
+                printString("TOT. OTRO :" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_otro")));
+                printString("TOT. CRED.:" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_cred")));
+                printString("SUB-TOTAL :" + String.format("%10.2f%n", Global.Genobj.getDouble("Sub_tota")));
+                printString("TOT. IMP. :" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_impu")));
+                printString("TOTAL     :" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_tota")));
+                printString("BRUTO CTE.:" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_bloc")));
+                printString("BRUTO EMP.:" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_bemp")));
+                printString("NETO  CTE.:" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_nloc")));
+                printString("NETO  EMP.:" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_nemp")));
+                printString("==============================");
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return true;
     }
 }

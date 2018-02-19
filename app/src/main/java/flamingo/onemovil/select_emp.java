@@ -14,24 +14,23 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class select_cte extends AppCompatActivity {
+public class select_emp extends AppCompatActivity {
 
-    private Button btn_regr_cte, btn_sele_cte, btn_clear_cte, btn_find_cte;
-    private ListView olst_cte2;
+    private Button btn_regr_emp, btn_sele_emp;
+    private ListView lst_emp;
     private SQLiteDatabase db3;
     private Cursor data;
     private String cSqlLn;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_select_cte);
+        setContentView(R.layout.activity_select_emp);
+
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
@@ -40,36 +39,24 @@ public class select_cte extends AppCompatActivity {
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
 
-        this.btn_regr_cte = (Button) findViewById(R.id.obtn_regr_cte);
-        this.btn_sele_cte = (Button) findViewById(R.id.obtn_sele_cte);
-        //btn_clear_cte = (Button) findViewById(R.id.obtn_clear);
-        //btn_find_cte = (Button) findViewById(R.id.obtn_find);
-        this.olst_cte2 = (ListView) findViewById(R.id.olst_cte);
+        this.btn_regr_emp = (Button) findViewById(R.id.obtn_regr_emp);
+        this.btn_sele_emp = (Button) findViewById(R.id.obtn_sele_emp);
+        this.lst_emp = (ListView) findViewById(R.id.olst_emp);
 
-        this.olst_cte2.setClickable(true);
+        this.lst_emp.setClickable(true);
 
+        ArrayList<String> theList = new ArrayList<>();
+
+        String cEmp_Sql = "" +
+                "SELECT " +
+                "( trim(emp_id) || SUBSTR('                   ', 1, 20-length(trim(emp_id))) || trim(emp_descripcion)) AS expr1 " +
+                "FROM empresas " +
+                "WHERE emp_inactivo=0 " +
+                "ORDER BY UPPER(trim(emp_descripcion))";
 
         String databasePath = getDatabasePath("one2009.db").getPath();
         db3 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
-
-        //populate an ArrayList<String> from the database and then view it
-        ArrayList<String> theList = new ArrayList<>();
-
-        String cCte_Sql = "" +
-                "SELECT " +
-                "( trim(clientes.cte_id) || SUBSTR('                   ', 1, 20-length(trim(clientes.cte_id))) || trim(clientes.cte_nombre_loc)) AS expr1 " +
-                "FROM clientes " +
-                "INNER JOIN ( " +
-                "   SELECT " +
-                "       maquinas_lnk.emp_id,maquinas_lnk.cte_id " +
-                "   FROM maquinas_lnk " +
-                "   INNER JOIN maquinastc ON (maquinas_lnk.maqtc_id=maquinastc.maqtc_id) AND (maquinastc.maqtc_inactivo=0) " +
-                "   WHERE (maquinas_lnk.emp_id='" + Global.cEmp_Id + "') " +
-                "   GROUP BY maquinas_lnk.emp_id,maquinas_lnk.cte_id " +
-                "			) maquinas_lnk2 on maquinas_lnk2.cte_id=clientes.cte_id " +
-                "ORDER BY  UPPER(trim(clientes.cte_nombre_loc)) ";
-
-        data = db3.rawQuery(cCte_Sql, null);
+        data = db3.rawQuery(cEmp_Sql                , null);
 
         if (data.getCount() == 0) {
             Toast.makeText(this, "There are no contents in this list!", Toast.LENGTH_LONG).show();
@@ -78,11 +65,11 @@ public class select_cte extends AppCompatActivity {
             do {
                 theList.add(data.getString(0));
                 ListAdapter listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, theList);
-                olst_cte2.setAdapter(listAdapter);
+                lst_emp.setAdapter(listAdapter);
             } while (data.moveToNext());
         }
 
-        btn_regr_cte.setOnClickListener(new View.OnClickListener() {
+        btn_regr_emp.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -91,15 +78,15 @@ public class select_cte extends AppCompatActivity {
                 Intent i = getIntent();
                 setResult(RESULT_CANCELED, i);
 
-                Global.cCte_Id = "";
-                Global.cCte_De = "";
+                Global.cEmp_Id = "";
+                Global.cEmp_De = "";
 
-                db3.close();
+                Global.oGen_Cursor.close();
                 finish();
             }
         });
 
-        btn_sele_cte.setOnClickListener(new View.OnClickListener() {
+        btn_sele_emp.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -107,26 +94,27 @@ public class select_cte extends AppCompatActivity {
                 Intent i = getIntent();
                 setResult(RESULT_OK, i);
 
-                db3.close();
+                Global.oGen_Cursor.close();
                 finish();
             }
         });
 
-        olst_cte2.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        lst_emp.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 
                 //Object o = listView.getItemAtPosition(position);
                 // Realiza lo que deseas, al recibir clic en el elemento de tu listView determinado por su posicion.
-                String selectedFromList = (olst_cte2.getItemAtPosition(position).toString());
+                String selectedFromList = (lst_emp.getItemAtPosition(position).toString());
 
-                Global.cCte_Id = selectedFromList.substring(0, 19).trim();
-                Global.cCte_De = selectedFromList.substring(20, selectedFromList.length()).trim();
+                Global.cEmp_Id = selectedFromList.substring(0, 19).trim();
+                Global.cEmp_De = selectedFromList.substring(20, selectedFromList.length()).trim();
 
-                btn_sele_cte.setEnabled(true);
+                btn_sele_emp.setEnabled(true);
             }
         });
 
     }
+
 }

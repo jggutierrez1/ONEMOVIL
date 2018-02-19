@@ -93,6 +93,7 @@
                     android:layout_width="133dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:editable="true"
                     android:text="COLECTADO:"
                     android:textSize="18sp" />
 
@@ -246,6 +247,7 @@
                     android:layout_width="133dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:editable="true"
                     android:text="PREMIOS:"
                     android:textSize="18sp" />
 

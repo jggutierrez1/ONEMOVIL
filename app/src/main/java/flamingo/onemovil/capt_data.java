@@ -89,7 +89,7 @@ public class capt_data extends AppCompatActivity {
     private int cte_pag_jcj, cte_pag_spac, cte_pag_impm, Denom_Ent_Fac, Denom_Sal_Fac;
     private double fDenom_Ent_Val, fDenom_Sal_Val, Porc_Loc;
     //private double ftot_cole, ftot_prem;
-    private int iMetroA_EntDif, iMetroB_EntDif, iMetroA_SalDif, iMetroB_SalDif;
+    private int iMetro_EntDif, iMetroA_EntDif, iMetroB_EntDif, iMetro_SalDif, iMetroA_SalDif, iMetroB_SalDif;
     private final static int REQUEST_GET_PASS = 5;
     public final static int REQUEST_CAMERA = 1;
 
@@ -182,6 +182,12 @@ public class capt_data extends AppCompatActivity {
         this.bFoundMach = this.Buscar_Maquina(Global.cEmp_Id, Global.cCte_Id, Global.cMaq_Id);
 
         this.MaquinaValid(true);
+
+        Calc_Dif_Ent(true);
+        Calc_Dif_Sal(true);
+
+        Calc_Tot(1);
+
 
         this.ea_act.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -510,6 +516,15 @@ public class capt_data extends AppCompatActivity {
                 Double dtot_cole = Double.valueOf(tot_cole.getText().toString()).doubleValue();
                 Double dtot_cred = Double.valueOf(tot_cred.getText().toString()).doubleValue();
 
+                if (iMetro_EntDif < 0) {
+                    Toast.makeText(getApplicationContext(), "PARA GUARDAR COLOQUE CORRECTAMENTE LOS METROS DE ENTRADA.", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                if (iMetro_SalDif < 0) {
+                    Toast.makeText(getApplicationContext(), "PARA GUARDAR COLOQUE CORRECTAMENTE LOS METROS DE SALIDA.", Toast.LENGTH_LONG).show();
+                    return;
+                }
 /*
                 Date date = new Date();
                 String day          = (String) DateFormat.format("dd",   date); // 20
@@ -775,13 +790,15 @@ public class capt_data extends AppCompatActivity {
         ieb_act = Integer.valueOf(eb_act.getText().toString()).intValue();
         ieb_ant = Integer.valueOf(eb_ant.getText().toString()).intValue();
 
+        iMetroA_EntDif = (iea_act - iea_ant);
+        iMetroB_EntDif = (ieb_act - ieb_ant);
+
         if (A == true) {
-            iMetroA_EntDif = (iea_act - iea_ant);
             ea_dif.setText(String.valueOf(iMetroA_EntDif).toString());
         } else {
-            iMetroB_EntDif = (ieb_act - ieb_ant);
             eb_dif.setText(String.valueOf(iMetroB_EntDif).toString());
         }
+        iMetro_EntDif = iMetroA_EntDif + iMetroB_EntDif;
     }
 
     private void Calc_Dif_Sal(boolean A) {
@@ -794,13 +811,15 @@ public class capt_data extends AppCompatActivity {
         isb_act = Integer.valueOf(sb_act.getText().toString()).intValue();
         isb_ant = Integer.valueOf(sb_ant.getText().toString()).intValue();
 
+        iMetroA_SalDif = (isa_act - isa_ant);
+        iMetroB_SalDif = (isb_act - isb_ant);
+
         if (A == true) {
-            iMetroA_SalDif = (isa_act - isa_ant);
             sa_dif.setText(String.valueOf(iMetroA_SalDif).toString());
         } else {
-            iMetroB_SalDif = (isb_act - isb_ant);
             sb_dif.setText(String.valueOf(iMetroB_SalDif).toString());
         }
+        iMetro_SalDif = iMetroA_SalDif + iMetroB_SalDif;
     }
 
     private void Calc_Tot(int iForce) {

@@ -50,6 +50,24 @@ public class uploadfiletoserver extends AppCompatActivity implements View.OnClic
         ivAttachment.setOnClickListener(this);
         bUpload.setOnClickListener(this);
 
+        if (Global.iSend_Img==1){
+            //on upload button Click
+            if (selectedFilePath != null) {
+                dialog = ProgressDialog.show(uploadfiletoserver.this, "", "Subiendo archivo: " + cFilename + "...", true);
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        //creating new thread to handle Http Operations
+                        uploadFile(selectedFilePath);
+                    }
+                }).start();
+            } else {
+                Toast.makeText(uploadfiletoserver.this, "Porfavor, seleccione el archivo a subir PRIMERO.", Toast.LENGTH_SHORT).show();
+            }
+
+        }
+
         bExit.setOnClickListener(new View.OnClickListener() {
 
             @Override

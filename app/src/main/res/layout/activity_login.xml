@@ -40,18 +40,6 @@
             android:textAlignment="center"
             android:textSize="35dp" />
 
-        <TextView
-            android:id="@+id/login_emp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_below="@+id/textview"
-            android:layout_marginTop="16dp"
-            android:text="CENTRAL GAMES"
-            android:textAlignment="center"
-            android:textColor="#ff7aff24"
-            android:textSize="35dp" />
-
         <EditText
             android:id="@+id/oLogin_User"
             android:layout_width="wrap_content"
@@ -73,9 +61,9 @@
             android:id="@+id/imageView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/login_emp"
+            android:layout_below="@+id/textview"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="29dp"
+            android:layout_marginTop="71dp"
             android:src="@drawable/descarga" />
 
         <EditText

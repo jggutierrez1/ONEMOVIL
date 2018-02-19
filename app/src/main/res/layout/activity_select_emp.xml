@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="flamingo.onemovil.select_cte">
+    tools:context="flamingo.onemovil.select_emp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
         tools:layout_editor_absoluteY="8dp">
 
         <ListView
-            android:id="@+id/olst_cte"
+            android:id="@+id/olst_emp"
             android:layout_width="match_parent"
             android:layout_height="475dp"
             android:layout_weight="3"
@@ -27,7 +27,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/obtn_regr_cte"
+                android:id="@+id/obtn_regr_emp"
                 android:layout_width="wrap_content"
                 android:layout_height="65dp"
                 android:layout_weight="1"
@@ -36,7 +36,7 @@
                 android:textColor="@color/Black" />
 
             <Button
-                android:id="@+id/obtn_sele_cte"
+                android:id="@+id/obtn_sele_emp"
                 android:layout_width="wrap_content"
                 android:layout_height="65dp"
                 android:layout_weight="1"

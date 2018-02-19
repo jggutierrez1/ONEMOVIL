@@ -111,13 +111,6 @@ public class sync_data extends AppCompatActivity {
                 btn_regr.setEnabled(false);
                 Global.Create_Sql_Tables(ock_rene.isChecked(), ock_delc.isChecked());
 
-                db2.execSQL("DELETE FROM empresas");
-                db2.execSQL("DELETE FROM clientes");
-                db2.execSQL("DELETE FROM denominaciones");
-                db2.execSQL("DELETE FROM maquinastc");
-                db2.execSQL("DELETE FROM maquinas_lnk");
-                db2.execSQL("DELETE FROM municipios");
-                db2.execSQL("DELETE FROM rutas");
 
                 //    0:'TODOS'
                 //    1:'empresas'
@@ -136,6 +129,16 @@ public class sync_data extends AppCompatActivity {
                 cParsString += "table_no=0";
                 cParsString += "&emp_id=0";
                 String script = Global.gen_execute_post(Global.SERVER_URL, "/flam/get_all_data.php", cParsString);
+
+                if ((script != "") && (script != null)) {
+                    db2.execSQL("DELETE FROM empresas");
+                    db2.execSQL("DELETE FROM clientes");
+                    db2.execSQL("DELETE FROM denominaciones");
+                    db2.execSQL("DELETE FROM maquinastc");
+                    db2.execSQL("DELETE FROM maquinas_lnk");
+                    db2.execSQL("DELETE FROM municipios");
+                    db2.execSQL("DELETE FROM rutas");
+                }
 
                 String[] queries = script.split(";");
                 for (String query : queries) {

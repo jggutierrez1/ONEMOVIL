@@ -171,6 +171,7 @@
                 android:layout_width="133dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:enabled="true"
                 android:text="ANTERIOR [A]:"
                 android:textSize="18sp" />
 
@@ -271,6 +272,7 @@
                 android:layout_width="133dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:enabled="true"
                 android:text="ANTERIOR [B]:"
                 android:textSize="18sp" />
 
@@ -386,6 +388,7 @@
                 android:layout_width="133dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:enabled="true"
                 android:text="ANTERIOR [A]:"
                 android:textSize="18sp" />
 
@@ -485,6 +488,7 @@
                 android:layout_width="133dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:enabled="true"
                 android:text="ANTERIOR [B]:"
                 android:textSize="18sp" />
 
@@ -567,6 +571,7 @@
                 android:layout_width="133dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:enabled="true"
                 android:text="COLECTADO $:"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -599,6 +604,7 @@
                 android:layout_width="133dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:enabled="true"
                 android:text="PREMIOS $:"
                 android:textSize="18sp"
                 android:textStyle="bold" />

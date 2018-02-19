@@ -36,6 +36,7 @@ public class install_check extends AppCompatActivity {
         DeviceId.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
 
         this.create_database();
+        Global.Create_Sql_Tables(true, true);
         Global.check_tables_device(true);
 
         String cInternetAnswer = "";

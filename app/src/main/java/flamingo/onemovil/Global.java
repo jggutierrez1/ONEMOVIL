@@ -75,9 +75,10 @@ public class Global {
     private static final char[] DIGITS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
     public static Integer iPrn_Data = 0;
+    public static Integer iSend_Img = 0;
 
-    public static String cEmp_Id = "1";
-    public static String cEmp_De = "";
+    public static String cEmp_Id = "0";
+    public static String cEmp_De = "SIN EMPRESA!!!!";
 
     public static String cCte_Id = "";
     public static String cCte_De = "";
@@ -105,14 +106,15 @@ public class Global {
     public static Cursor oGen_Cursor;
     public static String SERVER_URL = "http://190.140.40.242";
     //public static String SERVER_URL = "http://192.168.2.161";
-    public static String SERVER_URL_FLES = "http://190.140.40.242/flam/UploadToServer.php";
-    public static String SERVER_DIR_IMGS = "http://190.140.40.242/flam/images/";
+    public static String SERVER_URL_FLES = SERVER_URL + "/flam/UploadToServer.php";
+    public static String SERVER_DIR_IMGS = SERVER_URL + "/flam/images/";
     public static String stringResult = "";
     public static int iObj_Select = 0;
     public static Boolean ValidateOk = false;
     public static String PasswChgAmmout = "";
     public static String PasswChgMeters = "";
     public static int Correl_Device;
+    public static JSONObject Genobj;
 
     public static void Init_Vars() {
         PACKAGE_NAME = "flamingo.onemovil";
@@ -132,17 +134,22 @@ public class Global {
     }
 
     public static void Get_Config() {
-        String cSql_Ln = "SELECT corre_act,clave_metros,clave_montos,emp_id FROM dispositivos WHERE serial='" + Global.cid_device + "' ";
+
+        String cSql_Ln = "" +
+                "SELECT clave_metros, clave_montos, emp_id " +
+                "FROM dispositivos " +
+                "WHERE serial='" + Global.cid_device + "' ";
+
         Global.oGen_Cursor = Global.oGen_Db.rawQuery(cSql_Ln, null);
         Global.oGen_Cursor.moveToFirst();
         int iRecords = Global.oGen_Cursor.getCount();
         if (iRecords > 0) {
-            Global.Correl_Device = Global.oGen_Cursor.getInt(Global.oGen_Cursor.getColumnIndex("corre_act"));
+            //Global.Correl_Device = Global.oGen_Cursor.getInt(Global.oGen_Cursor.getColumnIndex("corre_act"));
             Global.PasswChgAmmout = Global.oGen_Cursor.getString(Global.oGen_Cursor.getColumnIndex("clave_montos"));
             Global.PasswChgMeters = Global.oGen_Cursor.getString(Global.oGen_Cursor.getColumnIndex("clave_metros"));
-            Global.cEmp_Id = Global.oGen_Cursor.getString(Global.oGen_Cursor.getColumnIndex("emp_id"));
+            //Global.cEmp_Id = Global.oGen_Cursor.getString(Global.oGen_Cursor.getColumnIndex("emp_id"));
         } else {
-            Global.Correl_Device = 0;
+            //Global.Correl_Device = 0;
             Global.PasswChgAmmout = Global.GenerateRandomNumber(5);
             Global.PasswChgMeters = Global.GenerateRandomNumber(5);
         }
@@ -866,7 +873,8 @@ public class Global {
 
         try {
             //url = new URL("http://192.168.2.82/flam/get_all_data.php");
-            url = new URL(cMyurl + cWebServices);
+
+;            url = new URL(cMyurl + cWebServices);
             Log.d(TAG, "CONECTADO A:[" + cMyurl + "]");
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
@@ -947,11 +955,10 @@ public class Global {
             cSql_Ln += "fecha_uacces DATETIME NULL DEFAULT NULL,";
             cSql_Ln += "dbname VARCHAR(30) NULL DEFAULT 'one2009_1',";
             cSql_Ln += "corre_ant INT(10) NULL DEFAULT 0,";
-            cSql_Ln += "corre_ult INT(10) NULL DEFAULT 0,";
             cSql_Ln += "corre_act INT(10) NULL DEFAULT 0,";
             cSql_Ln += "clave_metros VARCHAR(30) NULL DEFAULT '6545465465465546',";
             cSql_Ln += "clave_montos VARCHAR(30) NULL DEFAULT '6545465465465530',";
-            cSql_Ln += "emp_id INT(3) NULL DEFAULT 1,";
+            cSql_Ln += "emp_id INT(3) NULL DEFAULT 0,";
             cSql_Ln += "CONSTRAINT dispositivos PRIMARY KEY (id))";
             try {
                 Global.oGen_Db.execSQL(cSql_Ln);
@@ -965,13 +972,21 @@ public class Global {
         String cSql_Ln = "";
         String cNow = Global.getNow();
 
-        cSql_Ln += "INSERT INTO dispositivos(serial, fecha_pacceso,clave_install,corre_ant,corre_ult,corre_act) VALUES ";
-        cSql_Ln += "('" + Global.cid_device + "','" + cNow + "','" + cClave + "',0,0,0)";
+        cSql_Ln += "INSERT INTO dispositivos(serial, fecha_pacceso,clave_install,corre_ant,corre_act) VALUES ";
+        cSql_Ln += "('" + Global.cid_device + "','" + cNow + "','" + cClave + "',0,0)";
         Global.oGen_Db.execSQL(cSql_Ln);
     }
 
     public static void clear_tables_device() {
-        String cSql_Ln = "DELETE FROM dispositivos";
+        String cSql_Ln = "";
+
+        cSql_Ln = "DELETE FROM dispositivos";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "DELETE FROM empresas";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "DELETE FROM operacion";
         Global.oGen_Db.execSQL(cSql_Ln);
     }
 
@@ -1129,6 +1144,9 @@ public class Global {
         }
 
         if (bDropColects == true) {
+            cSql_Ln = "DELETE FROM operacion;";
+            //lobal.oGen_Db.execSQL(cSql_Ln);
+
             cSql_Ln = "DROP TABLE IF EXISTS operacion;";
             Global.oGen_Db.execSQL(cSql_Ln);
         }
@@ -1227,6 +1245,8 @@ public class Global {
         cSql_Ln += "emp_cargo_spac NUMERIC(12, 2) NULL DEFAULT 0,";
         cSql_Ln += "emp_fecha_alta DATETIME NULL ,";
         cSql_Ln += "emp_fecha_modif DATETIME NULL ,";
+        cSql_Ln += "emp_corre_ant INT(10) NULL DEFAULT '0',";
+        cSql_Ln += "emp_corre_act INT(10) NULL DEFAULT '0',";
         cSql_Ln += "u_usuario_alta CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln += "CONSTRAINT empresas_PRIMARY PRIMARY KEY (emp_id))";
@@ -1425,7 +1445,7 @@ public class Global {
         Global.oGen_Db.execSQL(cSql_Ln);
     }
 
-    public static void Create_Sql_Tables_Emp(){
+    public static void Create_Sql_Tables_Emp() {
         String cSql_Ln = "";
         // ---------------------------------EMPRESA----------------------------------------------------------------//
         cSql_Ln = "";
@@ -1452,6 +1472,8 @@ public class Global {
         cSql_Ln += "emp_fecha_modif DATETIME NULL ,";
         cSql_Ln += "u_usuario_alta CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "emp_corre_ant INT(10) NULL DEFAULT '0',";
+        cSql_Ln += "emp_corre_act INT(10) NULL DEFAULT '0',";
         cSql_Ln += "CONSTRAINT empresas_PRIMARY PRIMARY KEY (emp_id))";
         Global.oGen_Db.execSQL(cSql_Ln);
 
