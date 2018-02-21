@@ -30,6 +30,13 @@
                 android:text="QUITAR TECLADO" />
 
             <Button
+                android:id="@+id/obtn_unlock_capt"
+                android:layout_width="wrap_content"
+                android:layout_height="65dp"
+                android:layout_weight="1"
+                android:text="DESBLOQUEAR" />
+
+            <Button
                 android:id="@+id/obtn_foto_capt"
                 android:layout_width="wrap_content"
                 android:layout_height="65dp"
@@ -53,6 +60,16 @@
                 android:text="CANCELAR" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/ocapt_device"
+            style="@style/Widget.AppCompat.TextView.SpinnerItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:enabled="true"
+            android:text="ID. DISPOSITIVO:"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/olab_cte"
@@ -140,6 +157,7 @@
                 android:layout_width="133dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:enabled="true"
                 android:text="ACTUAL [A]:"
                 android:textSize="18sp" />
 
@@ -240,6 +258,7 @@
                 android:layout_width="133dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:enabled="true"
                 android:text="ACTUAL [B]:"
                 android:textSize="18sp" />
 
@@ -355,6 +374,7 @@
                 android:layout_width="133dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:enabled="true"
                 android:text="ACTUAL [A]:"
                 android:textSize="18sp" />
 
@@ -456,6 +476,7 @@
                 android:layout_width="133dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:enabled="true"
                 android:text="ACTUAL [B]:"
                 android:textSize="18sp" />
 

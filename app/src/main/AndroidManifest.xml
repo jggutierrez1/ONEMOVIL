@@ -42,7 +42,8 @@
         <activity android:name=".uploadfiletoserver" />
         <activity android:name=".get_password" />
         <activity android:name=".install_check" />
-        <activity android:name=".select_emp"></activity>
+        <activity android:name=".select_emp" />
+        <activity android:name=".borrar_colectas"></activity>
     </application>
 
 </manifest>

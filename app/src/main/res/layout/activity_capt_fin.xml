@@ -32,6 +32,13 @@
                     android:text="QUITAR TECLADO" />
 
                 <Button
+                    android:id="@+id/btn_totfin_unlock"
+                    android:layout_width="wrap_content"
+                    android:layout_height="65dp"
+                    android:layout_weight="1"
+                    android:text="DESBLOQUEAR" />
+
+                <Button
                     android:id="@+id/btn_print_maq"
                     android:layout_width="wrap_content"
                     android:layout_height="65dp"
@@ -58,6 +65,16 @@
             <Space
                 android:layout_width="match_parent"
                 android:layout_height="15dp" />
+
+            <TextView
+                android:id="@+id/apf_device"
+                style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:enabled="true"
+                android:text="ID. DISPOSITIVO:"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/capf_lab_cte"

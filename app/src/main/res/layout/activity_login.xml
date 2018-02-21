@@ -24,6 +24,7 @@
             android:id="@+id/login_device"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="true"
             android:text="ID. DISPOSITIVO:"
             android:textSize="18sp"
             tools:layout_editor_absoluteX="8dp"

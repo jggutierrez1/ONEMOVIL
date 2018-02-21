@@ -16,7 +16,7 @@ import android.widget.Toast;
 public class install_check extends AppCompatActivity {
     private Button obtn_check_ok, obtn_check_exit;
     private EditText ocheck_code;
-    private TextView InternetStatus,DeviceId;
+    private TextView InternetStatus, DeviceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,9 +35,9 @@ public class install_check extends AppCompatActivity {
         DeviceId = (TextView) findViewById(R.id.install_device);
         DeviceId.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
 
-        this.create_database();
-        Global.Create_Sql_Tables(true, true);
-        Global.check_tables_device(true);
+        //this.create_database();
+        //Global.Create_Sql_Tables(true, true);
+        //Global.check_tables_device(true);
 
         String cInternetAnswer = "";
         Boolean bInternetConnected = false;
@@ -88,7 +88,7 @@ public class install_check extends AppCompatActivity {
                     if (iResult == 1) {
                         Global.ValidateOk = true;
 
-                        Global.clear_tables_device();
+                        //Global.clear_tables_device();
                         Global.active_device(cClave);
 
                         finish();

@@ -96,8 +96,9 @@
                 android:id="@+id/obtn_canc_colec"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"
-                android:enabled="false"
-                android:text="DESCARTAR COLECTA" />
+                android:enabled="true"
+                android:text="ELIMINAR TODAS LAS COLECTA RELIZADAS"
+                android:textColor="@color/Brown" />
 
             <Button
                 android:id="@+id/obtn_fin_colec"

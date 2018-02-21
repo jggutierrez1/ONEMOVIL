@@ -51,6 +51,7 @@ public class menu extends AppCompatActivity {
     private final static int REQUEST_SEL_MAQ = 2;
     private final static int REQUEST_INI_CAP = 3;
     private final static int REQUEST_END_CAP = 4;
+    private final static int REQUEST_DEL_CAP = 6;
 
     private int iGlobalRes = 0;
     boolean exist = false;
@@ -118,6 +119,15 @@ public class menu extends AppCompatActivity {
         //Create_Sql_Tables();
         this.Color_Sig_Paso(0);
 
+        btn_upd.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Intent Int_SyncScreen = new Intent(getApplicationContext(), sync_data.class);
+                startActivity(Int_SyncScreen);
+            }
+        });
+
         btn_exit.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -128,15 +138,6 @@ public class menu extends AppCompatActivity {
                 db.close();
                 finish();
                 System.exit(0);
-            }
-        });
-
-        btn_upd.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent Int_SyncScreen = new Intent(getApplicationContext(), sync_data.class);
-                startActivity(Int_SyncScreen);
             }
         });
 
@@ -164,6 +165,11 @@ public class menu extends AppCompatActivity {
         btn_maq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Global.cEmp_Id == "") {
+                    Toast.makeText(getApplicationContext(), "DEBE SELECCIONAR UNA EMPRESA PRIMERO.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (Global.cCte_Id == "") {
                     Toast.makeText(getApplicationContext(), "DEBE SELECCIONAR UN CLIENTE PRIMERO.", Toast.LENGTH_SHORT).show();
                     return;
@@ -176,6 +182,11 @@ public class menu extends AppCompatActivity {
         btn_capt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Global.cEmp_Id == "") {
+                    Toast.makeText(getApplicationContext(), "DEBE SELECCIONAR UNA EMPRESA PRIMERO.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (Global.cCte_Id == "") {
                     Toast.makeText(getApplicationContext(), "DEBE SELECCIONAR UN CLIENTE PRIMERO.", Toast.LENGTH_SHORT).show();
                     return;
@@ -190,9 +201,15 @@ public class menu extends AppCompatActivity {
                 startActivityForResult(Int_CapScreen, REQUEST_INI_CAP);
             }
         });
+
         btn_fcol.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (Global.cEmp_Id == "") {
+                    Toast.makeText(getApplicationContext(), "DEBE SELECCIONAR UNA EMPRESA PRIMERO.", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 if (Global.cCte_Id == "") {
                     Toast.makeText(getApplicationContext(), "DEBE SELECCIONAR UN CLIENTE PRIMERO.", Toast.LENGTH_SHORT).show();
                     return;
@@ -210,15 +227,11 @@ public class menu extends AppCompatActivity {
         btn_ccol.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //dialogBox("ESTA SEGURO QUE DESEA DESCARTAR TODAS LAS ENTRADAS REALIZADAS EN EL EQUIPO.");
-                //if (iGlobalRes == 1) {
-                String cSql_Ln = "DELETE FROM operacion WHERE id_device='" + Global.cid_device + "'";
-                db.execSQL(cSql_Ln);
-                Toast.makeText(getApplicationContext(), "LOS DATOS FUERON ELIMINADOS.", Toast.LENGTH_SHORT).show();
-                Mostrat_Status_Subir();
-                //} else {
-                //    Toast.makeText(getApplicationContext(), "SE CANCELO LA ACCION.", Toast.LENGTH_SHORT).show();
-                //}
+
+                Global.iObj_Select = 0;
+                Global.DialogConfirmText = "ESTA SEGURO QUE DESEA BORRA LOS DATOS DE TODAS LAS COLECTAS REALIZADAS?";
+                Intent BorrarColectScreen = new Intent(getApplicationContext(), borrar_colectas.class);
+                startActivityForResult(BorrarColectScreen, REQUEST_DEL_CAP);
             }
         });
 
@@ -349,6 +362,27 @@ public class menu extends AppCompatActivity {
         // check if the request code is same as what is passed  here it is 2
 
         {
+
+            if (requestCode == REQUEST_DEL_CAP) {
+                switch (resultCode) {
+                    case RESULT_OK:
+
+                        Global.DialogConfirmText = "";
+
+                        String cSql_Ln = "DELETE FROM operacion WHERE id_device='" + Global.cid_device + "'";
+                        db.execSQL(cSql_Ln);
+                        Toast.makeText(getApplicationContext(), "LOS DATOS FUERON ELIMINADOS.", Toast.LENGTH_SHORT).show();
+
+                        break;
+                    case RESULT_CANCELED:
+                        Global.DialogConfirmText = "";
+
+                        Toast.makeText(this, "OPCION CANCELADA POR EL USUARIO.", Toast.LENGTH_SHORT).show();
+                        break;
+                }
+
+            }
+
             if (requestCode == REQUEST_SEL_EMP) {
                 //Valida la seleccion del cliente.
                 switch (resultCode) {

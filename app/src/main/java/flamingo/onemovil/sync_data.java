@@ -109,6 +109,7 @@ public class sync_data extends AppCompatActivity {
                 memo.setText("");
                 btn_proc.setEnabled(false);
                 btn_regr.setEnabled(false);
+
                 Global.Create_Sql_Tables(ock_rene.isChecked(), ock_delc.isChecked());
 
 
@@ -122,8 +123,8 @@ public class sync_data extends AppCompatActivity {
                 //    7:'rutas'
                 String cCmd = "";
 
-                cSql_Ln = "SELECT emp_id FROM device_db.dispositivos WHERE serial='" + Global.cid_device + "'";
-                String myEmp = Global.Rem_Query_Result("device_db", cSql_Ln, 0, "emp_id");
+                //cSql_Ln = "SELECT emp_id FROM device_db.dispositivos WHERE serial='" + Global.cid_device + "'";
+                //String myEmp = Global.Rem_Query_Result("device_db", cSql_Ln, 0, "emp_id");
 
                 cParsString = "";
                 cParsString += "table_no=0";
@@ -169,8 +170,14 @@ public class sync_data extends AppCompatActivity {
                 memo.append("REGISTROS EN RUTAS         :" + Lite_Query_Result("SELECT COUNT(*) AS CNT FROM rutas") + "\n");
                 memo.append(Global.repeat('-', 80) + "\n");
 
+                String cJsonResult ="";
+
+                cParsString = "device=" + Global.cid_device;
+                cJsonResult = Global.gen_execute_post(Global.SERVER_URL, "/flam/update_last_access.php", cParsString);
+                Global.logLargeString(cJsonResult);
+
                 cSql_Ln = "SELECT * FROM device_db.dispositivos WHERE serial='" + Global.cid_device + "'";
-                String cJsonResult = Global.Rem_Query_Result("device_db", cSql_Ln, 1, "");
+                cJsonResult = Global.Rem_Query_Result("device_db", cSql_Ln, 1, "");
 
                 JSONArray mainObject = null;
                 try {
@@ -189,15 +196,15 @@ public class sync_data extends AppCompatActivity {
                     String cRem_Clave_Metros = c.getString("clave_metros");
                     String cRem_Clave_Montos = c.getString("clave_montos");
 
-                    cSql_Ln = "";
-                    cSql_Ln += "UPDATE dispositivos SET ";
-                    cSql_Ln += " emp_id      ='" + cRem_Emp_id + "',";
-                    cSql_Ln += " clave_metros='" + cRem_Clave_Metros + "',";
-                    cSql_Ln += " clave_montos='" + cRem_Clave_Montos + "',";
-                    cSql_Ln += " dbname      ='" + cRem_Db_Name + "' ";
-                    cSql_Ln += "WHERE serial ='" + Global.cid_device + "'";
-                    Global.Query_Update(cSql_Ln);
+                    cSql_Ln = "DELETE FROM dispositivos;";
+                    db2.execSQL(cSql_Ln);
 
+                    cSql_Ln = "";
+                    cSql_Ln += "INSERT INTO dispositivos (emp_id,clave_metros,clave_montos,dbname,serial ) VALUES  ";
+                    cSql_Ln += "('0','"+ cRem_Clave_Metros + "','"+ cRem_Clave_Montos + "','"+ cRem_Db_Name + "','" + Global.cid_device + "')";
+                    db2.execSQL(cSql_Ln);
+
+                    /*
                     String cActual_Corre = Global.Query_Result("SELECT IFNULL(corre_act,0) AS corre_act FROM dispositivos WHERE serial ='" + Global.cid_device + "'", "corre_act");
                     if (cActual_Corre == "") {
                         cActual_Corre = "0";
@@ -212,9 +219,7 @@ public class sync_data extends AppCompatActivity {
                         cSql_Ln += "WHERE serial ='" + Global.cid_device + "'";
                         Global.Query_Update(cSql_Ln);
                     }
-                    cParsString = "device=" + Global.cid_device;
-                    cJsonResult = Global.gen_execute_post(Global.SERVER_URL, "/flam/update_last_access.php", cParsString);
-                    Global.logLargeString(cJsonResult);
+                     */
 
                     Global.Get_Config();
 

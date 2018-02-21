@@ -64,7 +64,7 @@ import android.text.format.DateFormat;
 public class capt_data extends AppCompatActivity {
 
     private static final String TAG = capt_data.class.getSimpleName();
-    private Button btn_hide_capt, btn_foto_capt, btn_save_capt, btn_cancel_capt;
+    private Button btn_hide_capt, btn_foto_capt, btn_save_capt, btn_cancel_capt, btn_unlock_capt;
     private CheckBox oBaja_prod;
     private EditText ea_act, ea_ant, ea_dif;
     private EditText eb_act, eb_ant, eb_dif;
@@ -76,6 +76,7 @@ public class capt_data extends AppCompatActivity {
     private TextView lab_cte, lab_cha;
     private TextView lea_act, lea_ant, leb_act, leb_ant, lsa_act, lsa_ant, lsb_act, lsb_ant, leb_dif;
     private TextView lsb_dif;
+    private TextView capt_device;
     private LinearLayout layoutb_eact, layoutb_eant, layoutb_edif, layoutb_sact, layoutb_sant, layoutb_sdif;
     private Space Spaceb_esep, Spaceb_ssep;
     private SQLiteDatabase db4;
@@ -109,6 +110,9 @@ public class capt_data extends AppCompatActivity {
         this.btn_foto_capt = (Button) findViewById(R.id.obtn_foto_capt);
         this.btn_save_capt = (Button) findViewById(R.id.obtn_save_capt);
         this.btn_cancel_capt = (Button) findViewById(R.id.obtn_cancel_capt);
+        this.btn_unlock_capt = (Button) findViewById(R.id.obtn_unlock_capt);
+
+        this.capt_device = (TextView) findViewById(R.id.ocapt_device);
 
         /*-------------------ETIQUETAS------------------------*/
         this.lea_ant = (TextView) findViewById(R.id.olea_ant);
@@ -174,6 +178,8 @@ public class capt_data extends AppCompatActivity {
         this.ltot_cole = (TextView) findViewById(R.id.oltot_cole);
         this.ltot_cred = (TextView) findViewById(R.id.oltot_cred);
 
+        this.capt_device.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
+
         this.Clear_Screen();
 
         String databasePath = getDatabasePath("one2009.db").getPath();
@@ -213,29 +219,10 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
-        this.lsa_ant.setOnClickListener(new View.OnClickListener() {
+        this.btn_unlock_capt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Global.iObj_Select = 2;
-                Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
-                startActivityForResult(Int_GetPass, REQUEST_GET_PASS);
-            }
-        });
-
-        this.leb_ant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Global.iObj_Select = 3;
-                Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
-                startActivityForResult(Int_GetPass, REQUEST_GET_PASS);
-            }
-        });
-
-
-        this.lsb_ant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Global.iObj_Select = 4;
+                Global.iObj_Select = 99;
                 Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
                 startActivityForResult(Int_GetPass, REQUEST_GET_PASS);
             }
@@ -708,6 +695,12 @@ public class capt_data extends AppCompatActivity {
 
                         if (ipass == Integer.valueOf(Global.PasswChgMeters)) {
                             switch (Global.iObj_Select) {
+                                case 99:
+                                    this.ea_ant.setEnabled(true);
+                                    this.sa_ant.setEnabled(true);
+                                    this.eb_ant.setEnabled(true);
+                                    this.sb_ant.setEnabled(true);
+                                    break;
                                 case 0:
                                     this.ea_ant.setEnabled(false);
                                     this.sa_ant.setEnabled(false);

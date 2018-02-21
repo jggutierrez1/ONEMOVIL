@@ -15,13 +15,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class login extends AppCompatActivity {
-    Button btn_entar, btn_cance;
-    EditText User, Pass;
-    TextView DeviceId, Intentos;
+    Button obtn_entar, obtn_cance;
+    EditText oUser, oPass;
+    TextView oDeviceId, oIntentos, oLogin_device;
     ImageView oImagen;
     int counter = 3;
     public final static int REQUEST_MEN = 1;
     private final static int REQUEST_INSTALL_VALIED = 12;
+    public final static int REQUEST_GET_PASS1 = 20;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,39 +41,46 @@ public class login extends AppCompatActivity {
         Global.Init_Vars();
         Global.Chech_App_Folders();
 
-        btn_entar = (Button) findViewById(R.id.obtn_login_entrar);
-        btn_cance = (Button) findViewById(R.id.obtn_login_cancel);
+        obtn_entar = (Button) findViewById(R.id.obtn_login_entrar);
+        obtn_cance = (Button) findViewById(R.id.obtn_login_cancel);
 
-        User = (EditText) findViewById(R.id.oLogin_User);
-        Pass = (EditText) findViewById(R.id.oLogin_Pass);
+        oUser = (EditText) findViewById(R.id.oLogin_User);
+        oPass = (EditText) findViewById(R.id.oLogin_Pass);
 
         oImagen = (ImageView) findViewById(R.id.imageView);
 
-        Intentos = (TextView) findViewById(R.id.ologin_intentos);
-        Intentos.setVisibility(View.GONE);
+        oLogin_device = (TextView) findViewById(R.id.login_device);
 
-        DeviceId = (TextView) findViewById(R.id.login_device);
-        DeviceId.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
+        oIntentos = (TextView) findViewById(R.id.ologin_intentos);
+        oIntentos.setVisibility(View.GONE);
+
+        oDeviceId = (TextView) findViewById(R.id.login_device);
+        oDeviceId.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
+
 
         if (Global.checkDataBase() == false) {
             this.create_database();
+            Global.Create_Sql_Tables(false, false);
+
             Intent Check_Install_Screen = new Intent(getApplicationContext(), install_check.class);
             startActivityForResult(Check_Install_Screen, REQUEST_INSTALL_VALIED);
         } else {
             this.create_database();
+            Global.Create_Sql_Tables(false, false);
+
             //Global.clear_tables_device();
             if (Global.check_device() <= 0) {
                 Intent Check_Install_Screen = new Intent(getApplicationContext(), install_check.class);
                 startActivityForResult(Check_Install_Screen, REQUEST_INSTALL_VALIED);
             }
         }
-        Global.Create_Sql_Tables_Emp();
+        //Global.Create_Sql_Tables_Emp();
         Global.Get_Config();
 
-        btn_entar.setOnClickListener(new View.OnClickListener() {
+        obtn_entar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (User.getText().toString().equals("admin") && Pass.getText().toString().equals("admin")) {
+                if (oUser.getText().toString().equals("admin") && oPass.getText().toString().equals("admin")) {
                     Toast.makeText(getApplicationContext(),
                             "Redirecting...", Toast.LENGTH_SHORT).show();
 
@@ -82,19 +90,19 @@ public class login extends AppCompatActivity {
                 } else {
                     Toast.makeText(getApplicationContext(), "Error de credenciales", Toast.LENGTH_SHORT).show();
 
-                    Intentos.setVisibility(View.VISIBLE);
-                    Intentos.setBackgroundColor(Color.RED);
+                    oIntentos.setVisibility(View.VISIBLE);
+                    oIntentos.setBackgroundColor(Color.RED);
                     counter--;
-                    Intentos.setText(Integer.toString(counter));
+                    oIntentos.setText(Integer.toString(counter));
 
                     if (counter == 0) {
-                        btn_entar.setEnabled(false);
+                        obtn_entar.setEnabled(false);
                     }
                 }
             }
         });
 
-        btn_cance.setOnClickListener(new View.OnClickListener() {
+        obtn_cance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finishAffinity();
@@ -102,13 +110,12 @@ public class login extends AppCompatActivity {
             }
         });
 
-        oImagen.setOnClickListener(new View.OnClickListener() {
+        oLogin_device.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Global.clear_tables_device();
-                finish();
-                System.exit(0);
-                android.os.Process.killProcess(android.os.Process.myPid());
+                Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
+                startActivityForResult(Int_GetPass, REQUEST_GET_PASS1);
+
             }
         });
 
@@ -117,6 +124,22 @@ public class login extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_GET_PASS1) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    int ipass = data.getIntExtra("PASSWORD", -1);
+                    if (ipass == 123) {
+                        Global.Create_Sql_Tables(true, true);
+                        finish();
+                        System.exit(0);
+                        android.os.Process.killProcess(android.os.Process.myPid());
+                    }
+                    break;
+                case RESULT_CANCELED:
+                    break;
+            }
+        }
 
         if (requestCode == REQUEST_MEN) {
             //Se procesa la devolución
@@ -130,6 +153,7 @@ public class login extends AppCompatActivity {
                     break;
             }
         }
+
         if (requestCode == REQUEST_INSTALL_VALIED) {
         }
         switch (resultCode) {

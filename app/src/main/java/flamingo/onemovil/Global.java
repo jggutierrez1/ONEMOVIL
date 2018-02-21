@@ -115,6 +115,7 @@ public class Global {
     public static String PasswChgMeters = "";
     public static int Correl_Device;
     public static JSONObject Genobj;
+    public static String DialogConfirmText = "";
 
     public static void Init_Vars() {
         PACKAGE_NAME = "flamingo.onemovil";
@@ -972,6 +973,8 @@ public class Global {
         String cSql_Ln = "";
         String cNow = Global.getNow();
 
+        Global.oGen_Db.execSQL("DELETE FROM dispositivos");
+
         cSql_Ln += "INSERT INTO dispositivos(serial, fecha_pacceso,clave_install,corre_ant,corre_act) VALUES ";
         cSql_Ln += "('" + Global.cid_device + "','" + cNow + "','" + cClave + "',0,0)";
         Global.oGen_Db.execSQL(cSql_Ln);
@@ -980,15 +983,15 @@ public class Global {
     public static void clear_tables_device() {
         String cSql_Ln = "";
 
-        cSql_Ln = "DELETE FROM dispositivos";
-        Global.oGen_Db.execSQL(cSql_Ln);
-
-        cSql_Ln = "DELETE FROM empresas";
-        Global.oGen_Db.execSQL(cSql_Ln);
-
-        cSql_Ln = "DELETE FROM operacion";
-        Global.oGen_Db.execSQL(cSql_Ln);
-    }
+        Global.oGen_Db.execSQL("DROP TABLE IF EXISTS dispositivos");
+        Global.oGen_Db.execSQL("DROP TABLE IF EXISTS empresas");
+        Global.oGen_Db.execSQL("DROP TABLE IF EXISTS clientes");
+        Global.oGen_Db.execSQL("DROP TABLE IF EXISTS denominaciones");
+        Global.oGen_Db.execSQL("DROP TABLE IF EXISTS maquinastc");
+        Global.oGen_Db.execSQL("DROP TABLE IF EXISTS maquinas_lnk");
+        Global.oGen_Db.execSQL("DROP TABLE IF EXISTS municipios");
+        Global.oGen_Db.execSQL("DROP TABLE IF EXISTS rutas");
+     }
 
     public static int check_device() {
         String cNow = Global.getNow();
@@ -1113,43 +1116,35 @@ public class Global {
         String cSql_Ln = "";
 
         if (bDropTables == true) {
-
-            // -----------------------------------CLIENTES------------------------------------------------------//
-            cSql_Ln = "DROP TABLE IF EXISTS clientes;";
-            Global.oGen_Db.execSQL(cSql_Ln);
-
-            // -----------------------------------DENOMINACIONES------------------------------------------------//
-            cSql_Ln = "DROP TABLE IF EXISTS denominaciones;";
-            Global.oGen_Db.execSQL(cSql_Ln);
-
-            // ---------------------------------EMPRESA----------------------------------------------------------------//
-            cSql_Ln = "DROP TABLE IF EXISTS empresas;";
-            Global.oGen_Db.execSQL(cSql_Ln);
-
-            // ---------------------------------MAQUINASTC------------------------------------------------------//
-            cSql_Ln = "DROP TABLE IF EXISTS maquinastc;";
-            Global.oGen_Db.execSQL(cSql_Ln);
-
-            // ---------------------------------MAQUINAS LNK----------------------------------------------------//
-            cSql_Ln = "DROP TABLE IF EXISTS maquinas_lnk;";
-            Global.oGen_Db.execSQL(cSql_Ln);
-
-            // ---------------------------------MUNICIPIOS  ----------------------------------------------------//
-            cSql_Ln = "DROP TABLE IF EXISTS municipios;";
-            Global.oGen_Db.execSQL(cSql_Ln);
-
-            // --------------------------------- RUTAS ---------------------------------------------------------//
-            cSql_Ln = "DROP TABLE IF EXISTS rutas;";
-            Global.oGen_Db.execSQL(cSql_Ln);
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS dispositivos");
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS empresas");
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS clientes");
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS denominaciones");
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS maquinastc");
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS maquinas_lnk");
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS municipios");
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS rutas");
         }
 
         if (bDropColects == true) {
-            cSql_Ln = "DELETE FROM operacion;";
-            //lobal.oGen_Db.execSQL(cSql_Ln);
-
-            cSql_Ln = "DROP TABLE IF EXISTS operacion;";
-            Global.oGen_Db.execSQL(cSql_Ln);
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS operacion");
         }
+
+        cSql_Ln = "";
+        cSql_Ln += "CREATE TABLE IF NOT EXISTS dispositivos (";
+        cSql_Ln += "id INTEGER NOT NULL,";
+        cSql_Ln += "serial VARCHAR(50) NOT NULL DEFAULT '',";
+        cSql_Ln += "clave_install VARCHAR(30) NULL DEFAULT 'FLAM111118',";
+        cSql_Ln += "fecha_pacceso DATETIME NULL DEFAULT NULL,";
+        cSql_Ln += "fecha_uacces DATETIME NULL DEFAULT NULL,";
+        cSql_Ln += "dbname VARCHAR(30) NULL DEFAULT 'one2009_1',";
+        cSql_Ln += "corre_ant INT(10) NULL DEFAULT 0,";
+        cSql_Ln += "corre_act INT(10) NULL DEFAULT 0,";
+        cSql_Ln += "clave_metros VARCHAR(30) NULL DEFAULT '6545465465465546',";
+        cSql_Ln += "clave_montos VARCHAR(30) NULL DEFAULT '6545465465465530',";
+        cSql_Ln += "emp_id INT(3) NULL DEFAULT 0,";
+        cSql_Ln += "CONSTRAINT dispositivos PRIMARY KEY (id))";
+        Global.oGen_Db.execSQL(cSql_Ln);
 
         cSql_Ln = "";
         cSql_Ln += "CREATE TABLE IF NOT EXISTS clientes (";

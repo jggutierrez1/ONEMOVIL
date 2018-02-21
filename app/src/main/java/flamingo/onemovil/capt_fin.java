@@ -47,11 +47,11 @@ import java.util.Iterator;
 import java.util.Locale;
 
 public class capt_fin extends AppCompatActivity {
-    private Button obtn_print_maq, obtn_totfin_hide, obtn_totfin_save, obtn_totfin_canc;
+    private Button obtn_print_maq, obtn_totfin_hide, obtn_totfin_save, obtn_totfin_canc,obtn_totfin_unlock;
     private EditText oOp_tot_cole, oOp_tot_timb, oOp_tot_impm, oOp_tot_jcj, oOp_tot_tenc, oOp_tot_devo, oOp_tot_otro,
             oOp_tot_cred, oOp_tot_subt, oOp_tot_impu, oOp_tot_tota, oOp_tot_bloc, oOp_tot_bemp, oOp_tot_nloc, oOp_tot_nemp,
             ototfin_notas;
-    private TextView olab_cte, olOp_tot_cole, olOp_tot_cred, olop_tot_jcj;
+    private TextView olab_cte, olOp_tot_cole, olOp_tot_cred, olop_tot_jcj, oapf_device;
     private SQLiteDatabase oDb5;
     private Cursor oData5;
     private double fPorc_Loc = 0.00;
@@ -75,11 +75,13 @@ public class capt_fin extends AppCompatActivity {
         this.olOp_tot_cole = (TextView) findViewById(R.id.lop_tot_cole);
         this.olOp_tot_cred = (TextView) findViewById(R.id.lop_tot_cred);
         this.olop_tot_jcj = (TextView) findViewById(R.id.lop_tot_jcj);
+        this.oapf_device= (TextView) findViewById(R.id.apf_device);
 
         this.obtn_totfin_hide = (Button) findViewById(R.id.btn_totfin_hide);
         this.obtn_print_maq = (Button) findViewById(R.id.btn_print_maq);
         this.obtn_totfin_save = (Button) findViewById(R.id.btn_totfin_save);
         this.obtn_totfin_canc = (Button) findViewById(R.id.btn_totfin_canc);
+        this.obtn_totfin_unlock = (Button) findViewById(R.id.btn_totfin_unlock);
 
         this.oOp_tot_cole = (EditText) findViewById(R.id.op_tot_cole);
         this.oOp_tot_timb = (EditText) findViewById(R.id.op_tot_timb);
@@ -103,6 +105,7 @@ public class capt_fin extends AppCompatActivity {
         this.ototfin_notas = (EditText) findViewById(R.id.totfin_notas);
 
         this.olab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
+        this.oapf_device.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
 
         this.Clear_Screen();
 
@@ -115,10 +118,10 @@ public class capt_fin extends AppCompatActivity {
         this.Valid_Data();
         this.Calc_Sub_Tot();
 
-        this.olOp_tot_cole.setOnClickListener(new View.OnClickListener() {
+        this.obtn_totfin_unlock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Global.iObj_Select = 1;
+                Global.iObj_Select = 99;
                 Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
                 startActivityForResult(Int_GetPass, REQUEST_GET_PASS);
             }
@@ -133,30 +136,12 @@ public class capt_fin extends AppCompatActivity {
             }
         });
 
-        this.olOp_tot_cred.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Global.iObj_Select = 2;
-                Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
-                startActivityForResult(Int_GetPass, REQUEST_GET_PASS);
-            }
-        });
-
         this.oOp_tot_cred.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     oOp_tot_cred.setEnabled(false);
                 }
-            }
-        });
-
-        this.olop_tot_jcj.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Global.iObj_Select = 3;
-                Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
-                startActivityForResult(Int_GetPass, REQUEST_GET_PASS);
             }
         });
 
@@ -749,6 +734,11 @@ public class capt_fin extends AppCompatActivity {
 
                     if (ipass == Integer.valueOf(Global.PasswChgAmmout)) {
                         switch (Global.iObj_Select) {
+                            case 99:
+                                this.oOp_tot_cole.setEnabled(true);
+                                this.oOp_tot_cred.setEnabled(true);
+                                this.oOp_tot_jcj.setEnabled(true);
+                                break;
                             case 0:
                                 this.oOp_tot_cole.setEnabled(false);
                                 this.oOp_tot_cred.setEnabled(false);
