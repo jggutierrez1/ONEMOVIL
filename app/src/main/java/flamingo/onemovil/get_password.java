@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class get_password extends AppCompatActivity {
     private Button obtn_acept, obtn_cancel;
     private EditText oPassw_value;
+    private TextView oPassw_device;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +26,9 @@ public class get_password extends AppCompatActivity {
         this.obtn_cancel = (Button) findViewById(R.id.btn_cancel);
 
         this.oPassw_value = (EditText) findViewById(R.id.Passw_value);
+        this.oPassw_device = (TextView) findViewById(R.id.Passw_device);
+
+        this.oPassw_device.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
 
         obtn_acept.setOnClickListener(new View.OnClickListener() {
 

@@ -816,22 +816,19 @@ public class capt_data extends AppCompatActivity {
     }
 
     private void Calc_Tot(int iForce) {
-        String cTot = "";
-        double fTot = 0.00;
-        double fpFac_e = 0.00;
-        double ftot_cole = 0.00;
+        double fpule = (this.Denom_Ent_Fac == 0 ? 1 : this.Denom_Ent_Fac);
+        double fdsal = (this.fDenom_Ent_Val == 0 ? 1 : this.fDenom_Ent_Val);
+        double fdif1 = (this.iMetroA_EntDif + this.iMetroB_EntDif);
+        double fdif2 = (fdif1 / fpule);
+        double fTot = fdif2 * fdsal;
 
-        fpFac_e = (this.Denom_Ent_Fac == 0 ? 1 : this.Denom_Ent_Fac);
-
-        fTot = (this.iMetroA_EntDif + this.iMetroB_EntDif) / fpFac_e;
-
-        cTot = String.format("%.2f", fTot);
+        String cTot = String.format("%.2f", fTot);
 
         if (iForce == 1) {
             this.tot_cole.setText(cTot);
             this.Calc_Sub_Tot();
         } else {
-            ftot_cole = Double.valueOf(tot_cole.getText().toString()).doubleValue();
+            double ftot_cole = Double.valueOf(tot_cole.getText().toString()).doubleValue();
             op_colect = ftot_cole;
             if (ftot_cole <= 0.00) {
                 this.tot_cole.setText(Double.valueOf(fTot).toString());
@@ -842,21 +839,19 @@ public class capt_data extends AppCompatActivity {
     }
 
     private void Tot_Cred(int iForce) {
-        String cTot = "";
-        double fTot = 0.00;
-        double fpFac_s = 0.00;
-        double ftot_prem = 0.00;
 
-        fpFac_s = (this.Denom_Sal_Fac == 0 ? 1 : this.Denom_Sal_Fac);
-
-        fTot = ((this.iMetroA_SalDif + this.iMetroB_SalDif) / fpFac_s) * (this.fDenom_Sal_Val == 0 ? 1 : this.fDenom_Sal_Val);
-        cTot = String.format("%.2f", fTot);
+        double fpule = (this.Denom_Sal_Fac == 0 ? 1 : this.Denom_Sal_Fac);
+        double fdsal = (this.fDenom_Sal_Val == 0 ? 1 : this.fDenom_Sal_Val);
+        double fdif1 = (this.iMetroA_SalDif + this.iMetroB_SalDif);
+        double fdif2 = (fdif1 / fpule);
+        double fTot = fdif2 * fdsal;
+        String cTot = String.format("%.2f", fTot);
 
         if (iForce == 1) {
             this.tot_cred.setText(cTot);
             this.Calc_Sub_Tot();
         } else {
-            ftot_prem = Double.valueOf(tot_cred.getText().toString()).doubleValue();
+            double ftot_prem = Double.valueOf(tot_cred.getText().toString()).doubleValue();
             op_cred = ftot_prem;
             if (ftot_prem <= 0) {
                 this.tot_cred.setText(cTot);
