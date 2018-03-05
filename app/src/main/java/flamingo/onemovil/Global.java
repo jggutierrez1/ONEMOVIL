@@ -1128,6 +1128,7 @@ public class Global {
 
         if (bDropColects == true) {
             Global.oGen_Db.execSQL("DROP TABLE IF EXISTS operacion");
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS operaciong");
         }
 
         cSql_Ln = "";
@@ -1424,9 +1425,10 @@ public class Global {
         cSql_Ln += "op_emp_id  INTEGER NULL DEFAULT 0,";
         cSql_Ln += "op_baja_prod INTEGER(1) NOT NULL DEFAULT 0,";
         cSql_Ln += "id_device VARCHAR(30) NOT NULL DEFAULT 'MANUAL',";
+        cSql_Ln += "id_group INTEGER NOT NULL DEFAULT 0,";
         cSql_Ln += "op_semanas_imp INTEGER NULL DEFAULT 1,";
         cSql_Ln += "op_image_name CHAR(80) NULL DEFAULT NULL,";
-        cSql_Ln += "op_usermodify INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "op_usermodify INTEGER(1) NULL DEFAULT 0,";
         cSql_Ln += "CONSTRAINT  operacion_PRIMARY PRIMARY KEY(id_op))";
         Global.oGen_Db.execSQL(cSql_Ln);
 
@@ -1437,6 +1439,60 @@ public class Global {
         Global.oGen_Db.execSQL(cSql_Ln);
 
         cSql_Ln = "CREATE INDEX IF NOT EXISTS MaqLnk_Id ON operacion ('MaqLnk_Id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS op_usermodify ON operacion ('op_usermodify')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS id_group ON operacion ('id_group')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "";
+        cSql_Ln += "CREATE TABLE IF NOT EXISTS operaciong (";
+        cSql_Ln += "id_autoin   INTEGER NOT NULL,";
+        cSql_Ln += "cte_id INTEGER unsigned DEFAULT 0,";
+        cSql_Ln += "cte_nombre_loc CHAR(60) DEFAULT '',";
+        cSql_Ln += "cte_nombre_com CHAR(60) DEFAULT '',";
+        cSql_Ln += "op_cal_colect NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_colect NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_impmunic NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_impjcj NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_timbres NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_spac NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_tec NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_dev NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_otros NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_cred NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_cal_cred NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_sub NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_itbm NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_tot NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_brutoloc NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_brutoemp NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_netoloc NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_netoemp NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_emp_id INTEGER(1) DEFAULT 0,";
+        cSql_Ln += "id_device VARCHAR(30) DEFAULT 'MANUAL',";
+        cSql_Ln += "id_group INTEGER DEFAULT 0,";
+        cSql_Ln += "op_usermodify INTEGER(1) DEFAULT 0,";
+        cSql_Ln += "op_fecha_alta  DATETIME NULL,";
+        cSql_Ln += "op_fecha_modif  DATETIME NULL,";
+        cSql_Ln += "CONSTRAINT  operaciong_PRIMARY PRIMARY KEY(id_autoin))";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS cte_id ON operaciong ('cte_id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS op_emp_id ON operaciong ('op_emp_id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS id_device ON operaciong ('id_device')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS op_usermodify ON operaciong ('op_usermodify')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS id_group ON operaciong ('id_group')";
         Global.oGen_Db.execSQL(cSql_Ln);
     }
 
@@ -1479,5 +1535,11 @@ public class Global {
         Global.oGen_Db.execSQL(cSql_Ln);
         // ----------------------------------FIN EMPRESAS---------------------------------------------------//
 
+    }
+
+    public static int createID(){
+        Date now = new Date();
+        int id = Integer.parseInt(new SimpleDateFormat("ddHHmmss",  Locale.US).format(now));
+        return id;
     }
 }

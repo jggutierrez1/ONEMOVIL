@@ -37,6 +37,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.nio.channels.FileChannel;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -45,9 +46,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.Locale;
+import java.util.Random;
 
 public class capt_fin extends AppCompatActivity {
-    private Button obtn_print_maq, obtn_totfin_hide, obtn_totfin_save, obtn_totfin_canc,obtn_totfin_unlock;
+    private Button obtn_print_maq, obtn_totfin_hide, obtn_totfin_save, obtn_totfin_canc, obtn_totfin_unlock;
     private EditText oOp_tot_cole, oOp_tot_timb, oOp_tot_impm, oOp_tot_jcj, oOp_tot_tenc, oOp_tot_devo, oOp_tot_otro,
             oOp_tot_cred, oOp_tot_subt, oOp_tot_impu, oOp_tot_tota, oOp_tot_bloc, oOp_tot_bemp, oOp_tot_nloc, oOp_tot_nemp,
             ototfin_notas;
@@ -75,7 +77,7 @@ public class capt_fin extends AppCompatActivity {
         this.olOp_tot_cole = (TextView) findViewById(R.id.lop_tot_cole);
         this.olOp_tot_cred = (TextView) findViewById(R.id.lop_tot_cred);
         this.olop_tot_jcj = (TextView) findViewById(R.id.lop_tot_jcj);
-        this.oapf_device= (TextView) findViewById(R.id.apf_device);
+        this.oapf_device = (TextView) findViewById(R.id.apf_device);
 
         this.obtn_totfin_hide = (Button) findViewById(R.id.btn_totfin_hide);
         this.obtn_print_maq = (Button) findViewById(R.id.btn_print_maq);
@@ -540,6 +542,8 @@ public class capt_fin extends AppCompatActivity {
                 Log.e("date1", cDateMysql);
                 Log.e("corre", cNumDoc);
 
+                int iId_Group = Global.createID();
+
                 //--------------------ACTUALIZA REGISTRO DE BAJA PRODUCCION---------------------------------------//
                 cSql_Ln = "UPDATE operacion SET ";
                 cSql_Ln += " op_tot_brutoloc = 0.00,";
@@ -557,9 +561,10 @@ public class capt_fin extends AppCompatActivity {
                 cSql_Ln += " op_tot_tot      = 0.00,";
                 cSql_Ln += " op_nodoc        ='" + cNumDoc + "',";
                 cSql_Ln += " op_fecha        ='" + cDateMysql + "',";
-                cSql_Ln += " u_usuario_alta  ='TABLET',";
-                cSql_Ln += " op_fecha_alta   ='" + cDateMysql + "', ";
-                cSql_Ln += " op_usermodify   = 1 ";
+                cSql_Ln += " u_usuario_modif ='TABLET',";
+                cSql_Ln += " op_fecha_modif  ='" + cDateMysql + "', ";
+                cSql_Ln += " op_usermodify   = 1, ";
+                cSql_Ln += " id_group        ='" + Integer.toString(iId_Group) + "' ";
                 cSql_Ln += "WHERE id_device ='" + Global.cid_device + "' ";
                 cSql_Ln += "AND   cte_id    ='" + Global.cCte_Id + "' ";
                 cSql_Ln += "AND IFNULL(op_baja_prod,0)=1;";
@@ -599,18 +604,36 @@ public class capt_fin extends AppCompatActivity {
                     else
                         cSql_Ln += " op_tot_otros   =(" + ctot_otro + "/" + cRegs_Cnt + "), ";
 
-                    cSql_Ln += " op_tot_sub     =(op_tot_colect - (op_tot_timbres + op_tot_impmunic + op_tot_impjcj + op_tot_tec) - (op_tot_dev + op_tot_otros + op_tot_cred)),";
+                    cSql_Ln += " op_tot_sub     = 0.00,";
                     cSql_Ln += " op_tot_itbm    = 0.00,";
-                    cSql_Ln += " op_tot_tot     = (op_tot_sub - op_tot_itbm),";
+                    cSql_Ln += " op_tot_tot     = 0.00,";
                     cSql_Ln += " op_nodoc       ='" + cNumDoc + "',";
                     cSql_Ln += " op_fecha       ='" + cDateMysql + "',";
-                    cSql_Ln += " u_usuario_alta ='TABLET',";
-                    cSql_Ln += " op_fecha_alta  ='" + cDateMysql + "', ";
-                    cSql_Ln += " op_usermodify  =1 ";
+                    cSql_Ln += " u_usuario_modif ='TABLET',";
+                    cSql_Ln += " op_fecha_modif ='" + cDateMysql + "', ";
+                    cSql_Ln += " op_usermodify  =1, ";
+                    cSql_Ln += " id_group        ='" + Integer.toString(iId_Group) + "' ";
                     cSql_Ln += "WHERE id_device ='" + Global.cid_device + "' ";
                     cSql_Ln += "AND   cte_id    ='" + Global.cCte_Id + "' ";
                     cSql_Ln += "AND IFNULL(op_baja_prod,0)=0;";
                     Global.logLargeString(cSql_Ln);
+                    oDb5.execSQL(cSql_Ln);
+
+                    cSql_Ln = "";
+                    cSql_Ln += "UPDATE operacion SET ";
+                    cSql_Ln += " op_tot_sub     =(op_tot_colect - (op_tot_timbres + op_tot_impmunic + op_tot_impjcj + op_tot_tec) - (op_tot_dev + op_tot_otros + op_tot_cred)),";
+                    cSql_Ln += " op_tot_itbm    = 0.00 ";
+                    cSql_Ln += "WHERE id_device ='" + Global.cid_device + "' ";
+                    cSql_Ln += "AND   cte_id    ='" + Global.cCte_Id + "' ";
+                    cSql_Ln += "AND IFNULL(op_baja_prod,0)=0;";
+                    oDb5.execSQL(cSql_Ln);
+
+                    cSql_Ln = "";
+                    cSql_Ln += "UPDATE operacion SET ";
+                    cSql_Ln += " op_tot_tot     = (op_tot_sub - op_tot_itbm) ";
+                    cSql_Ln += "WHERE id_device ='" + Global.cid_device + "' ";
+                    cSql_Ln += "AND   cte_id    ='" + Global.cCte_Id + "' ";
+                    cSql_Ln += "AND IFNULL(op_baja_prod,0)=0;";
                     oDb5.execSQL(cSql_Ln);
 
                     cSql_Ln = "" +
@@ -646,53 +669,64 @@ public class capt_fin extends AppCompatActivity {
                     oDb5.execSQL(cSql_Ln);
                 }
 
+                cSql_Ln = "";
+                cSql_Ln += "" +
+                        "DELETE FROM operaciong " +
+                        "WHERE id_device ='" + Global.cid_device + "' " +
+                        "AND   cte_id    ='" + Global.cCte_Id + "' ";
+                Global.logLargeString(cSql_Ln);
+                oDb5.execSQL(cSql_Ln);
+
+                cSql_Ln = "";
+                cSql_Ln += "INSERT INTO operaciong ( ";
+                cSql_Ln += "cte_id,";
+                cSql_Ln += "cte_nombre_loc  , cte_nombre_com,";
+                cSql_Ln += "op_cal_colect   ,op_tot_colect  ,";
+                cSql_Ln += "op_tot_impmunic ,op_tot_impjcj  ,";
+                cSql_Ln += "op_tot_timbres  ,op_tot_spac    ,";
+                cSql_Ln += "op_tot_tec      ,op_tot_dev    ,";
+                cSql_Ln += "op_tot_otros    ,";
+                cSql_Ln += "op_tot_cred     ,op_cal_cred    ,";
+                cSql_Ln += "op_tot_sub      ,op_tot_itbm    ,";
+                cSql_Ln += "op_tot_tot      ,";
+                cSql_Ln += "op_tot_brutoloc ,op_tot_brutoemp,";
+                cSql_Ln += "op_tot_netoloc  ,op_tot_netoemp,";
+                cSql_Ln += "op_emp_id       ,id_device,";
+                cSql_Ln += "id_group        ,op_usermodify,";
+                cSql_Ln += "op_fecha_alta) VALUES (";
+                cSql_Ln += "'" + Global.cCte_Id + "',";
+                cSql_Ln += "'" + Global.cCte_De + "',";
+                cSql_Ln += "'" + Global.cCte_De + "',";
+                cSql_Ln += "'0.00',";
+                cSql_Ln += "'" + ctot_cole + "',";
+                cSql_Ln += "'" + ctot_impm + "',";
+                cSql_Ln += "'" + ctot__jcj + "',";
+                cSql_Ln += "'" + ctot_timb + "',";
+                cSql_Ln += "'0.00',";
+                cSql_Ln += "'" + ctot_tecn + "',";
+                cSql_Ln += "'" + ctot_devo + "',";
+                cSql_Ln += "'" + ctot_otro + "',";
+                cSql_Ln += "'" + ctot_cred + "',";
+                cSql_Ln += "'0.00',";
+                cSql_Ln += "'" + cSub_tota + "',";
+                cSql_Ln += "'" + ctot_impu + "',";
+                cSql_Ln += "'" + ctot_tota + "',";
+                cSql_Ln += "'" + ctot_bloc + "',";
+                cSql_Ln += "'" + ctot_bemp + "',";
+                cSql_Ln += "'" + ctot_nloc + "',";
+                cSql_Ln += "'" + ctot_nemp + "',";
+                cSql_Ln += "'" + Global.cEmp_Id + "',";
+                cSql_Ln += "'" + Global.cid_device + "',";
+                cSql_Ln += "'" + Integer.toString(iId_Group) + "',";
+                cSql_Ln += "'1',";
+                cSql_Ln += "'" + cDateMysql + "');";
+                Global.logLargeString(cSql_Ln);
+                oDb5.execSQL(cSql_Ln);
+
                 Global.ExportDB();
                 Global.iPrn_Data = 2;
                 Intent Int_PrnMaqScreen = new Intent(getApplicationContext(), print_data.class);
                 startActivityForResult(Int_PrnMaqScreen, REQUEST_PRINT);
-
-                //------------------------------------------------------------------------------------------------//
-/*
-                //----------------RECORRE CADA EMPRESA PARA VER EL TEMA DE CORRELATIVO----------------------------//
-                String EMP_ID ,OPE_ID = "";
-                Cursor oCur_Emp,oCur_Sec,oCur_Ope;
-
-                cSql_Ln = "" +
-                        "SELECT op_emp_id " +
-                        "FROM operacion " +
-                        "WHERE id_device ='" + Global.cid_device + "' " +
-                        "GROUP BY op_emp_id";
-
-                oCur_Emp = oDb5.rawQuery(cSql_Ln, null);
-                oCur_Emp.moveToFirst();
-                do {
-
-                    //----------------RECORRE CADA EMPRESA PARA VER EL TEMA DE CORRELATIVO----------------------------//
-                    EMP_ID = oCur_Emp.getString(0);
-
-                    cSql_Ln = "" +
-                            "SELECT "+
-                            "   IFNULL(emp_corre_ant) AS emp_corre_ant,"+
-                            "   IFNULL(emp_corre_act) AS emp_corre_act "+
-                            "FROM empresas " +
-                            "WHERE emp_id ='" + EMP_ID + "';";
-                    oCur_Sec = oDb5.rawQuery(cSql_Ln, null);
-
-                    cSql_Ln = "" +
-                            "SELECT id_op " +
-                            "FROM operacion " +
-                            "WHERE id_device ='" + Global.cid_device + "' " +
-                            "AND  op_emp_id ='" + EMP_ID + "';";
-                    oCur_Ope = oDb5.rawQuery(cSql_Ln, null);
-                    oCur_Ope.moveToFirst();
-                    do {
-                        OPE_ID = oCur_Ope.getString(0);
-
-                    } while (oCur_Ope.moveToNext());
-                    //------------------------------------------------------------------------------------------------//
-
-                } while (oCur_Emp.moveToNext());
-                //------------------------------------------------------------------------------------------------//
 
                 /*
                 Global.ExportDB();

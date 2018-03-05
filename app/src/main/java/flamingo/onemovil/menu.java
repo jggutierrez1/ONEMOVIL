@@ -313,15 +313,75 @@ public class menu extends AppCompatActivity {
                 Global.logLargeString(Sql_Ln);
                 Global.logLargeString(cJsonResult);
 
-                String cParsString = "";
-                cParsString += "dbname=one2009_2";
+                String cParsString;
+                String script;
+
+                cParsString = "";
+                cParsString += "dbname=one2009_1";
                 cParsString += "&device=" + Global.cid_device;
                 cParsString += "&Json=" + cJsonResult;
-                String script = Global.gen_execute_post(Global.SERVER_URL, "/flam/subir_datos.php", cParsString);
+                cParsString += "&optn=1";
+                script = Global.gen_execute_post(Global.SERVER_URL, "/flam/subir_datos.php", cParsString);
                 Global.logLargeString(script);
                 if (script.contentEquals("1")) {
                     Toast.makeText(getApplicationContext(), "LOS DATOS SE SUBIERON CORRECTAMENTE.", Toast.LENGTH_SHORT).show();
                     String cSql_Ln = "DELETE FROM operacion " +
+                            "WHERE id_device ='" + Global.cid_device + "' " +
+                            "AND   op_emp_id ='" + PEMP_ID + "' ";
+                    db.execSQL(cSql_Ln);
+                } else {
+                    Toast.makeText(getApplicationContext(), "NO SE PUDIERON SUBIR LOS DATOS CORRECTAMENTE.", Toast.LENGTH_SHORT).show();
+                }
+
+                Sql_Ln = "" +
+                        "SELECT " +
+                        "IFNULL(cte_id         ,' ')  AS cte_id, " +
+                        "IFNULL(cte_nombre_loc ,' ')  AS cte_nombre_loc, " +
+                        "IFNULL(cte_nombre_com ,' ')  AS cte_nombre_com, " +
+                        "IFNULL(op_cal_colect  ,0.00) AS op_cal_colect , " +
+                        "IFNULL(op_tot_colect  ,0.00) AS op_tot_colect , " +
+                        "IFNULL(op_tot_cred    ,0.00) AS op_tot_cred   , " +
+                        "IFNULL(op_cal_cred    ,0.00) AS op_cal_cred   , " +
+                        "IFNULL(op_tot_brutoloc ,0.00) AS op_tot_brutoloc, " +
+                        "IFNULL(op_tot_brutoemp,0.00) AS op_tot_brutoemp, " +
+                        "IFNULL(op_tot_netoloc ,0.00) AS op_tot_netoloc, " +
+                        "IFNULL(op_tot_netoemp ,0.00) AS op_tot_netoemp, " +
+                        "IFNULL(op_tot_timbres ,0.00) AS op_tot_timbres, " +
+                        "IFNULL(op_tot_spac ,0.00) AS op_tot_spac, " +
+                        "IFNULL(op_tot_impmunic,0.00) AS op_tot_impmunic, " +
+                        "IFNULL(op_tot_impjcj  ,0.00) AS op_tot_impjcj , " +
+                        "IFNULL(op_tot_tec     ,0.00) AS op_tot_tec    , " +
+                        "IFNULL(op_tot_dev     ,0.00) AS op_tot_dev    , " +
+                        "IFNULL(op_tot_otros   ,0.00) AS op_tot_otros  , " +
+                        "IFNULL(op_tot_sub     ,0.00) AS op_tot_sub    , " +
+                        "IFNULL(op_tot_itbm    ,0.00) AS op_tot_itbm   , " +
+                        "IFNULL(op_tot_tot     ,0.00) AS op_tot_tot    , " +
+                        "IFNULL(op_fecha_alta ,date('now')) AS op_fecha_alta, " +
+                        "IFNULL(op_fecha_modif,date('now')) AS op_fecha_modif, " +
+                        "IFNULL(op_emp_id,0)          AS op_emp_id     , " +
+                        "IFNULL(id_device,' ')        AS id_device     , " +
+                        "IFNULL(id_group,'0')         AS id_group     , " +
+                        "IFNULL(op_usermodify,0)      AS op_usermodify   " +
+                        "FROM operaciong " +
+                        "WHERE id_device   ='" + Global.cid_device + "' " +
+                        "AND  op_usermodify='1' ";
+
+                Global.logLargeString(Sql_Ln);
+
+                cJsonResult = Global.getJsonResults2(Sql_Ln, "operaciong");
+                Global.logLargeString(Sql_Ln);
+                Global.logLargeString(cJsonResult);
+
+                cParsString = "";
+                cParsString += "dbname=one2009_1";
+                cParsString += "&device=" + Global.cid_device;
+                cParsString += "&Json=" + cJsonResult;
+                cParsString += "&optn=2";
+                script = Global.gen_execute_post(Global.SERVER_URL, "/flam/subir_datos.php", cParsString);
+                Global.logLargeString(script);
+                if (script.contentEquals("1")) {
+                    Toast.makeText(getApplicationContext(), "LOS DATOS SE SUBIERON CORRECTAMENTE.", Toast.LENGTH_SHORT).show();
+                    String cSql_Ln = "DELETE FROM operaciong " +
                             "WHERE id_device ='" + Global.cid_device + "' " +
                             "AND   op_emp_id ='" + PEMP_ID + "' ";
                     db.execSQL(cSql_Ln);
