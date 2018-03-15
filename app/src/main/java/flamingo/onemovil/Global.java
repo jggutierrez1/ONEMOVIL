@@ -1245,6 +1245,8 @@ public class Global {
         cSql_Ln += "emp_corre_act INT(10) NULL DEFAULT '0',";
         cSql_Ln += "u_usuario_alta CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "emp_clave_metros CHAR(30) NULL DEFAULT '112233',";
+        cSql_Ln += "emp_clave_montos CHAR(30) NULL DEFAULT '332211',";
         cSql_Ln += "CONSTRAINT empresas_PRIMARY PRIMARY KEY (emp_id))";
         Global.oGen_Db.execSQL(cSql_Ln);
 
@@ -1281,6 +1283,7 @@ public class Global {
         cSql_Ln += "maqtc_fecha_modif DATETIME NULL ,";
         cSql_Ln += "u_usuario_alta CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "maqtc_sem_jcj INTEGER NULL DEFAULT '1',";
         cSql_Ln += "CONSTRAINT maquinastc_PRIMARY PRIMARY KEY (maqtc_id))";
         Global.oGen_Db.execSQL(cSql_Ln);
 
@@ -1425,7 +1428,7 @@ public class Global {
         cSql_Ln += "op_emp_id  INTEGER NULL DEFAULT 0,";
         cSql_Ln += "op_baja_prod INTEGER(1) NOT NULL DEFAULT 0,";
         cSql_Ln += "id_device VARCHAR(30) NOT NULL DEFAULT 'MANUAL',";
-        cSql_Ln += "id_group INTEGER NOT NULL DEFAULT 0,";
+        cSql_Ln += "id_group VARCHAR(30) NULL DEFAULT 0,";
         cSql_Ln += "op_semanas_imp INTEGER NULL DEFAULT 1,";
         cSql_Ln += "op_image_name CHAR(80) NULL DEFAULT NULL,";
         cSql_Ln += "op_usermodify INTEGER(1) NULL DEFAULT 0,";
@@ -1473,7 +1476,7 @@ public class Global {
         cSql_Ln += "op_tot_netoemp NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "op_emp_id INTEGER(1) DEFAULT 0,";
         cSql_Ln += "id_device VARCHAR(30) DEFAULT 'MANUAL',";
-        cSql_Ln += "id_group INTEGER DEFAULT 0,";
+        cSql_Ln += "id_group VARCHAR(30) NULL DEFAULT 0,";
         cSql_Ln += "op_usermodify INTEGER(1) DEFAULT 0,";
         cSql_Ln += "op_fecha_alta  DATETIME NULL,";
         cSql_Ln += "op_fecha_modif  DATETIME NULL,";
@@ -1521,10 +1524,12 @@ public class Global {
         cSql_Ln += "emp_cargo_spac NUMERIC(12, 2) NULL DEFAULT 0,";
         cSql_Ln += "emp_fecha_alta DATETIME NULL ,";
         cSql_Ln += "emp_fecha_modif DATETIME NULL ,";
-        cSql_Ln += "u_usuario_alta CHAR(20) NULL DEFAULT 'ANONIMO',";
-        cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln += "emp_corre_ant INT(10) NULL DEFAULT '0',";
         cSql_Ln += "emp_corre_act INT(10) NULL DEFAULT '0',";
+        cSql_Ln += "u_usuario_alta CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "emp_clave_metros CHAR(30) NULL DEFAULT '112233',";
+        cSql_Ln += "emp_clave_montos CHAR(30) NULL DEFAULT '332211',";
         cSql_Ln += "CONSTRAINT empresas_PRIMARY PRIMARY KEY (emp_id))";
         Global.oGen_Db.execSQL(cSql_Ln);
 

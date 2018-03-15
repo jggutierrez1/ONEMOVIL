@@ -302,7 +302,8 @@ public class menu extends AppCompatActivity {
                         "IFNULL(op_nodoc,' ')         AS op_nodoc      , " +
                         "IFNULL(op_baja_prod,0)       AS op_baja_prod  , " +
                         "IFNULL(op_image_name,' ')    AS op_image_name , " +
-                        "IFNULL(op_usermodify,0)      AS op_usermodify   " +
+                        "IFNULL(op_usermodify,0)      AS op_usermodify , " +
+                        "IFNULL(id_group,'0')         AS id_group        " +
                         "FROM operacion " +
                         "WHERE id_device   ='" + Global.cid_device + "' " +
                         "AND  op_usermodify='1' ";
@@ -377,7 +378,7 @@ public class menu extends AppCompatActivity {
                 cParsString += "&device=" + Global.cid_device;
                 cParsString += "&Json=" + cJsonResult;
                 cParsString += "&optn=2";
-                script = Global.gen_execute_post(Global.SERVER_URL, "/flam/subir_datos.php", cParsString);
+                script = Global.gen_execute_post(Global.SERVER_URL, "/flam/subir_datos_v2.php", cParsString);
                 Global.logLargeString(script);
                 if (script.contentEquals("1")) {
                     Toast.makeText(getApplicationContext(), "LOS DATOS SE SUBIERON CORRECTAMENTE.", Toast.LENGTH_SHORT).show();

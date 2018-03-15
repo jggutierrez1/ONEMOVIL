@@ -451,6 +451,8 @@ public class capt_fin extends AppCompatActivity {
                 String ctot_nloc = "0.00";
                 String ctot_nemp = "0.00";
 
+                int iId_Group = 0;
+
                 dtot_cole = Double.valueOf(oOp_tot_cole.getText().toString()).doubleValue();
                 dtot_timb = Double.valueOf(oOp_tot_timb.getText().toString()).doubleValue();
                 dtot_impm = Double.valueOf(oOp_tot_impm.getText().toString()).doubleValue();
@@ -542,7 +544,7 @@ public class capt_fin extends AppCompatActivity {
                 Log.e("date1", cDateMysql);
                 Log.e("corre", cNumDoc);
 
-                int iId_Group = Global.createID();
+                iId_Group = Global.createID();
 
                 //--------------------ACTUALIZA REGISTRO DE BAJA PRODUCCION---------------------------------------//
                 cSql_Ln = "UPDATE operacion SET ";
