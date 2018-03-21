@@ -565,6 +565,15 @@ public class capt_data extends AppCompatActivity {
                 Global.Correl_Device++;
                 String Op_nodoc = Global.cid_device.substring(Global.cid_device.length() - 3, Global.cid_device.length()) + String.format("%08d", Global.Correl_Device);
 
+                if (Denom_Ent_Fac==0){
+                    maqtc_denom_e="1";
+                    den_valore = 0.00;
+                };
+                if (Denom_Sal_Fac==0){
+                    maqtc_denom_e="1";
+                    den_valors = 0.00;
+                };
+
                 cSql_Ln = "";
                 cSql_Ln += "INSERT INTO operacion ( ";
                 cSql_Ln += "cte_id,";
@@ -939,6 +948,7 @@ public class capt_data extends AppCompatActivity {
         cSqlLn += "  maquinastc.maqtc_m2s_act, ";
         cSqlLn += "  maquinastc.maqtc_m2s_ant, ";
         cSqlLn += "  maquinastc.maqtc_m1s_act, ";
+        cSqlLn += "  IFNULL(maquinastc.maqtc_sem_jcj,1) AS maqtc_sem_jcj, ";
         cSqlLn += "  maquinas_lnk.MaqLnk_Id, ";
         cSqlLn += "  clientes.cte_id, ";
         cSqlLn += "  clientes.cte_nombre_loc, ";
@@ -1075,6 +1085,8 @@ public class capt_data extends AppCompatActivity {
         den_fact_s = data4.getInt(data4.getColumnIndex("den_fact_s"));
         den_valore = data4.getDouble(data4.getColumnIndex("den_valore"));
         den_valors = data4.getDouble(data4.getColumnIndex("den_valors"));
+
+        this.oSemanas.setText(data4.getString(data4.getColumnIndex("maqtc_sem_jcj")));
 
         //if (self.otOperaciones.State = dsInsert) {
         if (bIsNew == true) {

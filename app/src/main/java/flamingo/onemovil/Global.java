@@ -1278,7 +1278,8 @@ public class Global {
         cSql_Ln += "maqtc_m2s_act   NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "maqtc_m2s_ant   NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "maqtc_m1s_act   NUMERIC(12, 2) DEFAULT 0.00,";
-        cSql_Ln += "maqtc_semanas_imp   INTEGER NULL DEFAULT '0',";
+        cSql_Ln += "maqtc_mfecha    DATETIME NULL ,";
+        cSql_Ln += "maqtc_semanas_imp   INTEGER NULL DEFAULT '1',";
         cSql_Ln += "maqtc_fecha_alta    DATETIME NULL ,";
         cSql_Ln += "maqtc_fecha_modif   DATETIME NULL ,";
         cSql_Ln += "u_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
