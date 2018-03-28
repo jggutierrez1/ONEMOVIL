@@ -1176,6 +1176,7 @@ public class Global {
         cSql_Ln += "u_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln += "cte_unico_emp   INTEGER NULL DEFAULT 0,";
         cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "cte_mod_metro_ant INTEGER NULL DEFAULT 0,";
         cSql_Ln += "CONSTRAINT clientes_PRIMARY PRIMARY KEY (cte_id))";
         Global.oGen_Db.execSQL(cSql_Ln);
 
@@ -1279,7 +1280,6 @@ public class Global {
         cSql_Ln += "maqtc_m2s_ant   NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "maqtc_m1s_act   NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "maqtc_mfecha    DATETIME NULL ,";
-        cSql_Ln += "maqtc_semanas_imp   INTEGER NULL DEFAULT '1',";
         cSql_Ln += "maqtc_fecha_alta    DATETIME NULL ,";
         cSql_Ln += "maqtc_fecha_modif   DATETIME NULL ,";
         cSql_Ln += "u_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
@@ -1475,6 +1475,7 @@ public class Global {
         cSql_Ln += "op_tot_brutoemp NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "op_tot_netoloc NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "op_tot_netoemp NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_observ       TEXT,";
         cSql_Ln += "op_emp_id INTEGER(1) DEFAULT 0,";
         cSql_Ln += "id_device VARCHAR(30) DEFAULT 'MANUAL',";
         cSql_Ln += "id_group VARCHAR(30) NULL DEFAULT 0,";

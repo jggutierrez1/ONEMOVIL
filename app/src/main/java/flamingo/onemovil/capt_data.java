@@ -66,13 +66,13 @@ public class capt_data extends AppCompatActivity {
 
     private static final String TAG = capt_data.class.getSimpleName();
     private Button btn_hide_capt, btn_foto_capt, btn_save_capt, btn_cancel_capt, btn_unlock_capt, btn_metd_capt;
-    private CheckBox oBaja_prod;
+    private CheckBox baja_prod;
     private EditText ea_act, ea_ant, ea_dif;
     private EditText eb_act, eb_ant, eb_dif;
     private EditText sa_act, sa_ant, sa_dif;
     private EditText sb_act, sb_ant, sb_dif;
     private EditText tot_cole, tot_cred;
-    private EditText oSemanas;
+    private EditText oSemanas, tot_notas;
     private TextView ltot_cole, ltot_cred;
     private TextView lab_cte, lab_cha;
     private TextView lea_act, lea_ant, leb_act, leb_ant, lsa_act, lsa_ant, lsb_act, lsb_ant, leb_dif;
@@ -89,7 +89,7 @@ public class capt_data extends AppCompatActivity {
     private int op_emp_id, den_fact_e, den_fact_s, maqtc_tipomaq, op_semanas_imp;
     private double Op_ea_metroac, Op_ea_metroan, Op_sa_metroac, Op_sa_metroan;
     private boolean bFoundMach;
-    private int cte_pag_jcj, cte_pag_spac, cte_pag_impm, Denom_Ent_Fac, Denom_Sal_Fac;
+    private int cte_pag_jcj, cte_pag_spac, cte_pag_impm, Denom_Ent_Fac, Denom_Sal_Fac, cte_mod_metro_ant;
     private double fDenom_Ent_Val, fDenom_Sal_Val, Porc_Loc;
     //private double ftot_cole, ftot_prem;
     private double iMetro_EntDif, iMetroA_EntDif, iMetroB_EntDif, iMetro_SalDif, iMetroA_SalDif, iMetroB_SalDif;
@@ -102,6 +102,8 @@ public class capt_data extends AppCompatActivity {
         setContentView(R.layout.activity_capt_data);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
+        cte_mod_metro_ant = 0;
 
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
@@ -146,8 +148,6 @@ public class capt_data extends AppCompatActivity {
         this.oSemanas = (EditText) findViewById(R.id.osemanas);
         this.oSemanas.setSelectAllOnFocus(true);
 
-        this.oBaja_prod = (CheckBox) findViewById(R.id.obaja_prod);
-
         this.ea_act = (EditText) findViewById(R.id.oea_act);
         this.ea_act.setSelectAllOnFocus(true);
         this.ea_ant = (EditText) findViewById(R.id.oea_ant);
@@ -181,6 +181,10 @@ public class capt_data extends AppCompatActivity {
         this.ltot_cole = (TextView) findViewById(R.id.oltot_cole);
         this.ltot_cred = (TextView) findViewById(R.id.oltot_cred);
 
+        this.tot_notas = (EditText) findViewById(R.id.otot_notas);
+
+        this.baja_prod = (CheckBox) findViewById(R.id.obaja_prod);
+
         this.capt_device.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
 
         this.Clear_Screen();
@@ -196,7 +200,6 @@ public class capt_data extends AppCompatActivity {
         Calc_Dif_Sal(true);
 
         Calc_Tot(1);
-
 
 
         this.btn_metd_capt.setOnClickListener(new View.OnClickListener() {
@@ -218,6 +221,14 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
+        this.tot_notas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (tot_notas.getText().toString() == "")
+                    tot_notas.setHint("Sin comentarios");
+            }
+        });
+
         this.ea_act.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -235,7 +246,7 @@ public class capt_data extends AppCompatActivity {
         });
 
 
-        this.oBaja_prod.setOnClickListener(new View.OnClickListener() {
+        this.baja_prod.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 do_Baja_ProdClick();
@@ -285,7 +296,10 @@ public class capt_data extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    ea_ant.setEnabled(false);
+                    if (cte_mod_metro_ant == 0)
+                        ea_ant.setEnabled(false);
+                    else
+                        ea_ant.setEnabled(true);
                 }
             }
         });
@@ -310,7 +324,10 @@ public class capt_data extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    eb_ant.setEnabled(false);
+                    if (cte_mod_metro_ant == 0)
+                        eb_ant.setEnabled(false);
+                    else
+                        eb_ant.setEnabled(true);
                 }
             }
         });
@@ -335,7 +352,10 @@ public class capt_data extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    sa_ant.setEnabled(false);
+                    if (cte_mod_metro_ant == 0)
+                        sa_ant.setEnabled(false);
+                    else
+                        sa_ant.setEnabled(true);
                 }
             }
         });
@@ -360,7 +380,10 @@ public class capt_data extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    sb_ant.setEnabled(false);
+                    if (cte_mod_metro_ant == 0)
+                        sb_ant.setEnabled(false);
+                    else
+                        sb_ant.setEnabled(true);
                 }
             }
         });
@@ -565,14 +588,16 @@ public class capt_data extends AppCompatActivity {
                 Global.Correl_Device++;
                 String Op_nodoc = Global.cid_device.substring(Global.cid_device.length() - 3, Global.cid_device.length()) + String.format("%08d", Global.Correl_Device);
 
-                if (Denom_Ent_Fac==0){
-                    maqtc_denom_e="1";
+                if (Denom_Ent_Fac == 0) {
+                    maqtc_denom_e = "1";
                     den_valore = 0.00;
-                };
-                if (Denom_Sal_Fac==0){
-                    maqtc_denom_e="1";
+                }
+                ;
+                if (Denom_Sal_Fac == 0) {
+                    maqtc_denom_e = "1";
                     den_valors = 0.00;
-                };
+                }
+                ;
 
                 cSql_Ln = "";
                 cSql_Ln += "INSERT INTO operacion ( ";
@@ -596,7 +621,7 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "op_tot_impmunic,op_tot_impjcj,";
                 cSql_Ln += "op_emp_id,id_device,";
                 cSql_Ln += "op_semanas_imp,op_nodoc,";
-                cSql_Ln += "op_baja_prod, op_image_name) VALUES (";
+                cSql_Ln += "op_baja_prod, op_observ, op_image_name) VALUES (";
                 cSql_Ln += "'" + Global.cCte_Id + "',";
                 cSql_Ln += "'" + cte_nombre_loc + "',";
                 cSql_Ln += "'" + cte_nombre_com + "',";
@@ -618,7 +643,7 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "'" + cNow2 + "',";
                 cSql_Ln += "'0',";
 
-                cSql_Ln += "'" + String.format("%.2f", Double.parseDouble(ea_ant.getText().toString()) ) + "',";
+                cSql_Ln += "'" + String.format("%.2f", Double.parseDouble(ea_ant.getText().toString())) + "',";
                 cSql_Ln += "'" + String.format("%.2f", Double.parseDouble(ea_act.getText().toString())) + "',";
                 cSql_Ln += "'" + String.format("%.2f", Double.parseDouble(ea_dif.getText().toString())) + "',";
 
@@ -650,7 +675,8 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "'" + op_semanas_imp + "',";
 
                 cSql_Ln += "'" + Op_nodoc + "',";
-                cSql_Ln += "'" + (oBaja_prod.isChecked() == true ? "1" : "0") + "',";
+                cSql_Ln += "'" + (baja_prod.isChecked() == true ? "1" : "0") + "',";
+                cSql_Ln += "'" + tot_notas.getText().toString() + "',";
 
                 if (Global.cLastFilePhoto.toLowerCase().contains(CadenaMaq.trim().toLowerCase())) {
                     cSql_Ln += "'" + Global.cLastFilePhoto + "'";
@@ -819,9 +845,9 @@ public class capt_data extends AppCompatActivity {
         iMetroB_EntDif = (ieb_act - ieb_ant);
 
         if (A == true) {
-            ea_dif.setText(String.format("%.2f",iMetroA_EntDif));
+            ea_dif.setText(String.format("%.2f", iMetroA_EntDif));
         } else {
-            eb_dif.setText(String.format("%.2f",iMetroB_EntDif));
+            eb_dif.setText(String.format("%.2f", iMetroB_EntDif));
         }
         iMetro_EntDif = iMetroA_EntDif + iMetroB_EntDif;
     }
@@ -840,9 +866,9 @@ public class capt_data extends AppCompatActivity {
         iMetroB_SalDif = (isb_act - isb_ant);
 
         if (A == true) {
-            sa_dif.setText(String.format("%.2f",iMetroA_SalDif));
+            sa_dif.setText(String.format("%.2f", iMetroA_SalDif));
         } else {
-            sb_dif.setText(String.format("%.2f",iMetroB_SalDif));
+            sb_dif.setText(String.format("%.2f", iMetroB_SalDif));
         }
         iMetro_SalDif = iMetroA_SalDif + iMetroB_SalDif;
     }
@@ -857,13 +883,13 @@ public class capt_data extends AppCompatActivity {
         String cTot = String.format("%.2f", fTot);
 
         if (iForce == 1) {
-            this.tot_cole.setText(String.format("%.2f",fTot));
+            this.tot_cole.setText(String.format("%.2f", fTot));
             this.Calc_Sub_Tot();
         } else {
             double ftot_cole = Double.valueOf(tot_cole.getText().toString()).doubleValue();
-            op_colect =  ftot_cole;
+            op_colect = ftot_cole;
             if (ftot_cole <= 0.00) {
-                this.tot_cole.setText(String.format("%.2f",fTot) );
+                this.tot_cole.setText(String.format("%.2f", fTot));
                 this.Calc_Sub_Tot();
             }
         }
@@ -880,13 +906,13 @@ public class capt_data extends AppCompatActivity {
         String cTot = String.format("%.2f", fTot);
 
         if (iForce == 1) {
-            this.tot_cred.setText(String.format("%.2f",fTot));
+            this.tot_cred.setText(String.format("%.2f", fTot));
             this.Calc_Sub_Tot();
         } else {
             double ftot_prem = Double.valueOf(tot_cred.getText().toString()).doubleValue();
             op_cred = (ftot_prem);
             if (ftot_prem <= 0) {
-                this.tot_cred.setText(String.format("%.2f",fTot));
+                this.tot_cred.setText(String.format("%.2f", fTot));
                 this.Calc_Sub_Tot();
             }
         }
@@ -897,28 +923,41 @@ public class capt_data extends AppCompatActivity {
     }
 
     private void Clear_Screen() {
+        this.baja_prod.setChecked(false);
 
         this.ea_act.setText((this.Denom_Ent_Fac == 0 ? "0.00" : "0"));
         this.ea_ant.setText((this.Denom_Ent_Fac == 0 ? "0.00" : "0"));
-        this.ea_ant.setEnabled(false);
+        if (this.cte_mod_metro_ant == 0)
+            this.ea_ant.setEnabled(false);
+        else
+            this.ea_ant.setEnabled(true);
         this.ea_dif.setText((this.Denom_Ent_Fac == 0 ? "0.00" : "0"));
         this.ea_dif.setEnabled(false);
 
         this.eb_act.setText((this.Denom_Ent_Fac == 0 ? "0.00" : "0"));
         this.eb_ant.setText((this.Denom_Ent_Fac == 0 ? "0.00" : "0"));
-        this.eb_ant.setEnabled(false);
+        if (this.cte_mod_metro_ant == 0)
+            this.eb_ant.setEnabled(false);
+        else
+            this.eb_ant.setEnabled(true);
         this.eb_dif.setText((this.Denom_Ent_Fac == 0 ? "0.00" : "0"));
         this.eb_dif.setEnabled(false);
 
         this.sa_act.setText((this.Denom_Sal_Fac == 0 ? "0.00" : "0"));
         this.sa_ant.setText((this.Denom_Sal_Fac == 0 ? "0.00" : "0"));
-        this.sa_ant.setEnabled(false);
+        if (this.cte_mod_metro_ant == 0)
+            this.sa_ant.setEnabled(false);
+        else
+            this.sa_ant.setEnabled(true);
         this.sa_dif.setText((this.Denom_Sal_Fac == 0 ? "0.00" : "0"));
         this.sa_dif.setEnabled(false);
 
         this.sb_act.setText((this.Denom_Sal_Fac == 0 ? "0.00" : "0"));
         this.sb_ant.setText((this.Denom_Sal_Fac == 0 ? "0.00" : "0"));
-        this.sb_ant.setEnabled(false);
+        if (this.cte_mod_metro_ant == 0)
+            this.sb_ant.setEnabled(false);
+        else
+            this.sb_ant.setEnabled(true);
         this.sb_dif.setText((this.Denom_Sal_Fac == 0 ? "0.00" : "0"));
         this.sb_dif.setEnabled(false);
 
@@ -926,6 +965,7 @@ public class capt_data extends AppCompatActivity {
         this.tot_cole.setEnabled(false);
         this.tot_cred.setText("0.00");
         this.tot_cred.setEnabled(false);
+        this.tot_notas.setText("");
     }
 
     private boolean Buscar_Maquina(String pId_emp, String pId_Cte, String pId_Maq) {
@@ -960,6 +1000,7 @@ public class capt_data extends AppCompatActivity {
         cSqlLn += "  clientes.cte_poc_ret, ";
         cSqlLn += "  clientes.mun_id, ";
         cSqlLn += "  clientes.rut_id, ";
+        cSqlLn += "  clientes.cte_mod_metro_ant, ";
         cSqlLn += "  rutas.rut_nombre, ";
         cSqlLn += "  empresas.emp_id, ";
         cSqlLn += "  empresas.emp_descripcion, ";
@@ -999,45 +1040,45 @@ public class capt_data extends AppCompatActivity {
     private void Mask_Tetros() {
         if (Denom_Ent_Fac == 0) {
             // Entradas A
-            this.ea_ant.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            this.ea_act.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            this.ea_dif.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.ea_ant.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.ea_act.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.ea_dif.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
-            // Entradas B
-            this.eb_ant.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            this.eb_act.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            this.eb_dif.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.ea_ant.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.ea_act.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.ea_dif.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+
         } else {
             // Entradas A
-            this.ea_ant.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER);
-            this.ea_act.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER);
-            this.ea_dif.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER);
+            this.ea_ant.setInputType(InputType.TYPE_CLASS_NUMBER);
+            this.ea_act.setInputType(InputType.TYPE_CLASS_NUMBER);
+            this.ea_dif.setInputType(InputType.TYPE_CLASS_NUMBER);
 
             // Entradas B
-            this.eb_ant.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER);
-            this.eb_act.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER);
-            this.eb_dif.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER);
-            this.eb_dif.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER);
+            this.eb_ant.setInputType(InputType.TYPE_CLASS_NUMBER);
+            this.eb_act.setInputType(InputType.TYPE_CLASS_NUMBER);
+            this.eb_dif.setInputType(InputType.TYPE_CLASS_NUMBER);
+            this.eb_dif.setInputType(InputType.TYPE_CLASS_NUMBER);
         }
 
         if (Denom_Sal_Fac == 0) {
             // Salidas A
-            this.sa_act.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            this.sa_ant.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            this.sa_dif.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.sa_act.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.sa_ant.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.sa_dif.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             // Salidas B
-            this.sb_act.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            this.sb_ant.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            this.sb_dif.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.sb_act.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.sb_ant.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.sb_dif.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         } else {
             // Salidas A
-            this.sa_act.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER);
-            this.sa_ant.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER);
-            this.sa_dif.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER);
+            this.sa_act.setInputType(InputType.TYPE_CLASS_NUMBER);
+            this.sa_ant.setInputType(InputType.TYPE_CLASS_NUMBER);
+            this.sa_dif.setInputType(InputType.TYPE_CLASS_NUMBER);
             // Salidas B
-            this.sb_act.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER);
-            this.sb_ant.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER);
-            this.sb_dif.setInputType(InputType.TYPE_TEXT_VARIATION_PERSON_NAME | InputType.TYPE_CLASS_NUMBER);
+            this.sb_act.setInputType(InputType.TYPE_CLASS_NUMBER);
+            this.sb_ant.setInputType(InputType.TYPE_CLASS_NUMBER);
+            this.sb_dif.setInputType(InputType.TYPE_CLASS_NUMBER);
         }
     }
 
@@ -1075,6 +1116,8 @@ public class capt_data extends AppCompatActivity {
         cte_pag_jcj = data4.getInt(data4.getColumnIndex("cte_pag_jcj"));
         cte_pag_spac = data4.getInt(data4.getColumnIndex("cte_pag_spac"));
 
+        cte_mod_metro_ant = data4.getInt(data4.getColumnIndex("cte_mod_metro_ant"));
+
         cte_pag_impm = data4.getInt(data4.getColumnIndex("cte_pag_impm"));
         op_cporc_Loc = data4.getDouble(data4.getColumnIndex("cte_poc_ret"));
 
@@ -1111,14 +1154,22 @@ public class capt_data extends AppCompatActivity {
                     this.sa_ant.setText(data4.getString(data4.getColumnIndex("maqtc_m1s_act")));
 
                     if (data4.getDouble(data4.getColumnIndex("maqtc_m1e_ant")) == 0.00)
-                        ea_ant.setEnabled(true);
-                    else
-                        ea_ant.setEnabled(false);
+                        this.ea_ant.setEnabled(true);
+                    else {
+                        if (cte_mod_metro_ant == 0)
+                            this.ea_ant.setEnabled(false);
+                        else
+                            this.ea_ant.setEnabled(true);
+                    }
 
                     if (data4.getDouble(data4.getColumnIndex("maqtc_m1s_ant")) == 0)
-                        sa_ant.setEnabled(true);
-                    else
-                        sa_ant.setEnabled(false);
+                        this.sa_ant.setEnabled(true);
+                    else {
+                        if (cte_mod_metro_ant == 0)
+                            this.sa_ant.setEnabled(false);
+                        else
+                            this.sa_ant.setEnabled(true);
+                    }
 
                 } else {
                     // Entradas A
@@ -1194,13 +1245,20 @@ public class capt_data extends AppCompatActivity {
 
                     if (data4.getDouble(data4.getColumnIndex("maqtc_m1e_ant")) == 0)
                         this.ea_ant.setEnabled(true);
-                    else
-                        this.ea_ant.setEnabled(false);
-
+                    else {
+                        if (cte_mod_metro_ant == 0)
+                            this.ea_ant.setEnabled(false);
+                        else
+                            this.ea_ant.setEnabled(true);
+                    }
                     if (data4.getDouble(data4.getColumnIndex("maqtc_m1s_ant")) == 0)
                         this.sa_ant.setEnabled(true);
-                    else
-                        this.sa_ant.setEnabled(false);
+                    else {
+                        if (cte_mod_metro_ant == 0)
+                            this.sa_ant.setEnabled(false);
+                        else
+                            this.sa_ant.setEnabled(true);
+                    }
                     // --------------------------------------------------------
                     // Entradas B
                     this.eb_act.setEnabled(true);
@@ -1214,13 +1272,20 @@ public class capt_data extends AppCompatActivity {
 
                     if (data4.getDouble(data4.getColumnIndex("maqtc_m2e_ant")) == 0)
                         this.eb_ant.setEnabled(true);
-                    else
-                        this.eb_ant.setEnabled(false);
-
+                    else {
+                        if (cte_mod_metro_ant == 0)
+                            this.eb_ant.setEnabled(false);
+                        else
+                            this.eb_ant.setEnabled(true);
+                    }
                     if (data4.getDouble(data4.getColumnIndex("maqtc_m2s_ant")) == 0)
                         this.sb_ant.setEnabled(true);
-                    else
-                        this.sb_ant.setEnabled(false);
+                    else {
+                        if (cte_mod_metro_ant == 0)
+                            this.sb_ant.setEnabled(false);
+                        else
+                            this.sb_ant.setEnabled(true);
+                    }
                 } else {
                     // Entradas A
                     this.ea_ant.setEnabled(true);
@@ -1334,7 +1399,7 @@ public class capt_data extends AppCompatActivity {
 
     private void do_Baja_ProdClick() {
 
-        if (this.oBaja_prod.isChecked() == true) {
+        if (this.baja_prod.isChecked() == true) {
 
             this.tot_cole.setText("0.00");
             op_cal_colect = 0.00;

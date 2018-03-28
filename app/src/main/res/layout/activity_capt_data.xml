@@ -206,7 +206,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:enabled="false"
+                android:enabled="true"
                 android:inputType="textPersonName|number"
                 android:selectAllOnFocus="true"
                 android:text="0"
@@ -308,7 +308,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:enabled="false"
+                android:enabled="true"
                 android:inputType="textPersonName|number"
                 android:selectAllOnFocus="true"
                 android:text="0"
@@ -425,7 +425,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:enabled="false"
+                android:enabled="true"
                 android:inputType="textPersonName|number"
                 android:selectAllOnFocus="true"
                 android:text="0"
@@ -526,7 +526,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ems="10"
-                android:enabled="false"
+                android:enabled="true"
                 android:inputType="textPersonName|number"
                 android:selectAllOnFocus="true"
                 android:text="0"
@@ -653,6 +653,39 @@
 
         </LinearLayout>
 
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="15dp"
+            android:layout_weight="0" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                android:layout_width="11dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="OBSERVACIONES:"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/otot_notas"
+                android:layout_width="wrap_content"
+                android:layout_height="80dp"
+                android:layout_weight="1"
+                android:ems="10"
+                android:enabled="true"
+                android:inputType="textMultiLine"
+                android:selectAllOnFocus="true"
+                android:tooltipText="ESCRIBA EL DETALLE AQUI" />
+
+        </LinearLayout>
     </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

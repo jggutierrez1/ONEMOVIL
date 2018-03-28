@@ -49,6 +49,8 @@ import java.util.Locale;
 import java.util.Random;
 
 public class capt_fin extends AppCompatActivity {
+    private final static int REQUEST_GET_PASS = 6;
+    private final static int REQUEST_PRINT = 7;
     private Button obtn_print_maq, obtn_totfin_hide, obtn_totfin_save, obtn_totfin_canc, obtn_totfin_unlock;
     private EditText oOp_tot_cole, oOp_tot_timb, oOp_tot_impm, oOp_tot_jcj, oOp_tot_tenc, oOp_tot_devo, oOp_tot_otro,
             oOp_tot_cred, oOp_tot_subt, oOp_tot_impu, oOp_tot_tota, oOp_tot_bloc, oOp_tot_bemp, oOp_tot_nloc, oOp_tot_nemp,
@@ -58,8 +60,6 @@ public class capt_fin extends AppCompatActivity {
     private Cursor oData5;
     private double fPorc_Loc = 0.00;
     private int itotfin_bruto, itotfin_prem, itotfin_devo, itotfin_otros, itotfin_total, itotfin_gast, itotfin_neto, itotfin_notas;
-    private final static int REQUEST_GET_PASS = 6;
-    private final static int REQUEST_PRINT = 7;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -216,7 +216,7 @@ public class capt_fin extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (ototfin_notas.getText().toString() == "")
-                    ototfin_notas.setHint("Sin comentarios");
+                    ototfin_notas.setHint("No hay comentarios");
             }
         });
 
@@ -695,7 +695,7 @@ public class capt_fin extends AppCompatActivity {
                 cSql_Ln += "op_tot_netoloc  ,op_tot_netoemp,";
                 cSql_Ln += "op_emp_id       ,id_device,";
                 cSql_Ln += "id_group        ,op_usermodify,";
-                cSql_Ln += "op_fecha_alta) VALUES (";
+                cSql_Ln += "op_fecha_alta   ,op_observ) VALUES (";
                 cSql_Ln += "'" + Global.cCte_Id + "',";
                 cSql_Ln += "'" + Global.cCte_De + "',";
                 cSql_Ln += "'" + Global.cCte_De + "',";
@@ -721,7 +721,8 @@ public class capt_fin extends AppCompatActivity {
                 cSql_Ln += "'" + Global.cid_device + "',";
                 cSql_Ln += "'" + Integer.toString(iId_Group) + "',";
                 cSql_Ln += "'1',";
-                cSql_Ln += "'" + cDateMysql + "');";
+                cSql_Ln += "'" + cDateMysql + "',";
+                cSql_Ln += "'" + ototfin_notas.getText().toString() + "');";
                 Global.logLargeString(cSql_Ln);
                 oDb5.execSQL(cSql_Ln);
 
