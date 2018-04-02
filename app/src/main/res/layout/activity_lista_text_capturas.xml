@@ -20,6 +20,13 @@
             android:text="QUITAR TECLADO" />
 
         <Button
+            android:id="@+id/btn_print_lst_t"
+            android:layout_width="wrap_content"
+            android:layout_height="65dp"
+            android:layout_weight="1"
+            android:text="Imprimir" />
+
+        <Button
             android:id="@+id/obtn_do_lst_t"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"

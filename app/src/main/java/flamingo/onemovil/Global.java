@@ -127,6 +127,7 @@ public class Global {
     public static int REQUEST_DEL_CAP = 6;
     public static int REQUEST_SEL_LIS = 7;
     public static int REQUEST_SEL_LIS2 = 8;
+    public static int REQUEST_PRINT = 9;
     public static int REQUEST_CAMERA = 1;
 
     public static boolean bAutoSelEmp = false,

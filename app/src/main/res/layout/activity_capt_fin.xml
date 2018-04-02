@@ -39,13 +39,6 @@
                     android:text="DESBLOQUEAR" />
 
                 <Button
-                    android:id="@+id/btn_print_maq"
-                    android:layout_width="wrap_content"
-                    android:layout_height="65dp"
-                    android:layout_weight="1"
-                    android:text="Imprimir" />
-
-                <Button
                     android:id="@+id/btn_totfin_save"
                     android:layout_width="wrap_content"
                     android:layout_height="65dp"

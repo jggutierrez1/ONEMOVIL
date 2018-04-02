@@ -16,12 +16,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Locale;
 
 public class activity_lista_text_finalizados extends AppCompatActivity {
-    private Button btn_hide_lst2_t, btn_do_lst2_t, btn_cancel_lst2_t;
-    private TextView text_lst2_t;
+    private Button obtn_hide_lst2_t, obtn_do_lst2_t, obtn_cancel_lst2_t, obtn_print_lst2_t;
+    private TextView otext_lst2_t;
     private SQLiteDatabase db05;
     private Cursor data05;
     private String cSqlLn;
@@ -39,10 +40,11 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
 
         Locale.setDefault(new Locale("en", "US"));
 
-        this.btn_hide_lst2_t = (Button) findViewById(R.id.obtn_hide_lst2_t);
-        this.btn_do_lst2_t = (Button) findViewById(R.id.obtn_do_lst2_t);
-        this.btn_cancel_lst2_t = (Button) findViewById(R.id.obtn_cancel_lst2_t);
-        this.text_lst2_t = (TextView) findViewById(R.id.otext_lst2_t);
+        this.obtn_hide_lst2_t = (Button) findViewById(R.id.obtn_hide_lst2_t);
+        this.obtn_do_lst2_t = (Button) findViewById(R.id.obtn_do_lst2_t);
+        this.obtn_cancel_lst2_t = (Button) findViewById(R.id.obtn_cancel_lst2_t);
+        this.otext_lst2_t = (TextView) findViewById(R.id.otext_lst2_t);
+        this.obtn_print_lst2_t = (Button) findViewById(R.id.btn_print_lst2_t);
 
         this.Clear2_Screen();
 
@@ -55,9 +57,19 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
                 this.Imprimir2_Maquinas();
             }
         }
-        //getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
-        btn_do_lst2_t.setOnClickListener(new View.OnClickListener() {
+        this.obtn_print_lst2_t.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Global.ExportDB();
+                Global.iPrn_Data = 2;
+                Intent Int_PrnLstScreen = new Intent(getApplicationContext(), print_data.class);
+                startActivityForResult(Int_PrnLstScreen, Global.REQUEST_PRINT);
+            }
+        });
+
+        this.obtn_do_lst2_t.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -67,7 +79,7 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
 
         });
 
-        btn_hide_lst2_t.setOnClickListener(new View.OnClickListener() {
+        this.obtn_hide_lst2_t.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -76,7 +88,7 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
             }
         });
 
-        btn_cancel_lst2_t.setOnClickListener(new View.OnClickListener() {
+        this.obtn_cancel_lst2_t.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -139,7 +151,42 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
 
 
     private void Clear2_Screen() {
-        this.text_lst2_t.setText("");
+        this.otext_lst2_t.setText("");
+    }
+
+    private boolean Listar2_Montos() {
+        cSqlLn = "";
+        cSqlLn += "SELECT ";
+        cSqlLn += " SUM(op.op_tot_colect)   AS tot_cole         , ";
+        cSqlLn += " SUM(op.op_tot_impmunic) AS op_tot_impmunic  , ";
+        cSqlLn += " SUM(op.op_tot_impjcj)   AS op_tot_impjcj    , ";
+        cSqlLn += " SUM(op.op_tot_timbres)  AS op_tot_timbres   , ";
+        cSqlLn += " SUM(op.op_tot_tec)      AS op_tot_tec       , ";
+        cSqlLn += " SUM(op.op_tot_dev)      AS op_tot_dev       , ";
+        cSqlLn += " SUM(op.op_tot_otros)    AS op_tot_otros     , ";
+        cSqlLn += " SUM(op.op_tot_cred)     AS op_tot_cred      , ";
+        cSqlLn += " SUM(op.op_tot_sub)      AS op_tot_sub       , ";
+        cSqlLn += " SUM(op.op_tot_itbm)     AS op_tot_itbm      , ";
+        cSqlLn += " SUM(op.op_tot_tot)      AS op_tot_tot       , ";
+        cSqlLn += " SUM(op.op_tot_brutoloc) AS op_tot_brutoloc  , ";
+        cSqlLn += " SUM(op.op_tot_brutoemp) AS op_tot_brutoemp  , ";
+        cSqlLn += " SUM(op.op_tot_netoloc)  AS op_tot_netoloc   , ";
+        cSqlLn += " SUM(op.op_tot_netoemp)  AS op_tot_netoemp    ";
+        cSqlLn += "FROM operaciong op ";
+        cSqlLn += "WHERE (op.id_device='" + Global.cid_device + "') ";
+        cSqlLn += "AND   (op.op_emp_id='" + Global.cEmp_Id + "') ";
+        cSqlLn += "AND   (op.cte_id   ='" + Global.cCte_Id + "') ";
+        cSqlLn += "AND   (op.op_usermodify ='1') ";
+        cSqlLn += "GROUP BY op.op_emp_id,id_device ";
+        Log.d("SQL", cSqlLn);
+        data05 = db05.rawQuery(cSqlLn, null);
+
+        if ((data05 == null) || (data05.getCount() == 0)) {
+            return false;
+        } else {
+            data05.moveToFirst();
+            return true;
+        }
     }
 
     private boolean Listar2_Maquinas() {
@@ -170,42 +217,7 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
         cSqlLn += "AND   (op.cte_id   ='" + Global.cCte_Id + "') ";
         cSqlLn += "AND   (op.op_usermodify ='1') ";
         cSqlLn += "GROUP BY op.op_emp_id,op.op_chapa ";
-        cSqlLn += "ORDER BY op.op_emp_id,op.op_modelo ";
-        Log.d("SQL", cSqlLn);
-        data05 = db05.rawQuery(cSqlLn, null);
-
-        if ((data05 == null) || (data05.getCount() == 0)) {
-            return false;
-        } else {
-            data05.moveToFirst();
-            return true;
-        }
-    }
-
-    private boolean Listar2_Montos() {
-
-        cSqlLn = "";
-        cSqlLn += "SELECT ";
-        cSqlLn += " SUM(op.op_tot_colect)   AS tot_cole         , ";
-        cSqlLn += " SUM(op.op_tot_impmunic) AS op_tot_impmunic  , ";
-        cSqlLn += " SUM(op.op_tot_impjcj)   AS op_tot_impjcj    , ";
-        cSqlLn += " SUM(op.op_tot_timbres)  AS op_tot_timbres   , ";
-        cSqlLn += " SUM(op.op_tot_tec)      AS op_tot_tec       , ";
-        cSqlLn += " SUM(op.op_tot_dev)      AS op_tot_dev       , ";
-        cSqlLn += " SUM(op.op_tot_otros)    AS op_tot_otros     , ";
-        cSqlLn += " SUM(op.op_tot_cred)     AS op_tot_cred      , ";
-        cSqlLn += " SUM(op.op_tot_sub)      AS op_tot_sub       , ";
-        cSqlLn += " SUM(op.op_tot_itbm)     AS op_tot_itbm      , ";
-        cSqlLn += " SUM(op.op_tot_tot)      AS op_tot_tot       , ";
-        cSqlLn += " SUM(op.op_tot_brutoloc) AS op_tot_brutoloc  , ";
-        cSqlLn += " SUM(op.op_tot_brutoemp) AS op_tot_brutoemp  , ";
-        cSqlLn += " SUM(op.op_tot_netoloc)  AS op_tot_netoloc   , ";
-        cSqlLn += " SUM(op.op_tot_netoemp)  AS op_tot_netoemp    ";
-        cSqlLn += "FROM operaciong op ";
-        cSqlLn += "WHERE op.id_device='" + Global.cid_device + "' ";
-        cSqlLn += "AND   op.op_emp_id='" + Global.cEmp_Id + "' ";
-        cSqlLn += "AND   op.cte_id   ='" + Global.cCte_Id + "' ";
-        cSqlLn += "GROUP BY op.op_emp_id,id_device ";
+        cSqlLn += "ORDER BY op.op_emp_id,op.op_chapa ";
         Log.d("SQL", cSqlLn);
         data05 = db05.rawQuery(cSqlLn, null);
 
@@ -230,8 +242,8 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
             cLine = String.format("%8s %18s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s",
                     "CHAPA", "MODELO",
                     "COL", "MUN", "JCJ", "TIM", "TEC", "OTR", "CRED.", "SUBT", "IMP.", "TOT", "BLOC", "BEMP", "NLOC", "NEMP");
-            this.text_lst2_t.append(cLine + "\n");
-            this.text_lst2_t.append(Global.repeat('=', 180) + "\n");
+            this.otext_lst2_t.append(cLine + "\n");
+            this.otext_lst2_t.append(Global.repeat('=', 180) + "\n");
 
             do {
                 cMaq_Chap = String.format("%8s", data05.getString(data05.getColumnIndex("op_chapa")).trim());
@@ -257,11 +269,11 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
                         ctot_cole, ctot_impu, ctot__jcj, ctot_timb, ctot_tecn, ctot_otos, ctot_cred,
                         ctot_subt, ctot_itbm, ctot_tota, ctot_bloc, ctot_bemp, ctot_nloc, ctot_nemp);
 
-                this.text_lst2_t.append(cLine + "\n");
+                this.otext_lst2_t.append(cLine + "\n");
             } while (data05.moveToNext());
-            this.text_lst2_t.append(Global.repeat('=', 180) + "\n");
+            this.otext_lst2_t.append(Global.repeat('=', 180) + "\n");
             cLine = String.format("%s %6s", "TOTAL DE MAQUNAS:", data05.getCount());
-            this.text_lst2_t.append(cLine + "\n");
+            this.otext_lst2_t.append(cLine + "\n");
 
             return true;
         }
@@ -273,30 +285,54 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
             return false;
         } else {
             data05.moveToFirst();
-            this.text_lst2_t.append(Global.repeat('=', 180) + "\n");
-            this.text_lst2_t.append(Global.center("***" + Global.cEmp_De.toUpperCase().trim() + "***", 180, ' ') + "\n");
-            this.text_lst2_t.append(Global.center("LISTADO DE MAQUINAS COLECTADAS", 180, ' ') + "\n");
-            this.text_lst2_t.append(Global.center("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]" + "\n", 180, ' ') + "\n");
-            this.text_lst2_t.append(Global.repeat('=', 180) + "\n");
+            this.otext_lst2_t.append(Global.repeat('=', 180) + "\n");
+            this.otext_lst2_t.append(Global.center("***" + Global.cEmp_De.toUpperCase().trim() + "***", 180, ' ') + "\n");
+            this.otext_lst2_t.append(Global.center("LISTADO DE MAQUINAS COLECTADAS", 180, ' ') + "\n");
+            this.otext_lst2_t.append(Global.center("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]" + "\n", 180, ' ') + "\n");
+            this.otext_lst2_t.append(Global.repeat('=', 180) + "\n");
+
+            Global.Genobj = new JSONObject();
 
             do {
-                text_lst2_t.append("COLECTADO :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("tot_cole")))  );
-                text_lst2_t.append("TIMBRES   :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_timbres")))  );
-                text_lst2_t.append("IMUESTOS  :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_impmunic")))  );
-                text_lst2_t.append("J.C.J     :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_impjcj")))  );
-                text_lst2_t.append("SERV. TEC.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_tec")))  );
-                text_lst2_t.append("TOT. DEVO.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_dev")))  );
-                text_lst2_t.append("TOT. OTRO :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_otros")))  );
-                text_lst2_t.append("TOT. CRED.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_cred")))  );
-                text_lst2_t.append("SUB-TOTAL :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_sub")))  );
-                text_lst2_t.append("TOT. IMP. :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_itbm")))  );
-                text_lst2_t.append("TOTAL     :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_tot")))  );
-                text_lst2_t.append("BRUTO CTE.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_brutoloc")))  );
-                text_lst2_t.append("BRUTO EMP.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_brutoemp")))  );
-                text_lst2_t.append("NETO  CTE.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_netoloc")))  );
-                text_lst2_t.append("NETO  EMP.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_netoemp")))  );
+
+                try {
+                    Global.Genobj.put("tot_cole", data05.getDouble(data05.getColumnIndex("tot_cole")));
+                    Global.Genobj.put("tot_timb", data05.getDouble(data05.getColumnIndex("op_tot_timbres")));
+                    Global.Genobj.put("tot_impm", data05.getDouble(data05.getColumnIndex("op_tot_impmunic")));
+                    Global.Genobj.put("dot__jcj", data05.getDouble(data05.getColumnIndex("op_tot_impjcj")));
+                    Global.Genobj.put("tot_tecn", data05.getDouble(data05.getColumnIndex("op_tot_tec")));
+                    Global.Genobj.put("tot_devo", data05.getDouble(data05.getColumnIndex("op_tot_dev")));
+                    Global.Genobj.put("tot_otro", data05.getDouble(data05.getColumnIndex("op_tot_otros")));
+                    Global.Genobj.put("tot_cred", data05.getDouble(data05.getColumnIndex("op_tot_cred")));
+                    Global.Genobj.put("Sub_tota", data05.getDouble(data05.getColumnIndex("op_tot_sub")));
+                    Global.Genobj.put("tot_impu", data05.getDouble(data05.getColumnIndex("op_tot_itbm")));
+                    Global.Genobj.put("tot_tota", data05.getDouble(data05.getColumnIndex("op_tot_tot")));
+                    Global.Genobj.put("tot_bloc", data05.getDouble(data05.getColumnIndex("op_tot_brutoloc")));
+                    Global.Genobj.put("tot_bemp", data05.getDouble(data05.getColumnIndex("op_tot_brutoemp")));
+                    Global.Genobj.put("tot_nloc", data05.getDouble(data05.getColumnIndex("op_tot_netoloc")));
+                    Global.Genobj.put("tot_nemp", data05.getDouble(data05.getColumnIndex("op_tot_netoemp")));
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                }
+
+                this.otext_lst2_t.append("COLECTADO :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("tot_cole"))));
+                this.otext_lst2_t.append("TIMBRES   :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_timbres"))));
+                this.otext_lst2_t.append("IMUESTOS  :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_impmunic"))));
+                this.otext_lst2_t.append("J.C.J     :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_impjcj"))));
+                this.otext_lst2_t.append("SERV. TEC.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_tec"))));
+                this.otext_lst2_t.append("TOT. DEVO.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_dev"))));
+                this.otext_lst2_t.append("TOT. OTRO :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_otros"))));
+                this.otext_lst2_t.append("TOT. CRED.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_cred"))));
+                this.otext_lst2_t.append("SUB-TOTAL :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_sub"))));
+                this.otext_lst2_t.append("TOT. IMP. :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_itbm"))));
+                this.otext_lst2_t.append("TOTAL     :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_tot"))));
+                this.otext_lst2_t.append("BRUTO CTE.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_brutoloc"))));
+                this.otext_lst2_t.append("BRUTO EMP.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_brutoemp"))));
+                this.otext_lst2_t.append("NETO  CTE.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_netoloc"))));
+                this.otext_lst2_t.append("NETO  EMP.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_netoemp"))));
             } while (data05.moveToNext());
-            this.text_lst2_t.append(Global.repeat('=', 180) + "\n");
+            this.otext_lst2_t.append(Global.repeat('=', 180) + "\n");
 
             return true;
         }

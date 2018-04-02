@@ -18,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.w3c.dom.Text;
@@ -26,8 +27,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class lista_text_capturas extends AppCompatActivity {
-    private Button btn_hide_lst_t, btn_do_lst_t, btn_cancel_lst_t;
-    private TextView text_lst_t;
+    private Button obtn_hide_lst_t, obtn_do_lst_t, obtn_cancel_lst_t, obtn_print_lst_t;
+    private TextView otext_lst_t;
     private SQLiteDatabase db04;
     private Cursor data04;
     private String cSqlLn;
@@ -45,10 +46,11 @@ public class lista_text_capturas extends AppCompatActivity {
 
         Locale.setDefault(new Locale("en", "US"));
 
-        this.btn_hide_lst_t = (Button) findViewById(R.id.obtn_hide_lst_t);
-        this.btn_do_lst_t = (Button) findViewById(R.id.obtn_do_lst_t);
-        this.btn_cancel_lst_t = (Button) findViewById(R.id.obtn_cancel_lst_t);
-        this.text_lst_t = (TextView) findViewById(R.id.otext_lst_t);
+        this.obtn_hide_lst_t = (Button) findViewById(R.id.obtn_hide_lst_t);
+        this.obtn_do_lst_t = (Button) findViewById(R.id.obtn_do_lst_t);
+        this.obtn_cancel_lst_t = (Button) findViewById(R.id.obtn_cancel_lst_t);
+        this.otext_lst_t = (TextView) findViewById(R.id.otext_lst_t);
+        this.obtn_print_lst_t = (Button) findViewById(R.id.btn_print_lst_t);
 
         this.Clear_Screen();
 
@@ -59,11 +61,21 @@ public class lista_text_capturas extends AppCompatActivity {
             this.Imprimir_Maquinas();
 
             if (this.Listar_Montos() == true) {
-                //this.Imprimir_Montos();
             }
         }
 
-        btn_do_lst_t.setOnClickListener(new View.OnClickListener() {
+        this.obtn_print_lst_t.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Global.ExportDB();
+                Global.iPrn_Data = 1;
+                Intent Int_PrnLstScreen = new Intent(getApplicationContext(), print_data.class);
+                startActivityForResult(Int_PrnLstScreen, Global.REQUEST_PRINT);
+            }
+        });
+
+        this.obtn_do_lst_t.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -73,7 +85,7 @@ public class lista_text_capturas extends AppCompatActivity {
 
         });
 
-        btn_hide_lst_t.setOnClickListener(new View.OnClickListener() {
+        this.obtn_hide_lst_t.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -82,7 +94,7 @@ public class lista_text_capturas extends AppCompatActivity {
             }
         });
 
-        btn_cancel_lst_t.setOnClickListener(new View.OnClickListener() {
+        this.obtn_cancel_lst_t.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -142,11 +154,10 @@ public class lista_text_capturas extends AppCompatActivity {
                     break;
             }
         }
-
     }
 
     private void Clear_Screen() {
-        this.text_lst_t.setText("");
+        this.otext_lst_t.setText("");
     }
 
     private boolean Listar_Maquinas() {
@@ -163,7 +174,7 @@ public class lista_text_capturas extends AppCompatActivity {
         cSqlLn += "AND   (op.op_emp_id='" + Global.cEmp_Id + "') ";
         cSqlLn += "AND   (op.cte_id   ='" + Global.cCte_Id + "') ";
         cSqlLn += "GROUP BY op.op_emp_id,op.op_chapa ";
-        cSqlLn += "ORDER BY op.op_emp_id,op.op_modelo ";
+        cSqlLn += "ORDER BY op.op_emp_id,op.op_chapa ";
 
         Log.d("SQL", cSqlLn);
         data04 = db04.rawQuery(cSqlLn, null);
@@ -184,9 +195,9 @@ public class lista_text_capturas extends AppCompatActivity {
         cSqlLn += " SUM(op.op_tot_cred)   AS tot_cred, ";
         cSqlLn += " (SUM(op.op_tot_colect)-SUM(op.op_tot_cred)) AS tot_dife ";
         cSqlLn += "FROM operacion op ";
-        cSqlLn += "WHERE op.id_device='" + Global.cid_device + "' ";
-        cSqlLn += "AND   op.op_emp_id='" + Global.cEmp_Id + "' ";
-        cSqlLn += "AND   op.cte_id   ='" + Global.cCte_Id + "' ";
+        cSqlLn += "WHERE (op.id_device='" + Global.cid_device + "') ";
+        cSqlLn += "AND   (op.op_emp_id='" + Global.cEmp_Id + "') ";
+        cSqlLn += "AND   (op.cte_id   ='" + Global.cCte_Id + "') ";
         cSqlLn += "GROUP BY op.op_emp_id,id_device ";
         Log.d("SQL", cSqlLn);
         data04 = db04.rawQuery(cSqlLn, null);
@@ -207,15 +218,15 @@ public class lista_text_capturas extends AppCompatActivity {
         if ((data04 == null) || (data04.getCount() == 0)) {
             return false;
         } else {
-            this.text_lst_t.append(Global.center("***" + Global.cEmp_De.toUpperCase().trim() + "***", 75 - 3, ' ') + "\n");
-            this.text_lst_t.append(Global.center("LISTADO PRELIMIANR DE MAQUINAS COLECTADAS", 75 - 3, ' ') + "\n");
-            this.text_lst_t.append(Global.center("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]" + "\n", 75 - 3, ' ') + "\n");
-            this.text_lst_t.append(Global.center("INFORMACION DE ->METROS/MONTOS<- CAPTURADOS\n", 75 - 3, ' ') + "\n");
-            this.text_lst_t.append(Global.repeat('=', 75 - 3) + "\n");
+            this.otext_lst_t.append(Global.center("***" + Global.cEmp_De.toUpperCase().trim() + "***", 75 - 3, ' ') + "\n");
+            this.otext_lst_t.append(Global.center("LISTADO PRELIMIANR DE MAQUINAS COLECTADAS", 75 - 3, ' ') + "\n");
+            this.otext_lst_t.append(Global.center("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]" + "\n", 75 - 3, ' ') + "\n");
+            this.otext_lst_t.append(Global.center("INFORMACION DE ->METROS/MONTOS<- CAPTURADOS\n", 75 - 3, ' ') + "\n");
+            this.otext_lst_t.append(Global.repeat('=', 75 - 3) + "\n");
             data04.moveToFirst();
             cLine = String.format("%8s %20s %12s %12s %12s", "CHAPA", "MODELO", "ENTRADAS", "SALIDAS", "DIFERENCIA");
-            this.text_lst_t.append(cLine + "\n");
-            this.text_lst_t.append(Global.repeat('=', 75 - 3) + "\n");
+            this.otext_lst_t.append(cLine + "\n");
+            this.otext_lst_t.append(Global.repeat('=', 75 - 3) + "\n");
 
             do {
                 cMaq_Chap = String.format(Locale.US, "%8s", data04.getString(data04.getColumnIndex("op_chapa")).trim());
@@ -224,11 +235,11 @@ public class lista_text_capturas extends AppCompatActivity {
                 ctot_cred = String.format(Locale.US, "%12.2f", data04.getDouble(data04.getColumnIndex("tot_cred")));
                 ctot_dife = String.format(Locale.US, "%12.2f", data04.getDouble(data04.getColumnIndex("tot_dife")));
                 cLine = String.format("%s %s %s %s %s", cMaq_Chap, cMaq_Mode, ctot_cole, ctot_cred, ctot_dife);
-                this.text_lst_t.append(cLine + "\n");
+                this.otext_lst_t.append(cLine + "\n");
             } while (data04.moveToNext());
-            this.text_lst_t.append(Global.repeat('=', 75 - 3) + "\n");
+            this.otext_lst_t.append(Global.repeat('=', 75 - 3) + "\n");
             cLine = String.format("%s %6s", "TOTAL DE MAQUNAS:", data04.getCount());
-            this.text_lst_t.append(cLine + "\n");
+            this.otext_lst_t.append(cLine + "\n");
 
             return true;
         }
@@ -251,40 +262,11 @@ public class lista_text_capturas extends AppCompatActivity {
                 //text_lst_t.append("Credito   : " + String.format(Locale.US, "%12.2f", data04.getDouble(1))+ "\n");
                 //text_lst_t.append("Diferencia: " + String.format(Locale.US,"%12.2f", data04.getDouble(2))+ "\n");
                 cLine = String.format("%8s %20s %s %s %s", "", "", ctot_cole, ctot_cred, ctot_dife);
-                text_lst_t.append(cLine + "\n");
+                this.otext_lst_t.append(cLine + "\n");
             } while (data04.moveToNext());
-            this.text_lst_t.append(Global.repeat('=', 75 - 3) + "\n");
+            this.otext_lst_t.append(Global.repeat('=', 75 - 3) + "\n");
 
             return true;
         }
-    }
-
-    private boolean Imprimir_Montos2() {
-        if (Global.iPrn_Data == 2) {
-            try {
-
-                this.text_lst_t.append(Global.repeat('=', 75 - 3) + "\n");
-                text_lst_t.append("COLECTADO :" + String.format("%12.2f%n", Global.Genobj.getDouble("tot_cole")) + "\n");
-                text_lst_t.append("TIMBRES   :" + String.format("%12.2f%n", Global.Genobj.getDouble("tot_timb")) + "\n");
-                text_lst_t.append("IMUESTOS  :" + String.format("%12.2f%n", Global.Genobj.getDouble("tot_impm")) + "\n");
-                text_lst_t.append("J.C.J     :" + String.format("%12.2f%n", Global.Genobj.getDouble("dot__jcj")) + "\n");
-                text_lst_t.append("SERV. TEC.:" + String.format("%12.2f%n", Global.Genobj.getDouble("tot_tecn")) + "\n");
-                text_lst_t.append("TOT. DEVO.:" + String.format("%12.2f%n", Global.Genobj.getDouble("tot_devo")) + "\n");
-                text_lst_t.append("TOT. OTRO :" + String.format("%12.2f%n", Global.Genobj.getDouble("tot_otro")) + "\n");
-                text_lst_t.append("TOT. CRED.:" + String.format("%12.2f%n", Global.Genobj.getDouble("tot_cred")) + "\n");
-                text_lst_t.append("SUB-TOTAL :" + String.format("%12.2f%n", Global.Genobj.getDouble("Sub_tota")) + "\n");
-                text_lst_t.append("TOT. IMP. :" + String.format("%12.2f%n", Global.Genobj.getDouble("tot_impu")) + "\n");
-                text_lst_t.append("TOTAL     :" + String.format("%12.2f%n", Global.Genobj.getDouble("tot_tota")) + "\n");
-                text_lst_t.append("BRUTO CTE.:" + String.format("%12.2f%n", Global.Genobj.getDouble("tot_bloc")) + "\n");
-                text_lst_t.append("BRUTO EMP.:" + String.format("%12.2f%n", Global.Genobj.getDouble("tot_bemp")) + "\n");
-                text_lst_t.append("NETO  CTE.:" + String.format("%12.2f%n", Global.Genobj.getDouble("tot_nloc")) + "\n");
-                text_lst_t.append("NETO  EMP.:" + String.format("%12.2f%n", Global.Genobj.getDouble("tot_nemp")) + "\n");
-                this.text_lst_t.append(Global.repeat('=', 75 - 3) + "\n");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
-        return true;
     }
 }

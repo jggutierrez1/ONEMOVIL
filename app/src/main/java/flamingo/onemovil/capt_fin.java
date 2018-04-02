@@ -50,7 +50,6 @@ import java.util.Random;
 
 public class capt_fin extends AppCompatActivity {
     private final static int REQUEST_GET_PASS = 6;
-    private final static int REQUEST_PRINT = 7;
     private Button obtn_print_maq, obtn_totfin_hide, obtn_totfin_save, obtn_totfin_canc, obtn_totfin_unlock;
     private EditText oOp_tot_cole, oOp_tot_timb, oOp_tot_impm, oOp_tot_jcj, oOp_tot_tenc, oOp_tot_devo, oOp_tot_otro,
             oOp_tot_cred, oOp_tot_subt, oOp_tot_impu, oOp_tot_tota, oOp_tot_bloc, oOp_tot_bemp, oOp_tot_nloc, oOp_tot_nemp,
@@ -80,7 +79,6 @@ public class capt_fin extends AppCompatActivity {
         this.oapf_device = (TextView) findViewById(R.id.apf_device);
 
         this.obtn_totfin_hide = (Button) findViewById(R.id.btn_totfin_hide);
-        this.obtn_print_maq = (Button) findViewById(R.id.btn_print_maq);
         this.obtn_totfin_save = (Button) findViewById(R.id.btn_totfin_save);
         this.obtn_totfin_canc = (Button) findViewById(R.id.btn_totfin_canc);
         this.obtn_totfin_unlock = (Button) findViewById(R.id.btn_totfin_unlock);
@@ -355,17 +353,6 @@ public class capt_fin extends AppCompatActivity {
                 Global.iObj_Select = 99;
                 Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
                 startActivityForResult(Int_GetPass, REQUEST_GET_PASS);
-            }
-        });
-
-        this.obtn_print_maq.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                Global.ExportDB();
-                Global.iPrn_Data = 1;
-                Intent Int_PrnMaqScreen = new Intent(getApplicationContext(), print_data.class);
-                startActivityForResult(Int_PrnMaqScreen, REQUEST_PRINT);
             }
         });
 
@@ -695,7 +682,7 @@ public class capt_fin extends AppCompatActivity {
                 Global.ExportDB();
                 Global.iPrn_Data = 2;
                 Intent Int_PrnMaqScreen = new Intent(getApplicationContext(), print_data.class);
-                startActivityForResult(Int_PrnMaqScreen, REQUEST_PRINT);
+                startActivityForResult(Int_PrnMaqScreen, Global.REQUEST_PRINT);
 
                 /*
                 Global.ExportDB();
@@ -742,62 +729,6 @@ public class capt_fin extends AppCompatActivity {
                                 this.oOp_tot_cred.setEnabled(true);
                                 this.oOp_tot_jcj.setEnabled(true);
                                 break;
-                            case 0:
-                                this.oOp_tot_cole.setEnabled(false);
-                                this.oOp_tot_cred.setEnabled(false);
-                                this.oOp_tot_jcj.setEnabled(false);
-                                break;
-                            case 1:
-                                this.oOp_tot_cole.setEnabled(true);
-                                this.oOp_tot_cole.selectAll();
-                                this.oOp_tot_cole.requestFocus();
-                                break;
-                            case 2:
-                                this.oOp_tot_cred.setEnabled(true);
-                                this.oOp_tot_cred.selectAll();
-                                this.oOp_tot_cred.requestFocus();
-                                break;
-                            case 3:
-                                this.oOp_tot_jcj.setEnabled(true);
-                                this.oOp_tot_jcj.selectAll();
-                                this.oOp_tot_jcj.requestFocus();
-                                break;
-                        }
-                        //Toast.makeText(this, "CONTRASEÑA VALIDA", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "CONTRASEÑA INCORRECTA", Toast.LENGTH_SHORT).show();
-                    }
-                    break;
-                case RESULT_CANCELED:
-                    switch (Global.iObj_Select) {
-                        case 0:
-                            this.oOp_tot_cole.setEnabled(false);
-                            this.oOp_tot_cred.setEnabled(false);
-                            this.oOp_tot_jcj.setEnabled(false);
-                            break;
-                        case 1:
-                            this.oOp_tot_cole.setEnabled(false);
-                            break;
-                        case 2:
-                            this.oOp_tot_cred.setEnabled(false);
-                            break;
-                        case 3:
-                            this.oOp_tot_jcj.setEnabled(false);
-                            break;
-                    }
-                    Toast.makeText(this, "Canceló la operación.", Toast.LENGTH_SHORT).show();
-                    break;
-
-            }
-        }
-        if (requestCode == REQUEST_PRINT) {
-            switch (resultCode) {
-                case RESULT_OK:
-                    int ipass = data.getIntExtra("PASSWORD", -1);
-                    Log.e("TAG", Integer.valueOf(ipass).toString());
-
-                    if (ipass == Integer.valueOf(Global.PasswChgAmmout)) {
-                        switch (Global.iObj_Select) {
                             case 0:
                                 this.oOp_tot_cole.setEnabled(false);
                                 this.oOp_tot_cred.setEnabled(false);
