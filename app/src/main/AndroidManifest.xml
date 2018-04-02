@@ -43,7 +43,9 @@
         <activity android:name=".get_password" />
         <activity android:name=".install_check" />
         <activity android:name=".select_emp" />
-        <activity android:name=".borrar_colectas"></activity>
+        <activity android:name=".borrar_colectas" />
+        <activity android:name=".lista_text_capturas" />
+        <activity android:name=".activity_lista_text_finalizados"></activity>
     </application>
 
 </manifest>

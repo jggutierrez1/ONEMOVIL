@@ -120,29 +120,30 @@ public class capt_fin extends AppCompatActivity {
         this.Valid_Data();
         this.Calc_Sub_Tot();
 
-        this.obtn_totfin_unlock.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Global.iObj_Select = 99;
-                Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
-                startActivityForResult(Int_GetPass, REQUEST_GET_PASS);
-            }
-        });
-
+        /**************************************SECTION ON FOCUSED******************************************/
         this.oOp_tot_cole.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    oOp_tot_cole.setEnabled(false);
+                    oOp_tot_cole.setText(oOp_tot_cole.getText().toString().isEmpty() ? "0" : oOp_tot_cole.getText().toString());
                 }
             }
         });
 
-        this.oOp_tot_cred.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        this.oOp_tot_timb.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    oOp_tot_cred.setEnabled(false);
+                    oOp_tot_timb.setText(oOp_tot_timb.getText().toString().isEmpty() ? "0" : oOp_tot_timb.getText().toString());
+                }
+            }
+        });
+
+        this.oOp_tot_impm.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    oOp_tot_impm.setText(oOp_tot_impm.getText().toString().isEmpty() ? "0" : oOp_tot_impm.getText().toString());
                 }
             }
         });
@@ -151,80 +152,70 @@ public class capt_fin extends AppCompatActivity {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
-                    oOp_tot_jcj.setEnabled(false);
+                    oOp_tot_jcj.setText(oOp_tot_jcj.getText().toString().isEmpty() ? "0" : oOp_tot_jcj.getText().toString());
                 }
             }
         });
 
-        this.oOp_tot_timb.setOnClickListener(new View.OnClickListener() {
+        this.oOp_tot_tenc.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
-                if (oOp_tot_timb.getText().toString() == "")
-                    oOp_tot_timb.setText("0.00");
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    oOp_tot_tenc.setText(oOp_tot_tenc.getText().toString().isEmpty() ? "0" : oOp_tot_tenc.getText().toString());
+                }
             }
         });
 
-        this.oOp_tot_impm.setOnClickListener(new View.OnClickListener() {
+        this.oOp_tot_cred.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
-                if (oOp_tot_impm.getText().toString() == "")
-                    oOp_tot_impm.setText("0.00");
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    oOp_tot_cred.setText(oOp_tot_cred.getText().toString().isEmpty() ? "0" : oOp_tot_cred.getText().toString());
+                }
             }
         });
 
-        this.oOp_tot_jcj.setOnClickListener(new View.OnClickListener() {
+        this.oOp_tot_devo.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
-                if (oOp_tot_jcj.getText().toString() == "")
-                    oOp_tot_jcj.setText("0.00");
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    oOp_tot_devo.setText(oOp_tot_devo.getText().toString().isEmpty() ? "0" : oOp_tot_devo.getText().toString());
+                }
             }
         });
 
-        this.oOp_tot_tenc.setOnClickListener(new View.OnClickListener() {
+        this.oOp_tot_otro.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
-                if (oOp_tot_tenc.getText().toString() == "")
-                    oOp_tot_tenc.setText("0.00");
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    oOp_tot_otro.setText(oOp_tot_otro.getText().toString().isEmpty() ? "0" : oOp_tot_otro.getText().toString());
+                }
             }
         });
 
-        this.oOp_tot_devo.setOnClickListener(new View.OnClickListener() {
+        this.oOp_tot_subt.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
-                if (oOp_tot_devo.getText().toString() == "")
-                    oOp_tot_devo.setText("0.00");
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    oOp_tot_subt.setText(oOp_tot_subt.getText().toString().isEmpty() ? "0" : oOp_tot_subt.getText().toString());
+                }
             }
         });
 
-        this.oOp_tot_otro.setOnClickListener(new View.OnClickListener() {
+        this.oOp_tot_tota.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
-            public void onClick(View v) {
-                if (oOp_tot_otro.getText().toString() == "")
-                    oOp_tot_otro.setText("0.00");
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    oOp_tot_tota.setText(oOp_tot_tota.getText().toString().isEmpty() ? "0" : oOp_tot_tota.getText().toString());
+                }
             }
         });
+        /**************************************************************************************************/
 
-        this.oOp_tot_cred.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (oOp_tot_cred.getText().toString() == "")
-                    oOp_tot_cred.setText("0.00");
-            }
-        });
-
-        this.ototfin_notas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ototfin_notas.getText().toString() == "")
-                    ototfin_notas.setHint("No hay comentarios");
-            }
-        });
-
+        /**************************************SECTION ON TEXT CHANGE**************************************/
         this.oOp_tot_cole.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
-                Valid_Data();
-
                 Calc_Sub_Tot();
             }
 
@@ -239,8 +230,6 @@ public class capt_fin extends AppCompatActivity {
         this.oOp_tot_timb.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
-                Valid_Data();
-
                 Calc_Sub_Tot();
             }
 
@@ -255,8 +244,6 @@ public class capt_fin extends AppCompatActivity {
         this.oOp_tot_impm.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
-                Valid_Data();
-
                 Calc_Sub_Tot();
             }
 
@@ -271,8 +258,6 @@ public class capt_fin extends AppCompatActivity {
         this.oOp_tot_jcj.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
-                Valid_Data();
-
                 Calc_Sub_Tot();
             }
 
@@ -287,40 +272,6 @@ public class capt_fin extends AppCompatActivity {
         this.oOp_tot_tenc.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
-                Valid_Data();
-
-                Calc_Sub_Tot();
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
-
-        this.oOp_tot_devo.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-                Valid_Data();
-
-                Calc_Sub_Tot();
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
-
-        this.oOp_tot_otro.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-                Valid_Data();
-
                 Calc_Sub_Tot();
             }
 
@@ -335,8 +286,6 @@ public class capt_fin extends AppCompatActivity {
         this.oOp_tot_cred.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
-                Valid_Data();
-
                 Calc_Sub_Tot();
             }
 
@@ -348,10 +297,24 @@ public class capt_fin extends AppCompatActivity {
             }
         });
 
-        this.oOp_tot_subt.addTextChangedListener(new TextWatcher() {
+        this.oOp_tot_devo.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
-                Valid_Data();
+                Calc_Sub_Tot();
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        this.oOp_tot_otro.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Calc_Sub_Tot();
             }
 
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -365,8 +328,6 @@ public class capt_fin extends AppCompatActivity {
         this.oOp_tot_impu.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
-                Valid_Data();
-
                 Calc_Sub_Tot();
             }
 
@@ -377,18 +338,23 @@ public class capt_fin extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
+        /**************************************************************************************************/
 
-        this.oOp_tot_tota.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-                Valid_Data();
+        /**************************************SECTION ON CLIC*****************************************/
+        this.ototfin_notas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (ototfin_notas.getText().toString() == "")
+                    ototfin_notas.setHint("No hay comentarios");
             }
+        });
 
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+        this.obtn_totfin_unlock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Global.iObj_Select = 99;
+                Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
+                startActivityForResult(Int_GetPass, REQUEST_GET_PASS);
             }
         });
 
@@ -750,13 +716,13 @@ public class capt_fin extends AppCompatActivity {
                 //Toast.makeText(getApplicationContext(), "regresando:..", Toast.LENGTH_LONG).show();
 
                 Intent i = getIntent();
-                Global.cCte_Id = "";
                 setResult(RESULT_CANCELED, i);
 
                 oDb5.close();
                 finish();
             }
         });
+        /**************************************************************************************************/
     }
 
     @Override
@@ -885,78 +851,48 @@ public class capt_fin extends AppCompatActivity {
     private void Clear_Screen() {
         this.oOp_tot_cole.setText("0.00");
         this.oOp_tot_cole.setEnabled(false);
-        //this.oOp_tot_cole.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        //this.oOp_tot_cole.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         this.oOp_tot_timb.setText("0.00");
         this.oOp_tot_timb.setEnabled(true);
-        //this.oOp_tot_timb.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        //this.oOp_tot_timb.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         this.oOp_tot_impm.setText("0.00");
         this.oOp_tot_impm.setEnabled(true);
-        //this.oOp_tot_impm.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        //this.oOp_tot_impm.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         this.oOp_tot_jcj.setText("0.00");
         this.oOp_tot_jcj.setEnabled(false);
-        //this.oOp_tot_jcj.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        //this.oOp_tot_jcj.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         this.oOp_tot_tenc.setText("0.00");
         this.oOp_tot_tenc.setEnabled(true);
-        //this.oOp_tot_tenc.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        //this.oOp_tot_tenc.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         this.oOp_tot_devo.setText("0.00");
         this.oOp_tot_devo.setEnabled(true);
-        //this.oOp_tot_devo.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        //this.oOp_tot_devo.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         this.oOp_tot_otro.setText("0.00");
         this.oOp_tot_otro.setEnabled(true);
-        //this.oOp_tot_otro.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        //this.oOp_tot_otro.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         this.oOp_tot_cred.setText("0.00");
         this.oOp_tot_cred.setEnabled(false);
-        //this.oOp_tot_cred.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        //this.oOp_tot_cred.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         this.oOp_tot_subt.setText("0.00");
         this.oOp_tot_subt.setEnabled(false);
-        //this.oOp_tot_subt.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        //this.oOp_tot_subt.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         this.oOp_tot_impu.setText("0.00");
         this.oOp_tot_impu.setEnabled(false);
-        //this.oOp_tot_impu.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        //this.oOp_tot_impu.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         this.oOp_tot_tota.setText("0.00");
         this.oOp_tot_tota.setEnabled(false);
-        //this.oOp_tot_tota.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        //this.oOp_tot_tota.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         this.oOp_tot_bloc.setText("0.00");
         this.oOp_tot_bloc.setEnabled(false);
-        //this.oOp_tot_bloc.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        //this.oOp_tot_bloc.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         this.oOp_tot_bemp.setText("0.00");
         this.oOp_tot_bemp.setEnabled(false);
-        //this.oOp_tot_bemp.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        //this.oOp_tot_bemp.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         this.oOp_tot_nloc.setText("0.00");
         this.oOp_tot_nloc.setEnabled(false);
-        //this.oOp_tot_nloc.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        //this.oOp_tot_nloc.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         this.oOp_tot_nemp.setText("0.00");
         this.oOp_tot_nemp.setEnabled(false);
-        //this.oOp_tot_nemp.setRawInputType(Configuration.KEYBOARD_QWERTY);
-        //this.oOp_tot_nemp.setInputType(InputType.TYPE_CLASS_NUMBER);
 
         this.ototfin_notas.setText("");
     }
@@ -1123,16 +1059,15 @@ public class capt_fin extends AppCompatActivity {
 
     private void Calc_Sub_Tot() {
         double ipK_porc = 0.00;
+
         Double dtot_cole = 0.00;
         Double dtot_timb = 0.00;
         Double dtot_impm = 0.00;
         Double dtot__jcj = 0.00;
         Double dtot_tecn = 0.00;
-        Double dtot_sum1 = 0.00;
         Double dtot_cred = 0.00;
         Double dtot_otro = 0.00;
         Double dtot_devo = 0.00;
-        Double dtot_sum2 = 0.00;
         Double dSub_tota = 0.00;
         Double dtot_impu = 0.00;
         Double dtot_tota = 0.00;
@@ -1140,6 +1075,15 @@ public class capt_fin extends AppCompatActivity {
         Double dtot_bemp = 0.00;
         Double dtot_nloc = 0.00;
         Double dtot_nemp = 0.00;
+
+        String stot_cole = (this.oOp_tot_cole.getText().toString().isEmpty() ? "0" : this.oOp_tot_cole.getText().toString());
+        String stot_timb = (this.oOp_tot_timb.getText().toString().isEmpty() ? "0" : this.oOp_tot_timb.getText().toString());
+        String stot_impm = (this.oOp_tot_impm.getText().toString().isEmpty() ? "0" : this.oOp_tot_impm.getText().toString());
+        String stot__jcj = (this.oOp_tot_jcj.getText().toString().isEmpty() ? "0" : this.oOp_tot_jcj.getText().toString());
+        String stot_tecn = (this.oOp_tot_tenc.getText().toString().isEmpty() ? "0" : this.oOp_tot_tenc.getText().toString());
+        String stot_cred = (this.oOp_tot_cred.getText().toString().isEmpty() ? "0" : this.oOp_tot_cred.getText().toString());
+        String stot_devo = (this.oOp_tot_devo.getText().toString().isEmpty() ? "0" : this.oOp_tot_devo.getText().toString());
+        String stot_otro = (this.oOp_tot_otro.getText().toString().isEmpty() ? "0" : this.oOp_tot_otro.getText().toString());
 
         String cSub_tota = "";
         String ctot_tota = "";
@@ -1149,18 +1093,20 @@ public class capt_fin extends AppCompatActivity {
         String ctot_nemp = "";
 
         //-------------------------------------------------------------------------------------------------------//
-        dtot_timb = Double.valueOf(this.oOp_tot_timb.getText().toString()).doubleValue();
-        dtot_impm = Double.valueOf(this.oOp_tot_impm.getText().toString()).doubleValue();
-        dtot__jcj = Double.valueOf(this.oOp_tot_jcj.getText().toString()).doubleValue();
-        dtot_tecn = Double.valueOf(this.oOp_tot_tenc.getText().toString()).doubleValue();
-        dtot_sum1 = (dtot_timb + dtot_impm + dtot__jcj + dtot_tecn);
+        dtot_cole = Double.valueOf(stot_cole).doubleValue();
+        dtot_timb = Double.valueOf(stot_timb).doubleValue();
+        dtot_impm = Double.valueOf(stot_impm).doubleValue();
+        dtot__jcj = Double.valueOf(stot__jcj).doubleValue();
+        dtot_tecn = Double.valueOf(stot_tecn).doubleValue();
+
+        Double dtot_sum1 = (dtot_timb + dtot_impm + dtot__jcj + dtot_tecn);
         //-------------------------------------------------------------------------------------------------------//
-        dtot_devo = Double.valueOf(this.oOp_tot_devo.getText().toString()).doubleValue();
-        dtot_otro = Double.valueOf(this.oOp_tot_otro.getText().toString()).doubleValue();
-        dtot_cred = Double.valueOf(this.oOp_tot_cred.getText().toString()).doubleValue();
-        dtot_sum2 = (dtot_devo + dtot_otro + dtot_cred);
+        dtot_cred = Double.valueOf(stot_cred).doubleValue();
+        dtot_devo = Double.valueOf(stot_devo).doubleValue();
+        dtot_otro = Double.valueOf(stot_otro).doubleValue();
+
+        Double dtot_sum2 = (dtot_devo + dtot_otro + dtot_cred);
         //-------------------------------------------------------------------------------------------------------//
-        dtot_cole = Double.valueOf(this.oOp_tot_cole.getText().toString()).doubleValue();
         //-------------------------------------------------------------------------------------------------------//
         dSub_tota = (dtot_cole - dtot_sum1 - dtot_sum2);
         cSub_tota = String.format("%.2f", dSub_tota);

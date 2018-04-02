@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Field;
 import java.math.BigInteger;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -116,6 +117,25 @@ public class Global {
     public static int Correl_Device;
     public static JSONObject Genobj;
     public static String DialogConfirmText = "";
+
+    public static int REQUEST_SEL_EMP = 5;
+    public static int REQUEST_SEL_CTE = 1;
+    public static int REQUEST_SEL_MAQ = 2;
+    public static int REQUEST_INI_CAP = 3;
+    public static int REQUEST_END_CAP = 4;
+    public static int REQUEST_GET_PASS = 5;
+    public static int REQUEST_DEL_CAP = 6;
+    public static int REQUEST_SEL_LIS = 7;
+    public static int REQUEST_SEL_LIS2 = 8;
+    public static int REQUEST_CAMERA = 1;
+
+    public static boolean bAutoSelEmp = false,
+            bAutoSelCte = false,
+            bAutoSelMaq = false,
+            bAutoSelCapM = false,
+            bAutoSelCapF = false,
+            bAutoSelList = false,
+            bAutoSelList2 = false;
 
     public static void Init_Vars() {
         PACKAGE_NAME = "flamingo.onemovil";
@@ -875,7 +895,8 @@ public class Global {
         try {
             //url = new URL("http://192.168.2.82/flam/get_all_data.php");
 
-;            url = new URL(cMyurl + cWebServices);
+            ;
+            url = new URL(cMyurl + cWebServices);
             Log.d(TAG, "CONECTADO A:[" + cMyurl + "]");
             connection = (HttpURLConnection) url.openConnection();
             connection.setDoOutput(true);
@@ -991,7 +1012,7 @@ public class Global {
         Global.oGen_Db.execSQL("DROP TABLE IF EXISTS maquinas_lnk");
         Global.oGen_Db.execSQL("DROP TABLE IF EXISTS municipios");
         Global.oGen_Db.execSQL("DROP TABLE IF EXISTS rutas");
-     }
+    }
 
     public static int check_device() {
         String cNow = Global.getNow();
@@ -1544,9 +1565,9 @@ public class Global {
 
     }
 
-    public static int createID(){
+    public static int createID() {
         Date now = new Date();
-        int id = Integer.parseInt(new SimpleDateFormat("ddHHmmss",  Locale.US).format(now));
+        int id = Integer.parseInt(new SimpleDateFormat("ddHHmmss", Locale.US).format(now));
         return id;
     }
 }

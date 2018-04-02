@@ -48,7 +48,6 @@ public class select_cte extends AppCompatActivity {
 
         this.olst_cte2.setClickable(true);
 
-
         String databasePath = getDatabasePath("one2009.db").getPath();
         db3 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
 

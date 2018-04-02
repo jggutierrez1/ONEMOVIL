@@ -101,6 +101,18 @@
                 android:textColor="@color/Brown" />
 
             <Button
+                android:id="@+id/obtn_list_colec"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="LISTAR COLECTADO" />
+
+            <Button
+                android:id="@+id/obtn_list2_colec"
+                android:layout_width="match_parent"
+                android:layout_height="65dp"
+                android:text="LISTAR FINALIZADOS" />
+
+            <Button
                 android:id="@+id/obtn_fin_colec"
                 android:layout_width="match_parent"
                 android:layout_height="65dp"

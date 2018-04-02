@@ -93,8 +93,6 @@ public class capt_data extends AppCompatActivity {
     private double fDenom_Ent_Val, fDenom_Sal_Val, Porc_Loc;
     //private double ftot_cole, ftot_prem;
     private double iMetro_EntDif, iMetroA_EntDif, iMetroB_EntDif, iMetro_SalDif, iMetroA_SalDif, iMetroB_SalDif;
-    private final static int REQUEST_GET_PASS = 5;
-    public final static int REQUEST_CAMERA = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +130,7 @@ public class capt_data extends AppCompatActivity {
         this.lsb_dif = (TextView) findViewById(R.id.olsb_dif);
         /*-------------------------------------------------------*/
 
-       /*-------------------LAYOUTS------------------------*/
+        /*-------------------LAYOUTS------------------------*/
         this.layoutb_eact = (LinearLayout) findViewById(R.id.olayoutb_eact);
         this.layoutb_eant = (LinearLayout) findViewById(R.id.olayoutb_eant);
         this.layoutb_edif = (LinearLayout) findViewById(R.id.olayoutb_edif);
@@ -196,11 +194,11 @@ public class capt_data extends AppCompatActivity {
 
         this.MaquinaValid(true);
 
-        Calc_Dif_Ent(true);
-        Calc_Dif_Sal(true);
+        this.Valid_Data();
 
-        Calc_Tot(1);
-
+        this.Calc_Dif_Ent(true);
+        this.Calc_Dif_Sal(true);
+        this.Calc_Tot(1);
 
         this.btn_metd_capt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,39 +210,236 @@ public class capt_data extends AppCompatActivity {
                 fDenom_Sal_Val = 0;
 
                 Mask_Tetros();
+                Mask_Ent();
+                Mask_Sal();
 
+                //Calc_Dif_Ent(true);
+                //Calc_Dif_Sal(true);
+                //Calc_Tot(1);
+            }
+        });
+
+        /**************************************SECTION ON FOCUSED******************************************/
+        this.ea_act.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    ea_act.setText(ea_act.getText().toString().isEmpty() ? "0" : ea_act.getText().toString());
+                }
+            }
+        });
+
+        this.eb_act.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    eb_act.setText(eb_act.getText().toString().isEmpty() ? "0" : eb_act.getText().toString());
+                }
+            }
+        });
+
+        this.sa_act.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    sa_act.setText(sa_act.getText().toString().isEmpty() ? "0" : sa_act.getText().toString());
+                }
+            }
+        });
+
+        this.sb_act.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    sb_act.setText(sb_act.getText().toString().isEmpty() ? "0" : sb_act.getText().toString());
+                }
+            }
+        });
+
+        this.ea_ant.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    ea_ant.setText(ea_ant.getText().toString().isEmpty() ? "0" : ea_ant.getText().toString());
+                    if (cte_mod_metro_ant == 0)
+                        ea_ant.setEnabled(false);
+                    else
+                        ea_ant.setEnabled(true);
+                }
+            }
+        });
+
+        this.eb_ant.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    eb_ant.setText(eb_ant.getText().toString().isEmpty() ? "0" : eb_ant.getText().toString());
+                    if (cte_mod_metro_ant == 0)
+                        eb_ant.setEnabled(false);
+                    else
+                        eb_ant.setEnabled(true);
+                }
+            }
+        });
+
+        this.sa_ant.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    sa_ant.setText(sa_ant.getText().toString().isEmpty() ? "0" : sa_ant.getText().toString());
+                    if (cte_mod_metro_ant == 0)
+                        sa_ant.setEnabled(false);
+                    else
+                        sa_ant.setEnabled(true);
+                }
+            }
+        });
+
+        this.sb_ant.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    sb_ant.setText(sb_ant.getText().toString().isEmpty() ? "0" : sb_ant.getText().toString());
+                    if (cte_mod_metro_ant == 0)
+                        sb_ant.setEnabled(false);
+                    else
+                        sb_ant.setEnabled(true);
+                }
+            }
+        });
+        /**************************************************************************************************/
+
+        /**************************************SECTION ON CHANGES******************************************/
+        this.ea_act.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
                 Calc_Dif_Ent(true);
-                Calc_Dif_Sal(true);
-
                 Calc_Tot(1);
+            }
 
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
 
-        this.tot_notas.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (tot_notas.getText().toString() == "")
-                    tot_notas.setHint("Sin comentarios");
+        this.ea_ant.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Calc_Dif_Ent(true);
+                Calc_Tot(1);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
 
-        this.ea_act.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ea_act.getText().toString() == "")
-                    ea_act.setText((Denom_Ent_Fac == 0 ? "0.00" : "0"));
+        this.eb_act.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Calc_Dif_Ent(true);
+                Calc_Tot(1);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         });
 
+        this.eb_ant.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Calc_Dif_Ent(true);
+                Calc_Tot(1);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        this.sa_act.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Calc_Dif_Sal(true);
+                Tot_Cred(1);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        this.sa_ant.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Calc_Dif_Sal(true);
+                Tot_Cred(1);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        this.sb_act.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Calc_Dif_Sal(true);
+                Tot_Cred(1);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        this.sb_ant.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Calc_Dif_Sal(true);
+                Tot_Cred(1);
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+        /**************************************************************************************************/
+
+        /**************************************SECTION ON CLIC******************************************/
         this.oSemanas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (oSemanas.getText().toString() == "")
+                if (oSemanas.getText().toString().isEmpty()){
                     oSemanas.setText("1");
+                }
             }
         });
-
 
         this.baja_prod.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -253,12 +448,11 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
-        this.btn_unlock_capt.setOnClickListener(new View.OnClickListener() {
+        this.tot_notas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Global.iObj_Select = 99;
-                Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
-                startActivityForResult(Int_GetPass, REQUEST_GET_PASS);
+                if (tot_notas.getText().toString().isEmpty())
+                    tot_notas.setHint("Sin comentarios");
             }
         });
 
@@ -276,255 +470,12 @@ public class capt_data extends AppCompatActivity {
             }
         });
 
-        this.ea_act.setOnClickListener(new View.OnClickListener() {
+        this.btn_unlock_capt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ea_act.getText().toString() == "")
-                    ea_act.setText((Denom_Ent_Fac == 0 ? "0.00" : "0"));
-            }
-        });
-
-        this.ea_ant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ea_ant.getText().toString() == "")
-                    ea_ant.setText((Denom_Ent_Fac == 0 ? "0.00" : "0"));
-            }
-        });
-
-        this.ea_ant.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (cte_mod_metro_ant == 0)
-                        ea_ant.setEnabled(false);
-                    else
-                        ea_ant.setEnabled(true);
-                }
-            }
-        });
-
-        this.eb_act.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (eb_act.getText().toString() == "")
-                    eb_act.setText((Denom_Ent_Fac == 0 ? "0.00" : "0"));
-            }
-        });
-
-        this.eb_ant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (eb_ant.getText().toString() == "")
-                    eb_ant.setText((Denom_Ent_Fac == 0 ? "0.00" : "0"));
-            }
-        });
-
-        this.eb_ant.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (cte_mod_metro_ant == 0)
-                        eb_ant.setEnabled(false);
-                    else
-                        eb_ant.setEnabled(true);
-                }
-            }
-        });
-
-        this.sa_act.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sa_act.getText().toString() == "")
-                    sa_act.setText((Denom_Sal_Fac == 0 ? "0.00" : "0"));
-            }
-        });
-
-        this.sa_ant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sa_ant.getText().toString() == "")
-                    sa_ant.setText((Denom_Sal_Fac == 0 ? "0.00" : "0"));
-            }
-        });
-
-        this.sa_ant.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (cte_mod_metro_ant == 0)
-                        sa_ant.setEnabled(false);
-                    else
-                        sa_ant.setEnabled(true);
-                }
-            }
-        });
-
-        this.sb_act.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sb_act.getText().toString() == "")
-                    sb_act.setText((Denom_Sal_Fac == 0 ? "0.00" : "0"));
-            }
-        });
-
-        this.sb_ant.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (sb_ant.getText().toString() == "")
-                    sb_ant.setText((Denom_Sal_Fac == 0 ? "0.00" : "0"));
-            }
-        });
-
-        this.sb_ant.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus) {
-                    if (cte_mod_metro_ant == 0)
-                        sb_ant.setEnabled(false);
-                    else
-                        sb_ant.setEnabled(true);
-                }
-            }
-        });
-
-        this.ea_act.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-                Valid_Data();
-
-                Calc_Dif_Ent(true);
-                Calc_Tot(1);
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
-
-        this.ea_ant.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-                Valid_Data();
-
-                Calc_Dif_Ent(true);
-                Calc_Tot(1);
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
-
-        this.eb_act.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-                Valid_Data();
-
-                Calc_Dif_Ent(true);
-                Calc_Tot(1);
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
-
-        this.eb_ant.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-                Valid_Data();
-
-                Calc_Dif_Ent(true);
-                Calc_Tot(1);
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
-
-        this.sa_act.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-
-                Valid_Data();
-
-                Calc_Dif_Sal(true);
-                Tot_Cred(1);
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
-
-        this.sa_ant.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-
-                Valid_Data();
-
-                Calc_Dif_Sal(true);
-                Tot_Cred(1);
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
-
-        this.sb_act.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-
-                Valid_Data();
-
-                Calc_Dif_Sal(true);
-                Tot_Cred(1);
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-        });
-
-        this.sb_ant.addTextChangedListener(new TextWatcher() {
-
-            public void afterTextChanged(Editable s) {
-
-                Valid_Data();
-
-                Calc_Dif_Sal(true);
-                Tot_Cred(1);
-            }
-
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Global.iObj_Select = 99;
+                Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
+                startActivityForResult(Int_GetPass, Global.REQUEST_GET_PASS);
             }
         });
 
@@ -667,8 +618,8 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "'" + String.format("%.2f", dtot_cred) + "',";
                 cSql_Ln += "'" + cNow2 + "',";
                 cSql_Ln += "'" + cNow2 + "',";
-                cSql_Ln += "'" + Op_tot_impjcj2 + "',";
                 cSql_Ln += "'" + Op_tot_impmunic2 + "',";
+                cSql_Ln += "'" + Op_tot_impjcj2 + "',";
 
                 cSql_Ln += "'" + op_emp_id + "',";
                 cSql_Ln += "'" + Global.cid_device + "',";
@@ -704,7 +655,6 @@ public class capt_data extends AppCompatActivity {
                 ((InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE))
                         .toggleSoftInput(InputMethodManager.HIDE_IMPLICIT_ONLY, 0);
 
-
                 finish();
             }
         });
@@ -736,6 +686,7 @@ public class capt_data extends AppCompatActivity {
                 startActivity(Int_TakePhoto);
             }
         });
+        /**************************************************************************************************/
 
     }
 
@@ -744,7 +695,7 @@ public class capt_data extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         {
-            if (requestCode == REQUEST_GET_PASS) {
+            if (requestCode == Global.REQUEST_GET_PASS) {
                 //Se procesa la devolución
                 switch (resultCode) {
                     case RESULT_OK:
@@ -817,7 +768,7 @@ public class capt_data extends AppCompatActivity {
                 }
             }
 
-            if (requestCode == REQUEST_CAMERA) {
+            if (requestCode == Global.REQUEST_CAMERA) {
                 switch (resultCode) {
                     case RESULT_OK:
                         Toast.makeText(this, "PROCESADO", Toast.LENGTH_SHORT).show();
@@ -831,18 +782,147 @@ public class capt_data extends AppCompatActivity {
         }
     }
 
+    private void Mask_Ent() {
+        String sea_act, sea_ant;
+        String seb_act, seb_ant;
+        String sea_dif, seb_dif;
+
+        Double fea_act, fea_ant;
+        Double feb_act, feb_ant;
+        Double fea_dif, feb_dif;
+
+        if (Denom_Ent_Fac == 0) {
+            sea_act = this.ea_act.getText().toString();
+            sea_act = (this.ea_act.getText().toString().isEmpty() ? "0" : sea_act);
+
+            sea_ant = this.ea_ant.getText().toString();
+            sea_ant = (this.ea_ant.getText().toString().isEmpty() ? "0" : sea_ant);
+
+            seb_act = this.eb_act.getText().toString();
+            seb_act = (this.eb_act.getText().toString().isEmpty() ? "0" : seb_act);
+
+            seb_ant = this.eb_ant.getText().toString();
+            seb_ant = (this.eb_ant.getText().toString().isEmpty() ? "0" : seb_ant);
+
+            sea_dif = this.ea_dif.getText().toString();
+            sea_dif = (this.ea_dif.getText().toString().isEmpty() ? "0" : sea_dif);
+
+            seb_dif = this.eb_dif.getText().toString();
+            seb_dif = (this.eb_dif.getText().toString().isEmpty() ? "0" : seb_dif);
+
+            fea_act = Double.valueOf(sea_act).doubleValue();
+            fea_ant = Double.valueOf(sea_ant).doubleValue();
+
+            feb_act = Double.valueOf(seb_act).doubleValue();
+            feb_ant = Double.valueOf(seb_ant).doubleValue();
+
+            fea_dif = Double.valueOf(sea_dif).doubleValue();
+            feb_dif = Double.valueOf(seb_dif).doubleValue();
+
+            sea_act = String.format(Locale.US, "%.2f", fea_act);
+            sea_ant = String.format(Locale.US, "%.2f", fea_ant);
+
+            seb_act = String.format(Locale.US, "%.2f", feb_act);
+            seb_ant = String.format(Locale.US, "%.2f", feb_ant);
+
+            sea_dif = String.format(Locale.US, "%.2f", fea_dif);
+            seb_dif = String.format(Locale.US, "%.2f", feb_dif);
+
+            this.ea_act.setText(sea_act);
+            this.ea_ant.setText(sea_ant);
+            this.ea_dif.setText(sea_dif);
+
+            this.eb_act.setText(seb_act);
+            this.eb_ant.setText(seb_ant);
+            this.eb_dif.setText(seb_dif);
+        }
+    }
+
+    private void Mask_Sal() {
+        String ssa_act, ssa_ant;
+        String ssb_act, ssb_ant;
+        String ssa_dif, ssb_dif;
+
+        Double fsa_act, fsa_ant;
+        Double fsb_act, fsb_ant;
+        Double fsa_dif, fsb_dif;
+
+
+        if (Denom_Sal_Fac == 0) {
+
+            ssa_act = this.sa_act.getText().toString();
+            ssa_act = (this.sa_act.getText().toString().isEmpty() ? "0" : ssa_act);
+
+            ssa_ant = this.sa_ant.getText().toString();
+            ssa_ant = (this.sa_ant.getText().toString().isEmpty() ? "0" : ssa_ant);
+
+            ssb_act = this.sb_act.getText().toString();
+            ssb_act = (this.sb_act.getText().toString().isEmpty() ? "0" : ssb_act);
+
+            ssb_ant = this.sb_ant.getText().toString();
+            ssb_ant = (this.sb_ant.getText().toString().isEmpty() ? "0" : ssb_ant);
+
+            ssa_dif = this.sa_dif.getText().toString();
+            ssa_dif = (this.sa_dif.getText().toString().isEmpty() ? "0" : ssa_dif);
+
+            ssb_dif = this.sb_dif.getText().toString();
+            ssb_dif = (this.sb_dif.getText().toString().isEmpty() ? "0" : ssb_dif);
+
+            fsa_act = Double.valueOf(ssa_act).doubleValue();
+            fsa_ant = Double.valueOf(ssa_ant).doubleValue();
+
+            fsb_act = Double.valueOf(ssb_act).doubleValue();
+            fsb_ant = Double.valueOf(ssb_ant).doubleValue();
+
+            fsa_dif = Double.valueOf(ssa_dif).doubleValue();
+            fsb_dif = Double.valueOf(ssb_dif).doubleValue();
+
+            ssa_act = String.format(Locale.US, "%.2f", fsa_act);
+            ssa_ant = String.format(Locale.US, "%.2f", fsa_ant);
+
+            ssb_act = String.format(Locale.US, "%.2f", fsb_act);
+            ssb_ant = String.format(Locale.US, "%.2f", fsb_ant);
+
+            ssa_dif = String.format(Locale.US, "%.2f", fsa_dif);
+            ssb_dif = String.format(Locale.US, "%.2f", fsb_dif);
+
+            this.sa_act.setText(ssa_act);
+            this.sa_ant.setText(ssa_ant);
+            this.sa_dif.setText(ssa_dif);
+
+            this.sb_act.setText(ssb_act);
+            this.sb_ant.setText(ssb_ant);
+            this.sb_dif.setText(ssb_dif);
+        }
+    }
+
     private void Calc_Dif_Ent(boolean A) {
-        double iea_act, iea_ant;
-        double ieb_act, ieb_ant;
+        double fea_act, fea_ant;
+        double feb_act, feb_ant;
 
-        iea_act = Double.valueOf(ea_act.getText().toString()).doubleValue();
-        iea_ant = Double.valueOf(ea_ant.getText().toString()).doubleValue();
+        String sea_act, sea_ant;
+        String seb_act, seb_ant;
 
-        ieb_act = Double.valueOf(eb_act.getText().toString()).doubleValue();
-        ieb_ant = Double.valueOf(eb_ant.getText().toString()).doubleValue();
+        sea_act = this.ea_act.getText().toString();
+        sea_act = (this.ea_act.getText().toString().isEmpty() ? "0" : sea_act);
 
-        iMetroA_EntDif = (iea_act - iea_ant);
-        iMetroB_EntDif = (ieb_act - ieb_ant);
+        sea_ant = this.ea_ant.getText().toString();
+        sea_ant = (this.ea_ant.getText().toString().isEmpty() ? "0" : sea_ant);
+
+        seb_act = this.eb_act.getText().toString();
+        seb_act = (this.eb_act.getText().toString().isEmpty() ? "0" : seb_act);
+
+        seb_ant = this.eb_ant.getText().toString();
+        seb_ant = (this.eb_ant.getText().toString().isEmpty() ? "0" : seb_ant);
+
+        fea_act = Double.valueOf(sea_act).doubleValue();
+        fea_ant = Double.valueOf(sea_ant).doubleValue();
+
+        feb_act = Double.valueOf(seb_act).doubleValue();
+        feb_ant = Double.valueOf(seb_ant).doubleValue();
+
+        iMetroA_EntDif = (fea_act - fea_ant);
+        iMetroB_EntDif = (feb_act - feb_ant);
 
         if (A == true) {
             ea_dif.setText(String.format("%.2f", iMetroA_EntDif));
@@ -853,17 +933,32 @@ public class capt_data extends AppCompatActivity {
     }
 
     private void Calc_Dif_Sal(boolean A) {
-        Double isa_act, isa_ant;
-        Double isb_act, isb_ant;
+        Double fsa_act, fsa_ant;
+        Double fsb_act, fsb_ant;
 
-        isa_act = Double.valueOf(sa_act.getText().toString()).doubleValue();
-        isa_ant = Double.valueOf(sa_ant.getText().toString()).doubleValue();
+        String ssa_act, ssa_ant;
+        String ssb_act, ssb_ant;
 
-        isb_act = Double.valueOf(sb_act.getText().toString()).doubleValue();
-        isb_ant = Double.valueOf(sb_ant.getText().toString()).doubleValue();
+        ssa_act = this.sa_act.getText().toString();
+        ssa_act = (this.sa_act.getText().toString().isEmpty() ? "0" : ssa_act);
 
-        iMetroA_SalDif = (isa_act - isa_ant);
-        iMetroB_SalDif = (isb_act - isb_ant);
+        ssa_ant = this.sa_ant.getText().toString();
+        ssa_ant = (this.sa_ant.getText().toString().isEmpty() ? "0" : ssa_ant);
+
+        ssb_act = this.sb_act.getText().toString();
+        ssb_act = (this.sb_act.getText().toString().isEmpty() ? "0" : ssb_act);
+
+        ssb_ant = this.sb_ant.getText().toString();
+        ssb_ant = (this.sb_ant.getText().toString().isEmpty() ? "0" : ssb_ant);
+
+        fsa_act = Double.valueOf(ssa_act).doubleValue();
+        fsa_ant = Double.valueOf(ssa_ant).doubleValue();
+
+        fsb_act = Double.valueOf(ssb_act).doubleValue();
+        fsb_ant = Double.valueOf(ssb_ant).doubleValue();
+
+        iMetroA_SalDif = (fsa_act - fsa_ant);
+        iMetroB_SalDif = (fsb_act - fsb_ant);
 
         if (A == true) {
             sa_dif.setText(String.format("%.2f", iMetroA_SalDif));
@@ -871,6 +966,7 @@ public class capt_data extends AppCompatActivity {
             sb_dif.setText(String.format("%.2f", iMetroB_SalDif));
         }
         iMetro_SalDif = iMetroA_SalDif + iMetroB_SalDif;
+
     }
 
     private void Calc_Tot(int iForce) {
@@ -1040,46 +1136,49 @@ public class capt_data extends AppCompatActivity {
     private void Mask_Tetros() {
         if (Denom_Ent_Fac == 0) {
             // Entradas A
-            this.ea_ant.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            this.ea_act.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            this.ea_dif.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.ea_ant.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.ea_act.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.ea_dif.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
-            this.ea_ant.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            this.ea_act.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            this.ea_dif.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.ea_ant.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.ea_act.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.ea_dif.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
 
         } else {
             // Entradas A
-            this.ea_ant.setInputType(InputType.TYPE_CLASS_NUMBER);
-            this.ea_act.setInputType(InputType.TYPE_CLASS_NUMBER);
-            this.ea_dif.setInputType(InputType.TYPE_CLASS_NUMBER);
+            this.ea_ant.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
+            this.ea_act.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
+            this.ea_dif.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
 
             // Entradas B
-            this.eb_ant.setInputType(InputType.TYPE_CLASS_NUMBER);
-            this.eb_act.setInputType(InputType.TYPE_CLASS_NUMBER);
-            this.eb_dif.setInputType(InputType.TYPE_CLASS_NUMBER);
-            this.eb_dif.setInputType(InputType.TYPE_CLASS_NUMBER);
+            this.eb_ant.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
+            this.eb_act.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
+            this.eb_dif.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
+            this.eb_dif.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
         }
 
         if (Denom_Sal_Fac == 0) {
             // Salidas A
-            this.sa_act.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            this.sa_ant.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            this.sa_dif.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.sa_act.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.sa_ant.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.sa_dif.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
             // Salidas B
-            this.sb_act.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            this.sb_ant.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
-            this.sb_dif.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.sb_act.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.sb_ant.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            this.sb_dif.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         } else {
             // Salidas A
-            this.sa_act.setInputType(InputType.TYPE_CLASS_NUMBER);
-            this.sa_ant.setInputType(InputType.TYPE_CLASS_NUMBER);
-            this.sa_dif.setInputType(InputType.TYPE_CLASS_NUMBER);
+            this.sa_act.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
+            this.sa_ant.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
+            this.sa_dif.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
             // Salidas B
-            this.sb_act.setInputType(InputType.TYPE_CLASS_NUMBER);
-            this.sb_ant.setInputType(InputType.TYPE_CLASS_NUMBER);
-            this.sb_dif.setInputType(InputType.TYPE_CLASS_NUMBER);
+            this.sb_act.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
+            this.sb_ant.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
+            this.sb_dif.setInputType(InputType.TYPE_NUMBER_FLAG_SIGNED | InputType.TYPE_CLASS_NUMBER);
         }
+        this.Calc_Dif_Ent(true);
+        this.Calc_Dif_Sal(true);
+        this.Calc_Tot(1);
     }
 
     private void MaquinaValid(Boolean bIsNew) {
@@ -1139,7 +1238,7 @@ public class capt_data extends AppCompatActivity {
 
             if (cte_pag_impm == 0)
                 Op_tot_impmunic = data4.getDouble(data4.getColumnIndex("mun_impuesto"));
-        }
+       }
 
         switch (data4.getInt(data4.getColumnIndex("maqtc_metros"))) {
             case 1:
@@ -1356,44 +1455,44 @@ public class capt_data extends AppCompatActivity {
     }
 
     private void Valid_Data() {
-        if (ea_ant.getText().toString().length() == 0) {
-            ea_ant.setError(null);
-            ea_ant.setText("0");
+        if (this.ea_ant.getText().toString().length() == 0) {
+            this.ea_ant.setError(null);
+            this.ea_ant.setText("0");
         }
 
-        if (ea_act.getText().toString().length() == 0) {
-            ea_act.setError(null);
-            ea_act.setText("0");
+        if (this.ea_act.getText().toString().length() == 0) {
+            this.ea_act.setError(null);
+            this.ea_act.setText("0");
         }
 
-        if (eb_ant.getText().toString().length() == 0) {
-            eb_ant.setError(null);
-            eb_ant.setText("0");
+        if (this.eb_ant.getText().toString().length() == 0) {
+            this.eb_ant.setError(null);
+            this.eb_ant.setText("0");
         }
 
-        if (eb_ant.getText().toString().length() == 0) {
-            eb_ant.setError(null);
-            eb_ant.setText("0");
+        if (this.eb_ant.getText().toString().length() == 0) {
+            this.eb_ant.setError(null);
+            this.eb_ant.setText("0");
         }
 
-        if (sa_ant.getText().toString().length() == 0) {
-            sa_ant.setError(null);
-            sa_ant.setText("0");
+        if (this.sa_ant.getText().toString().length() == 0) {
+            this.sa_ant.setError(null);
+            this.sa_ant.setText("0");
         }
 
-        if (sa_act.getText().toString().length() == 0) {
-            sa_act.setError(null);
-            sa_act.setText("0");
+        if (this.sa_act.getText().toString().length() == 0) {
+            this.sa_act.setError(null);
+            this.sa_act.setText("0");
         }
 
-        if (sb_ant.getText().toString().length() == 0) {
-            sb_ant.setError(null);
-            sb_ant.setText("0");
+        if (this.sb_ant.getText().toString().length() == 0) {
+            this.sb_ant.setError(null);
+            this.sb_ant.setText("0");
         }
 
-        if (sb_act.getText().toString().length() == 0) {
-            sb_act.setError(null);
-            sb_act.setText("0");
+        if (this.sb_act.getText().toString().length() == 0) {
+            this.sb_act.setError(null);
+            this.sb_act.setText("0");
         }
     }
 
@@ -1406,11 +1505,11 @@ public class capt_data extends AppCompatActivity {
             this.tot_cred.setText("0.00");
             op_cal_cred = 0.00;
 
-            this.ea_act.setText(ea_ant.getText().toString());
-            this.sa_act.setText(sa_ant.getText().toString());
+            this.ea_act.setText(this.ea_ant.getText().toString());
+            this.sa_act.setText(this.sa_ant.getText().toString());
 
-            this.eb_act.setText(eb_ant.getText().toString());
-            this.sb_act.setText(eb_ant.getText().toString());
+            this.eb_act.setText(this.eb_ant.getText().toString());
+            this.sb_act.setText(this.eb_ant.getText().toString());
             // ----------------------------------------------------------------------------------
             this.Calc_Sub_Tot();
 
