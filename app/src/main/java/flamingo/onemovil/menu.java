@@ -1,5 +1,6 @@
 package flamingo.onemovil;
 
+import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
@@ -24,6 +25,7 @@ import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -38,7 +40,7 @@ import java.io.IOException;
 
 public class menu extends AppCompatActivity {
 
-    private Button btn_upd, btn_emp, btn_cte, btn_maq, btn_capt, btn_send, btn_exit, btn_ccol, btn_fcol, btn_list,btn_list2;
+    private Button btn_upd, btn_emp, btn_cte, btn_maq, btn_capt, btn_send, btn_exit, btn_ccol, btn_fcol, btn_list, btn_list2;
     private ImageView mImageView;
     private TextView DeviceId, lempresa;
 
@@ -307,7 +309,7 @@ public class menu extends AppCompatActivity {
                         if ((Global.cMaq_Id == "") || (Global.cMaq_Id == "0")) {
                             Intent Int_MaqScreen = new Intent(getApplicationContext(), select_maq.class);
                             startActivityForResult(Int_MaqScreen, Global.REQUEST_SEL_MAQ);
-                        } else{
+                        } else {
                             Global.iObj_Select = 0;
                             Intent Capf_MaqScreen = new Intent(getApplicationContext(), capt_fin.class);
                             startActivityForResult(Capf_MaqScreen, Global.REQUEST_END_CAP);

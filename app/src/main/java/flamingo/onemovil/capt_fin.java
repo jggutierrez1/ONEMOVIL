@@ -634,8 +634,8 @@ public class capt_fin extends AppCompatActivity {
 
                 cSql_Ln = "";
                 cSql_Ln += "INSERT INTO operaciong ( ";
-                cSql_Ln += "cte_id,";
-                cSql_Ln += "cte_nombre_loc  , cte_nombre_com,";
+                cSql_Ln += "cte_id          ,op_fecha,";
+                cSql_Ln += "cte_nombre_loc  ,cte_nombre_com,";
                 cSql_Ln += "op_cal_colect   ,op_tot_colect  ,";
                 cSql_Ln += "op_tot_impmunic ,op_tot_impjcj  ,";
                 cSql_Ln += "op_tot_timbres  ,op_tot_spac    ,";
@@ -648,8 +648,10 @@ public class capt_fin extends AppCompatActivity {
                 cSql_Ln += "op_tot_netoloc  ,op_tot_netoemp,";
                 cSql_Ln += "op_emp_id       ,id_device,";
                 cSql_Ln += "id_group        ,op_usermodify,";
-                cSql_Ln += "op_fecha_alta   ,op_observ) VALUES (";
+                cSql_Ln += "op_fecha_alta   ,op_fecha_modif, op_observ,";
+                cSql_Ln += "op_usuario_alta ,op_usuario_modif) VALUES (";
                 cSql_Ln += "'" + Global.cCte_Id + "',";
+                cSql_Ln += "'" + cDateMysql + "',";
                 cSql_Ln += "'" + Global.cCte_De + "',";
                 cSql_Ln += "'" + Global.cCte_De + "',";
                 cSql_Ln += "'0.00',";
@@ -675,20 +677,19 @@ public class capt_fin extends AppCompatActivity {
                 cSql_Ln += "'" + Integer.toString(iId_Group) + "',";
                 cSql_Ln += "'1',";
                 cSql_Ln += "'" + cDateMysql + "',";
-                cSql_Ln += "'" + ototfin_notas.getText().toString() + "');";
+                cSql_Ln += "'" + cDateMysql + "',";
+                cSql_Ln += "'" + ototfin_notas.getText().toString() + "',";
+                cSql_Ln += "'TABLET',";
+                cSql_Ln += "'TABLET')";
                 Global.logLargeString(cSql_Ln);
                 oDb5.execSQL(cSql_Ln);
 
-                Global.ExportDB();
                 Global.iPrn_Data = 2;
                 Intent Int_PrnMaqScreen = new Intent(getApplicationContext(), print_data.class);
                 startActivityForResult(Int_PrnMaqScreen, Global.REQUEST_PRINT);
 
-                /*
-                Global.ExportDB();
-
-                */
                 oDb5.close();
+                Global.ExportDB();
 
                 finish();
             }

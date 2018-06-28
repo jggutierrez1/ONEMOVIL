@@ -18,6 +18,18 @@
             tools:layout_editor_absoluteX="314dp"
             tools:layout_editor_absoluteY="26dp">
 
+            <TextView
+                android:id="@+id/totfin_titulo"
+                style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/background_light"
+                android:fontFamily="sans-serif"
+                android:text="[REGISTRAR FACTURA GLOBAL]"
+                android:textAlignment="center"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -27,21 +39,21 @@
                 <Button
                     android:id="@+id/btn_totfin_hide"
                     android:layout_width="wrap_content"
-                    android:layout_height="65dp"
+                    android:layout_height="80dp"
                     android:layout_weight="1"
                     android:text="QUITAR TECLADO" />
 
                 <Button
                     android:id="@+id/btn_totfin_unlock"
                     android:layout_width="wrap_content"
-                    android:layout_height="65dp"
+                    android:layout_height="80dp"
                     android:layout_weight="1"
                     android:text="DESBLOQUEAR" />
 
                 <Button
                     android:id="@+id/btn_totfin_save"
                     android:layout_width="wrap_content"
-                    android:layout_height="65dp"
+                    android:layout_height="80dp"
                     android:layout_weight="1"
                     android:background="@color/Chartreuse"
                     android:text="PROCESAR" />
@@ -49,7 +61,7 @@
                 <Button
                     android:id="@+id/btn_totfin_canc"
                     android:layout_width="wrap_content"
-                    android:layout_height="65dp"
+                    android:layout_height="80dp"
                     android:layout_weight="1"
                     android:background="@color/Coral"
                     android:text="CANCELAR" />
@@ -57,16 +69,17 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="15dp" />
+                android:layout_height="12dp" />
 
             <TextView
                 android:id="@+id/apf_device"
                 style="@style/Widget.AppCompat.TextView.SpinnerItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#e6e6e6"
                 android:enabled="true"
                 android:text="ID. DISPOSITIVO:"
-                android:textSize="20sp"
+                android:textSize="23dp"
                 android:textStyle="bold" />
 
             <TextView
@@ -74,26 +87,27 @@
                 style="@style/Widget.AppCompat.TextView.SpinnerItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#e6e6e6"
                 android:text="CLIENTE:"
                 android:textSize="23sp"
                 android:textStyle="bold" />
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="15dp" />
+                android:layout_height="12dp" />
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autoText="false"
-                android:background="?attr/colorPrimary"
+                android:background="#e6e6e6"
                 android:textAlignment="center"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="45dp"
                 android:layout_weight="0"
                 android:orientation="horizontal">
 
@@ -105,7 +119,8 @@
                     android:layout_weight="1"
                     android:editable="true"
                     android:text="COLECTADO:"
-                    android:textSize="18sp" />
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/op_tot_cole"
@@ -113,11 +128,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:enabled="false"
                     android:inputType="numberSigned|numberDecimal"
                     android:selectAllOnFocus="true"
                     android:text="0.00"
-                    android:textSize="18sp"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
             </LinearLayout>
@@ -135,7 +150,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="TIMBRES:"
-                    android:textSize="18sp" />
+                    android:textSize="23dp" />
 
                 <EditText
                     android:id="@+id/op_tot_timb"
@@ -147,7 +162,7 @@
                     android:inputType="numberSigned|numberDecimal"
                     android:selectAllOnFocus="true"
                     android:text="0.00"
-                    android:textSize="18sp"
+                    android:textSize="23dp"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
             </LinearLayout>
@@ -165,7 +180,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="IMPUESTO MUNICIPAL:"
-                    android:textSize="18sp" />
+                    android:textSize="23dp" />
 
                 <EditText
                     android:id="@+id/op_tot_impm"
@@ -177,7 +192,7 @@
                     android:inputType="numberSigned|numberDecimal"
                     android:selectAllOnFocus="true"
                     android:text="0.00"
-                    android:textSize="18sp"
+                    android:textSize="23dp"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
             </LinearLayout>
@@ -197,7 +212,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="IMP. J.C.J.:"
-                    android:textSize="18sp" />
+                    android:textSize="23dp" />
 
                 <EditText
                     android:id="@+id/op_tot_jcj"
@@ -209,7 +224,7 @@
                     android:inputType="numberSigned|numberDecimal"
                     android:selectAllOnFocus="true"
                     android:text="0.00"
-                    android:textSize="18sp"
+                    android:textSize="23dp"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
             </LinearLayout>
@@ -227,7 +242,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="SERVICIO TECNICO:"
-                    android:textSize="18sp" />
+                    android:textSize="23dp" />
 
                 <EditText
                     android:id="@+id/op_tot_tecn"
@@ -239,7 +254,7 @@
                     android:inputType="numberSigned|numberDecimal"
                     android:selectAllOnFocus="true"
                     android:text="0.00"
-                    android:textSize="18sp"
+                    android:textSize="23dp"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
             </LinearLayout>
@@ -247,7 +262,7 @@
             <LinearLayout
                 android:id="@+id/olayout_tot_cred"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="45dp"
                 android:layout_weight="0"
                 android:orientation="horizontal">
 
@@ -259,7 +274,8 @@
                     android:layout_weight="1"
                     android:editable="true"
                     android:text="PREMIOS:"
-                    android:textSize="18sp" />
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/op_tot_cred"
@@ -267,11 +283,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:ems="10"
-                    android:enabled="false"
                     android:inputType="numberSigned|numberDecimal"
                     android:selectAllOnFocus="true"
                     android:text="0.00"
-                    android:textSize="18sp"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
 
@@ -280,7 +296,7 @@
             <LinearLayout
                 android:id="@+id/olayou_tot_dev"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="45dp"
                 android:layout_weight="0"
                 android:orientation="horizontal">
 
@@ -290,7 +306,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="DEVOLUCIONES/FACTURAS:"
-                    android:textSize="18sp" />
+                    android:textSize="23dp" />
 
                 <EditText
                     android:id="@+id/op_tot_devo"
@@ -302,7 +318,7 @@
                     android:inputType="numberSigned|numberDecimal"
                     android:selectAllOnFocus="true"
                     android:text="0.00"
-                    android:textSize="18sp"
+                    android:textSize="23dp"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
             </LinearLayout>
@@ -310,7 +326,7 @@
             <LinearLayout
                 android:id="@+id/olayout_tot_otro"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="45dp"
                 android:layout_weight="0"
                 android:orientation="horizontal">
 
@@ -320,7 +336,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="OTROS/DEPOSITOS:"
-                    android:textSize="18sp" />
+                    android:textSize="23dp" />
 
                 <EditText
                     android:id="@+id/op_tot_otro"
@@ -331,7 +347,7 @@
                     android:inputType="numberSigned|numberDecimal"
                     android:selectAllOnFocus="true"
                     android:text="0.00"
-                    android:textSize="18sp"
+                    android:textSize="23dp"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
             </LinearLayout>
@@ -349,19 +365,22 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="SUB-TOTAL:"
-                    android:textSize="18sp" />
+                    android:textColor="?attr/colorPrimaryDark"
+                    android:textSize="23dp" />
 
                 <EditText
                     android:id="@+id/op_tot_subt"
                     android:layout_width="105dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:editable="false"
                     android:ems="10"
-                    android:enabled="false"
+                    android:enabled="true"
                     android:inputType="numberSigned|numberDecimal"
                     android:selectAllOnFocus="false"
                     android:text="0.00"
-                    android:textSize="18sp"
+                    android:textColor="?attr/colorPrimaryDark"
+                    android:textSize="23dp"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
             </LinearLayout>
@@ -379,19 +398,24 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="TOTAL:"
-                    android:textSize="18sp" />
+                    android:textColor="@android:color/holo_green_dark"
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/op_tot_tota"
                     android:layout_width="105dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:editable="false"
                     android:ems="10"
-                    android:enabled="false"
+                    android:enabled="true"
                     android:inputType="numberSigned|numberDecimal"
                     android:selectAllOnFocus="false"
                     android:text="0.00"
-                    android:textSize="18sp"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
             </LinearLayout>
@@ -410,7 +434,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="IMPUESTOS:"
-                    android:textSize="18sp" />
+                    android:textSize="23dp" />
 
                 <EditText
                     android:id="@+id/op_tot_impu"
@@ -422,7 +446,7 @@
                     android:inputType="numberSigned|numberDecimal"
                     android:selectAllOnFocus="false"
                     android:text="0.00"
-                    android:textSize="18sp"
+                    android:textSize="23dp"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
             </LinearLayout>
@@ -431,14 +455,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autoText="false"
-                android:background="?attr/colorPrimary"
+                android:background="#e6e6e6"
                 android:textAlignment="center"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="45dp"
                 android:layout_weight="0"
                 android:orientation="horizontal">
 
@@ -448,18 +472,21 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="BRUTO CLIENTE:"
-                    android:textSize="18sp" />
+                    android:textColor="?attr/colorPrimaryDark"
+                    android:textSize="23dp" />
 
                 <EditText
                     android:id="@+id/op_tot_bloc"
                     android:layout_width="105dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:editable="false"
                     android:ems="10"
-                    android:enabled="false"
+                    android:enabled="true"
                     android:inputType="numberSigned|numberDecimal"
                     android:text="0.00"
-                    android:textSize="18sp"
+                    android:textColor="?attr/colorPrimaryDark"
+                    android:textSize="23dp"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
 
@@ -467,7 +494,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="45dp"
                 android:layout_weight="0"
                 android:orientation="horizontal">
 
@@ -477,18 +504,21 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="BRUTO EMP:"
-                    android:textSize="18sp" />
+                    android:textColor="?attr/colorPrimaryDark"
+                    android:textSize="23dp" />
 
                 <EditText
                     android:id="@+id/op_tot_bemp"
                     android:layout_width="105dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:editable="false"
                     android:ems="10"
-                    android:enabled="false"
+                    android:enabled="true"
                     android:inputType="numberSigned|numberDecimal"
                     android:text="0.00"
-                    android:textSize="18sp"
+                    android:textColor="?attr/colorPrimaryDark"
+                    android:textSize="23dp"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
 
@@ -498,7 +528,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:autoText="false"
-                android:background="?attr/colorPrimary"
+                android:background="#e6e6e6"
                 android:textAlignment="center"
                 android:textSize="14sp"
                 android:textStyle="bold" />
@@ -506,7 +536,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="45dp"
                 android:layout_weight="0"
                 android:orientation="horizontal">
 
@@ -516,18 +546,23 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="NETO CLIENTE:"
-                    android:textSize="18sp" />
+                    android:textColor="@android:color/holo_green_dark"
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/op_tot_nloc"
                     android:layout_width="105dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:editable="false"
                     android:ems="10"
-                    android:enabled="false"
+                    android:enabled="true"
                     android:inputType="numberSigned|numberDecimal"
                     android:text="0.00"
-                    android:textSize="18sp"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
 
@@ -535,7 +570,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="45dp"
                 android:layout_weight="0"
                 android:orientation="horizontal">
 
@@ -544,19 +579,24 @@
                     android:layout_width="133dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="TOTAL A DEPOSITORA"
-                    android:textSize="18sp" />
+                    android:text="TOTAL A DEPOSITAR"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/op_tot_nemp"
                     android:layout_width="105dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:editable="false"
                     android:ems="10"
-                    android:enabled="false"
+                    android:enabled="true"
                     android:inputType="numberSigned|numberDecimal"
                     android:text="0.00"
-                    android:textSize="18sp"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
 
@@ -564,7 +604,7 @@
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="15dp"
+                android:layout_height="12dp"
                 android:layout_weight="0" />
 
             <LinearLayout
@@ -579,14 +619,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="OBSERVACIONES:"
-                    android:textSize="18sp"
+                    android:textSize="23dp"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/totfin_notas"
                     android:layout_width="wrap_content"
-                    android:layout_height="80dp"
+                    android:layout_height="127dp"
                     android:layout_weight="1"
+                    android:background="#fff586"
                     android:ems="10"
                     android:enabled="true"
                     android:inputType="textMultiLine"

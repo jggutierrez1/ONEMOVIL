@@ -22,7 +22,7 @@
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="SINCRONIZADOR DE DATOS BASE."
+            android:text="ACTUALIZAR DATOS Y MAQUINAS (BAJAR DE LA NUBE)"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:textSize="35sp"
@@ -90,6 +90,9 @@
             android:id="@+id/omemo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:enabled="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:ems="10"
             android:inputType="textMultiLine" />
 

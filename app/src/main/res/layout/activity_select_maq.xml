@@ -14,11 +14,24 @@
         tools:layout_editor_absoluteY="8dp">
 
         <TextView
+            android:id="@+id/titulo_lst_maq"
+            style="@style/Widget.AppCompat.TextView.SpinnerItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.03"
+            android:background="@android:color/background_light"
+            android:fontFamily="sans-serif"
+            android:text="[SELECCIONAR MAQUINAS]"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
             android:id="@+id/lab_cte02"
             style="@style/Widget.AppCompat.TextView.SpinnerItem"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
+            android:layout_weight="0.06"
             android:background="@color/Gold"
             android:text="CLIENTE:"
             android:textAlignment="center"
@@ -27,7 +40,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="10dp"
+            android:layout_height="7dp"
             android:layout_weight="0" />
 
         <ListView
@@ -46,7 +59,7 @@
             <Button
                 android:id="@+id/obtn_regr_maq"
                 android:layout_width="wrap_content"
-                android:layout_height="65dp"
+                android:layout_height="80dp"
                 android:layout_weight="1"
                 android:background="@color/Coral"
                 android:text="REGRESAR" />
@@ -54,7 +67,7 @@
             <Button
                 android:id="@+id/obtn_foto_maq"
                 android:layout_width="wrap_content"
-                android:layout_height="65dp"
+                android:layout_height="80dp"
                 android:layout_weight="1"
                 android:enabled="false"
                 android:text="FOTO METROS"
@@ -63,7 +76,7 @@
             <Button
                 android:id="@+id/obtn_sele_maq"
                 android:layout_width="wrap_content"
-                android:layout_height="65dp"
+                android:layout_height="80dp"
                 android:layout_weight="1"
                 android:background="@color/Chartreuse"
                 android:enabled="false"

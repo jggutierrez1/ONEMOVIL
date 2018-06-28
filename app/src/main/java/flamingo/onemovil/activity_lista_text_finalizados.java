@@ -154,7 +154,7 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
         this.otext_lst2_t.setText("");
     }
 
-    private boolean Listar2_Montos() {
+     private boolean Listar2_Montos() {
         cSqlLn = "";
         cSqlLn += "SELECT ";
         cSqlLn += " SUM(op.op_tot_colect)   AS tot_cole         , ";

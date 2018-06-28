@@ -76,6 +76,7 @@ public class login extends AppCompatActivity {
         }
         //Global.Create_Sql_Tables_Emp();
         Global.Get_Config();
+        //Global.ExportDB();
 
         obtn_entar.setOnClickListener(new View.OnClickListener() {
             @Override

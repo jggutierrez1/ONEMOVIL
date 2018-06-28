@@ -13,6 +13,19 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="8dp">
 
+        <TextView
+            android:id="@+id/titulo_lst_emp"
+            style="@style/Widget.AppCompat.TextView.SpinnerItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.03"
+            android:background="@android:color/background_light"
+            android:fontFamily="sans-serif"
+            android:text="[SELECCIONAR EMPRESA]"
+            android:textAlignment="center"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
         <ListView
             android:id="@+id/olst_emp"
             android:layout_width="match_parent"
@@ -29,7 +42,7 @@
             <Button
                 android:id="@+id/obtn_regr_emp"
                 android:layout_width="wrap_content"
-                android:layout_height="65dp"
+                android:layout_height="80dp"
                 android:layout_weight="1"
                 android:background="@color/Coral"
                 android:text="REGRESAR"
@@ -38,7 +51,7 @@
             <Button
                 android:id="@+id/obtn_sele_emp"
                 android:layout_width="wrap_content"
-                android:layout_height="65dp"
+                android:layout_height="80dp"
                 android:layout_weight="1"
                 android:background="@color/Chartreuse"
                 android:enabled="false"

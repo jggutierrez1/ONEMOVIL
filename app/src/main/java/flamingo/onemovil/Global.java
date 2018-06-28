@@ -105,8 +105,10 @@ public class Global {
     public static Intent oPictureActionIntent = null;
     public static SQLiteDatabase oGen_Db;
     public static Cursor oGen_Cursor;
-    public static String SERVER_URL = "http://190.140.40.242";
-    //public static String SERVER_URL = "http://192.168.2.161";
+    //public static String SERVER_URL = "http://190.140.40.242";
+    public static String SERVER_URL0 = "http://192.168.3.80";
+    public static String SERVER_URL = "http://190.140.2.84";
+    //public static String SERVER_URL = "http://190.140.2.84";
     public static String SERVER_URL_FLES = SERVER_URL + "/flam/UploadToServer.php";
     public static String SERVER_DIR_IMGS = SERVER_URL + "/flam/images/";
     public static String stringResult = "";
@@ -152,7 +154,7 @@ public class Global {
         cDataStorageDirectory = Environment.getDataDirectory() + cApp_Data_Storage;
 
         cFileDbPathOrig = cApp_Data_Storage + "one2009.db";
-        cFileDbPathDest = cApp_Folder_Storage + "/one2009.db";
+        cFileDbPathDest = cApp_Folder_Storage + "/" + cid_device + "-one2009.db";
     }
 
     public static void Get_Config() {
@@ -279,7 +281,7 @@ public class Global {
         FileChannel source = null;
         FileChannel destination = null;
 
-        File currentDB = new File(data, cFileDbPathOrig);
+        File currentDB = new File("", cFileDbPathOrig);
         File backupDB = new File(sd, cFileDbPathDest);
         if (backupDB.exists()) {
             backupDB.delete();
@@ -1475,35 +1477,38 @@ public class Global {
 
         cSql_Ln = "";
         cSql_Ln += "CREATE TABLE IF NOT EXISTS operaciong (";
-        cSql_Ln += "id_autoin   INTEGER NOT NULL,";
-        cSql_Ln += "cte_id INTEGER unsigned DEFAULT 0,";
-        cSql_Ln += "cte_nombre_loc CHAR(60) DEFAULT '',";
-        cSql_Ln += "cte_nombre_com CHAR(60) DEFAULT '',";
-        cSql_Ln += "op_cal_colect NUMERIC(12, 2) DEFAULT 0.00,";
-        cSql_Ln += "op_tot_colect NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "id_autoin       INTEGER NOT NULL,";
+        cSql_Ln += "cte_id          INTEGER unsigned DEFAULT 0,";
+        cSql_Ln += "cte_nombre_loc  CHAR(60) DEFAULT '',";
+        cSql_Ln += "cte_nombre_com  CHAR(60) DEFAULT '',";
+        cSql_Ln += "op_fecha        DATETIME NULL,";
+        cSql_Ln += "op_cal_colect   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_colect   NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "op_tot_impmunic NUMERIC(12, 2) DEFAULT 0.00,";
-        cSql_Ln += "op_tot_impjcj NUMERIC(12, 2) DEFAULT 0.00,";
-        cSql_Ln += "op_tot_timbres NUMERIC(12, 2) DEFAULT 0.00,";
-        cSql_Ln += "op_tot_spac NUMERIC(12, 2) DEFAULT 0.00,";
-        cSql_Ln += "op_tot_tec NUMERIC(12, 2) DEFAULT 0.00,";
-        cSql_Ln += "op_tot_dev NUMERIC(12, 2) DEFAULT 0.00,";
-        cSql_Ln += "op_tot_otros NUMERIC(12, 2) DEFAULT 0.00,";
-        cSql_Ln += "op_tot_cred NUMERIC(12, 2) DEFAULT 0.00,";
-        cSql_Ln += "op_cal_cred NUMERIC(12, 2) DEFAULT 0.00,";
-        cSql_Ln += "op_tot_sub NUMERIC(12, 2) DEFAULT 0.00,";
-        cSql_Ln += "op_tot_itbm NUMERIC(12, 2) DEFAULT 0.00,";
-        cSql_Ln += "op_tot_tot NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_impjcj   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_timbres  NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_spac     NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_tec      NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_dev      NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_otros    NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_cred     NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_cal_cred     NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_sub      NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_itbm     NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_tot      NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "op_tot_brutoloc NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "op_tot_brutoemp NUMERIC(12, 2) DEFAULT 0.00,";
-        cSql_Ln += "op_tot_netoloc NUMERIC(12, 2) DEFAULT 0.00,";
-        cSql_Ln += "op_tot_netoemp NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_netoloc  NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_netoemp  NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "op_observ       TEXT,";
-        cSql_Ln += "op_emp_id INTEGER(1) DEFAULT 0,";
-        cSql_Ln += "id_device VARCHAR(30) DEFAULT 'MANUAL',";
-        cSql_Ln += "id_group VARCHAR(30) NULL DEFAULT 0,";
-        cSql_Ln += "op_usermodify INTEGER(1) DEFAULT 0,";
-        cSql_Ln += "op_fecha_alta  DATETIME NULL,";
+        cSql_Ln += "op_emp_id       INTEGER(1)  DEFAULT 0,";
+        cSql_Ln += "id_device       VARCHAR(30) DEFAULT 'MANUAL',";
+        cSql_Ln += "id_group        VARCHAR(30) NULL DEFAULT 0,";
+        cSql_Ln += "op_usermodify   INTEGER(1)  DEFAULT 0,";
+        cSql_Ln += "op_fecha_alta   DATETIME NULL,";
         cSql_Ln += "op_fecha_modif  DATETIME NULL,";
+        cSql_Ln += "op_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "op_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln += "CONSTRAINT  operaciong_PRIMARY PRIMARY KEY(id_autoin))";
         Global.oGen_Db.execSQL(cSql_Ln);
 

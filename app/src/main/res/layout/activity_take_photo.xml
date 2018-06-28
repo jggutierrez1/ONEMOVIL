@@ -18,36 +18,52 @@
             android:layout_weight="1"
             android:orientation="vertical">
 
-            <!-- Capture picture button -->
-
             <Button
                 android:id="@+id/btnCapturePicture"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
+                android:layout_weight="1"
                 android:layout_marginBottom="10dp"
                 android:background="@color/Chartreuse"
                 android:text="TOMAR FOTO" />
 
-            <!-- Record video button -->
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
 
             <Button
                 android:id="@+id/btn_deletephoto"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
+                android:layout_weight="1"
                 android:text="BORRAR FOTO" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
 
             <Button
                 android:id="@+id/btn_openphotos"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
+                android:layout_weight="1"
                 android:text="VER CARPETA" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
 
             <Button
                 android:id="@+id/btnSalir"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="80dp"
+                android:layout_weight="1"
                 android:background="@color/Coral"
                 android:text="SALIR" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
+
         </LinearLayout>
 
         <TextView

@@ -68,7 +68,8 @@
         <Button
             android:id="@+id/btnConnect"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
             android:background="@color/Chartreuse"
             android:padding="5dp"
             android:text="Conectar impresora" />
@@ -76,21 +77,24 @@
         <Button
             android:id="@+id/btnDisconnect"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
             android:padding="5dp"
             android:text="Desconectar Impresora" />
 
         <Button
             android:id="@+id/btnPrint"
             android:layout_width="match_parent"
-            android:layout_height="65dp"
+            android:layout_height="80dp"
+            android:layout_weight="1"
             android:padding="5dp"
             android:text="Imprimir Listado" />
 
         <Button
             android:id="@+id/btnRegr"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="80dp"
+            android:layout_weight="1"
             android:background="@color/Coral"
             android:text="REGRESAR" />
 

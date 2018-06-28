@@ -55,89 +55,170 @@
                 android:id="@+id/oEntry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:enabled="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
                 android:ems="10"
                 android:inputType="textPersonName"
                 android:text="Name" />
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
+
             <Button
                 android:id="@+id/obtn_upd"
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:text="CARGAR DATOS BASICOS" />
+                android:layout_height="80dp"
+                android:background="@color/Chartreuse"
+                android:fontFamily="sans-serif"
+                android:text="ACTUALIZAR DATOS Y MAQUINAS (BAJAR DE LA NUBE CON WIFI)"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
 
             <Button
                 android:id="@+id/obtn_emp"
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:text="INICIAR COLECTA [EMPRESA]" />
+                android:layout_height="80dp"
+                android:fontFamily="sans-serif"
+                android:text="SELECCIONAR EMPRESA"
+                android:textSize="18sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
 
             <Button
                 android:id="@+id/obtn_cte"
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
+                android:layout_height="80dp"
                 android:enabled="false"
-                android:text="SELECCIONAR CLIENTE" />
+                android:fontFamily="sans-serif"
+                android:singleLine="false"
+                android:text="SELECCIONAR CLIENTE"
+                android:textSize="18sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
 
             <Button
                 android:id="@+id/obtn_maq"
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
+                android:layout_height="80dp"
                 android:enabled="false"
-                android:text="SELECCIONAR MAQUINA" />
+                android:fontFamily="sans-serif"
+                android:text="SELECCIONAR MAQUINA"
+                android:textSize="18sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
 
             <Button
                 android:id="@+id/obtn_capt"
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
+                android:layout_height="80dp"
+                android:background="@color/AliceBlue"
                 android:enabled="false"
-                android:text="REGISTRAR METROS MAQUINAS" />
+                android:fontFamily="sans-serif"
+                android:text="REGISTRAR METROS  DE MAQUINA."
+                android:textColor="@color/DarkBlue"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/obtn_canc_colec"
+            <Space
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:enabled="true"
-                android:text="ELIMINAR TODAS LAS COLECTA RELIZADAS"
-                android:textColor="@color/Brown" />
+                android:layout_height="7dp" />
 
             <Button
                 android:id="@+id/obtn_list_colec"
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:text="LISTAR COLECTADO" />
+                android:layout_height="80dp"
+                android:background="@color/AliceBlue"
+                android:fontFamily="sans-serif"
+                android:text="LISTAR METROS (MAQUINAS)"
+                android:textColor="@color/DarkBlue"
+                android:textSize="18sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
 
             <Button
-                android:id="@+id/obtn_list2_colec"
+                android:id="@+id/obtn_canc_colec"
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:text="LISTAR FINALIZADOS" />
+                android:layout_height="80dp"
+                android:background="@color/Red"
+                android:enabled="true"
+                android:fontFamily="sans-serif"
+                android:text="ELIMINAR TODAS LAS COLECTA RELIZADAS"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
 
             <Button
                 android:id="@+id/obtn_fin_colec"
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
+                android:layout_height="80dp"
+                android:background="@color/DarkGreen"
                 android:enabled="false"
-                android:text="FINALIZAR COLECTA" />
+                android:fontFamily="sans-serif"
+                android:text="REGISTRAR FACTURA GLOBAL."
+                android:textColor="@android:color/white"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
+
+            <Button
+                android:id="@+id/obtn_list2_colec"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@color/DarkGreen"
+                android:fontFamily="sans-serif"
+                android:text="LISTAR DATOS (FACTURA GLOBAL)"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
 
             <Button
                 android:id="@+id/obtn_send"
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
-                android:editable="false"
+                android:layout_height="80dp"
+                android:background="@color/Chartreuse"
                 android:enabled="false"
-                android:text="ENVIAR COLECTAS" />
+                android:fontFamily="sans-serif"
+                android:text="ENVIAR COLECTAS (SUBIR A LA NUBE CON WIFI)"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <Space
                 android:layout_width="match_parent"
-                android:layout_height="15dp" />
+                android:layout_height="7dp" />
 
             <Button
                 android:id="@+id/obtn_exit"
                 android:layout_width="match_parent"
-                android:layout_height="65dp"
+                android:layout_height="80dp"
                 android:background="@color/Coral"
+                android:fontFamily="sans-serif"
                 android:text="SALIR"
-                android:textColor="@android:color/black" />
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
         </LinearLayout>
     </ScrollView>

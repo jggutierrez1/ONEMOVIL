@@ -5,687 +5,722 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="flamingo.onemovil.capt_data">
+
     <ScrollView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:fillViewport="true"> <!--IMPORTANT otherwise backgrnd img. will not fill the whole screen -->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="16dp">
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/obtn_hide_capt"
-                android:layout_width="wrap_content"
-                android:layout_height="65dp"
-                android:layout_weight="1"
-                android:text="QUITAR TECLADO" />
-
-            <Button
-                android:id="@+id/obtn_unlock_capt"
-                android:layout_width="wrap_content"
-                android:layout_height="65dp"
-                android:layout_weight="1"
-                android:text="DESBLOQUEAR" />
-
-            <Button
-                android:id="@+id/obtn_foto_capt"
-                android:layout_width="wrap_content"
-                android:layout_height="65dp"
-                android:layout_weight="1"
-                android:text="FOTO METROS" />
-
-            <Button
-                android:id="@+id/obtn_metd_capt"
-                android:layout_width="wrap_content"
-                android:layout_height="65dp"
-                android:layout_weight="1"
-                android:text="METROS EN $" />
-
-            <Button
-                android:id="@+id/obtn_save_capt"
-                android:layout_width="wrap_content"
-                android:layout_height="65dp"
-                android:layout_weight="1"
-                android:background="@color/Chartreuse"
-                android:text="GUARDAR" />
-
-            <Button
-                android:id="@+id/obtn_cancel_capt"
-                android:layout_width="wrap_content"
-                android:layout_height="65dp"
-                android:layout_weight="1"
-                android:background="@color/Coral"
-                android:text="CANCELAR" />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/ocapt_device"
-            style="@style/Widget.AppCompat.TextView.SpinnerItem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:enabled="true"
-            android:text="ID. DISPOSITIVO:"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/olab_cte"
-            style="@style/Widget.AppCompat.TextView.SpinnerItem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/Gold"
-            android:text="CLIENTE:"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/olab_cha"
-            style="@style/Widget.AppCompat.TextView.SpinnerItem"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/Gold"
-            android:text="CHAPA:"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <!--                             ETIQUETA ENTRADA                                    -->
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <CheckBox
-            android:id="@+id/obaja_prod"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/Tomato"
-            android:text="BAJA PRODUCCION"
-            android:textSize="18sp"
-            android:textStyle="italic" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="16dp">
 
             <TextView
-                android:id="@+id/textView2"
-                android:layout_width="262dp"
+                android:id="@+id/ocapt_titulo"
+                style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="SEMANAS A COBRAR J.C.J.?:"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/osemanas"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:inputType="textPersonName|number"
-                android:selectAllOnFocus="true"
-                android:text="1"
+                android:background="@android:color/background_light"
+                android:fontFamily="sans-serif"
+                android:text="[REGISTRAR METROS DE MAQUINA]"
+                android:textAlignment="center"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autoText="false"
-            android:background="?attr/colorPrimaryDark"
-            android:text="METROS DE ENTRADA"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textSize="14sp"
-            android:textStyle="bold" />
 
-        <!--  ACTUAL [A] -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="0"
-            android:orientation="horizontal">
+                <Button
+                    android:id="@+id/obtn_hide_capt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:text="QUITAR TECLADO" />
+
+                <Button
+                    android:id="@+id/obtn_unlock_capt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:text="DESBLOQUEAR" />
+
+                <Button
+                    android:id="@+id/obtn_foto_capt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:text="FOTO METROS" />
+
+                <Button
+                    android:id="@+id/obtn_metd_capt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:text="METROS EN $" />
+
+                <Button
+                    android:id="@+id/obtn_save_capt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:background="@color/Chartreuse"
+                    android:text="GUARDAR" />
+
+                <Button
+                    android:id="@+id/obtn_cancel_capt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:background="@color/Coral"
+                    android:text="CANCELAR" />
+
+            </LinearLayout>
+
 
             <TextView
+                android:id="@+id/ocapt_device"
                 style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                android:layout_width="133dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:background="#e6e6e6"
                 android:enabled="true"
-                android:text="ACTUAL [A]:"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/oea_act"
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="true"
-                android:inputType="textPersonName|number"
-                android:selectAllOnFocus="true"
-                android:text="0"
-                android:textSize="18sp"
-                tools:layout_editor_absoluteX="182dp"
-                tools:layout_editor_absoluteY="147dp" />
-        </LinearLayout>
-
-        <!--  ANTERIOR [A] -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="0"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/olea_ant"
-                style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                android:layout_width="133dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="true"
-                android:text="ANTERIOR [A]:"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/oea_ant"
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="true"
-                android:inputType="textPersonName|number"
-                android:selectAllOnFocus="true"
-                android:text="0"
-                android:textSize="18sp"
-                tools:layout_editor_absoluteX="182dp"
-                tools:layout_editor_absoluteY="147dp" />
-
-        </LinearLayout>
-
-        <!--  VALOR [A] -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="0"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                android:layout_width="133dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="RESULTADO [A]:"
-                android:textSize="18sp"
+                android:text="ID. DISPOSITIVO:"
+                android:textSize="23sp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/oea_dif"
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="true"
-                android:inputType="textPersonName|number"
-                android:text="0"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tools:layout_editor_absoluteX="182dp"
-                tools:layout_editor_absoluteY="147dp" />
-        </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
-
-        <!--  ACTUAL [B] -->
-        <LinearLayout
-            android:id="@+id/olayoutb_eact"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="0"
-            android:orientation="horizontal">
-
             <TextView
-                android:id="@+id/oleb_act"
+                android:id="@+id/olab_cte"
                 style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                android:layout_width="133dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="true"
-                android:text="ACTUAL [B]:"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/oeb_act"
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="true"
-                android:inputType="textPersonName|number"
-                android:selectAllOnFocus="true"
-                android:text="0"
-                android:textSize="18sp"
-                tools:layout_editor_absoluteX="182dp"
-                tools:layout_editor_absoluteY="147dp" />
-        </LinearLayout>
-
-        <!--  ANTERIOR [B] -->
-        <LinearLayout
-            android:id="@+id/olayoutb_eant"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="0"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/oleb_ant"
-                style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                android:layout_width="133dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="true"
-                android:text="ANTERIOR [B]:"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/oeb_ant"
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="true"
-                android:inputType="textPersonName|number"
-                android:selectAllOnFocus="true"
-                android:text="0"
-                android:textSize="18sp"
-                tools:layout_editor_absoluteX="182dp"
-                tools:layout_editor_absoluteY="147dp" />
-
-        </LinearLayout>
-
-        <!--  VALOR [B] -->
-        <LinearLayout
-            android:id="@+id/olayoutb_edif"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="0"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/oleb_dif"
-                style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                android:layout_width="133dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="RESULTADO [B]:"
-                android:textSize="18sp"
+                android:background="#e6e6e6"
+                android:text="CLIENTE:"
+                android:textSize="23sp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/oeb_dif"
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="false"
-                android:inputType="textPersonName|number"
-                android:text="0"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tools:layout_editor_absoluteX="182dp"
-                tools:layout_editor_absoluteY="147dp" />
-        </LinearLayout>
-
-        <Space
-            android:id="@+id/oSpaceb_esep"
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
-        <!--                             ETIQUETA SALIDA                                    -->
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autoText="false"
-            android:background="?attr/colorPrimaryDark"
-            android:text="METROS DE SALIDA"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <!--  ACTUAL [A] -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="0"
-            android:orientation="horizontal">
-
             <TextView
+                android:id="@+id/olab_cha"
                 style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                android:layout_width="133dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="true"
-                android:text="ACTUAL [A]:"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/osa_act"
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="true"
-                android:inputType="textPersonName|number"
-                android:selectAllOnFocus="true"
-                android:text="0"
-                android:textSize="18sp"
-                tools:layout_editor_absoluteX="182dp"
-                tools:layout_editor_absoluteY="147dp" />
-        </LinearLayout>
-
-        <!--  ANTERIOR [A] -->
-
-        <!--  VALOR [A] -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="0"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/olsa_ant"
-                style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                android:layout_width="133dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="true"
-                android:text="ANTERIOR [A]:"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/osa_ant"
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="true"
-                android:inputType="textPersonName|number"
-                android:selectAllOnFocus="true"
-                android:text="0"
-                android:textSize="18sp"
-                tools:layout_editor_absoluteX="182dp"
-                tools:layout_editor_absoluteY="147dp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="0"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                android:layout_width="133dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="RESULTADO [A]:"
-                android:textSize="18sp"
+                android:background="#e6e6e6"
+                android:text="CHAPA:"
+                android:textSize="23sp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/osa_dif"
-                android:layout_width="105dp"
+            <!--                             ETIQUETA ENTRADA                                    -->
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <CheckBox
+                android:id="@+id/obaja_prod"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="false"
-                android:inputType="textPersonName|number"
-                android:text="0"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tools:layout_editor_absoluteX="182dp"
-                tools:layout_editor_absoluteY="147dp" />
-        </LinearLayout>
+                android:background="@color/Tomato"
+                android:text="BAJA PRODUCCION"
+                android:textSize="23dp"
+                android:textStyle="italic" />
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        <!--  ACTUAL [B] -->
-        <LinearLayout
-            android:id="@+id/olayoutb_sact"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="0"
-            android:orientation="horizontal">
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="262dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="SEMANAS A COBRAR J.C.J.?:"
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/osemanas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="textPersonName|number"
+                    android:selectAllOnFocus="true"
+                    android:text="1"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
 
             <TextView
-                android:id="@+id/olsb_act"
-                style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                android:layout_width="133dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="true"
-                android:text="ACTUAL [B]:"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/osb_act"
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="true"
-                android:inputType="textPersonName|number"
-                android:selectAllOnFocus="true"
-                android:text="0"
-                android:textSize="18sp"
-                tools:layout_editor_absoluteX="182dp"
-                tools:layout_editor_absoluteY="147dp" />
-        </LinearLayout>
-
-        <!--  ANTERIOR [B] -->
-        <LinearLayout
-            android:id="@+id/olayoutb_sant"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="0"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/olsb_ant"
-                style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                android:layout_width="133dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="true"
-                android:text="ANTERIOR [B]:"
-                android:textSize="18sp" />
-
-            <EditText
-                android:id="@+id/osb_ant"
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="true"
-                android:inputType="textPersonName|number"
-                android:selectAllOnFocus="true"
-                android:text="0"
-                android:textSize="18sp"
-                tools:layout_editor_absoluteX="182dp"
-                tools:layout_editor_absoluteY="147dp" />
-
-        </LinearLayout>
-
-        <!--  VALOR [B] -->
-        <LinearLayout
-            android:id="@+id/olayoutb_sdif"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="0"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/olsb_dif"
-                style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                android:layout_width="133dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="RESULTADO [B]:"
-                android:textSize="18sp"
+                android:background="#e6e6e6"
+                android:text="METROS DE ENTRADA"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/osb_dif"
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="false"
-                android:inputType="textPersonName|number"
-                android:text="0"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tools:layout_editor_absoluteX="182dp"
-                tools:layout_editor_absoluteY="147dp" />
-        </LinearLayout>
+            <!--  ACTUAL [A] -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
 
-        <Space
-            android:id="@+id/oSpaceb_ssep"
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="ACTUAL [A]:"
+                    android:textSize="23dp" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:autoText="false"
-            android:background="?attr/colorPrimaryDark"
-            android:text="RESULTADOS"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textSize="14sp"
-            android:textStyle="bold" />
+                <EditText
+                    android:id="@+id/oea_act"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="textPersonName|number"
+                    android:selectAllOnFocus="true"
+                    android:text="0"
+                    android:textSize="23dp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
 
-        <!--  COLECTADO -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="0"
-            android:orientation="horizontal">
+            <!--  ANTERIOR [A] -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/olea_ant"
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="ANTERIOR [A]:"
+                    android:textSize="23dp" />
+
+                <EditText
+                    android:id="@+id/oea_ant"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="textPersonName|number"
+                    android:selectAllOnFocus="true"
+                    android:text="0"
+                    android:textSize="23dp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+
+            </LinearLayout>
+
+            <!--  VALOR [A] -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="RESULTADO [A]:"
+                    android:textColor="?attr/colorPrimaryDark"
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/oea_dif"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:editable="false"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="textPersonName|number"
+                    android:text="0"
+                    android:textColor="?attr/colorPrimaryDark"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <!--  ACTUAL [B] -->
+            <LinearLayout
+                android:id="@+id/olayoutb_eact"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/oleb_act"
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="ACTUAL [B]:"
+                    android:textSize="23dp" />
+
+                <EditText
+                    android:id="@+id/oeb_act"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="textPersonName|number"
+                    android:selectAllOnFocus="true"
+                    android:text="0"
+                    android:textSize="23dp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <!--  ANTERIOR [B] -->
+            <LinearLayout
+                android:id="@+id/olayoutb_eant"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/oleb_ant"
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="ANTERIOR [B]:"
+                    android:textSize="23dp" />
+
+                <EditText
+                    android:id="@+id/oeb_ant"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="textPersonName|number"
+                    android:selectAllOnFocus="true"
+                    android:text="0"
+                    android:textSize="23dp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+
+            </LinearLayout>
+
+            <!--  VALOR [B] -->
+            <LinearLayout
+                android:id="@+id/olayoutb_edif"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/oleb_dif"
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="RESULTADO [B]:"
+                    android:textColor="?attr/colorPrimaryDark"
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/oeb_dif"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:editable="false"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="textPersonName|number"
+                    android:text="0"
+                    android:textColor="?attr/colorPrimaryDark"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <Space
+                android:id="@+id/oSpaceb_esep"
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
+
+            <!--                             ETIQUETA SALIDA                                    -->
 
             <TextView
-                android:id="@+id/oltot_cole"
-                style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                android:layout_width="133dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="true"
-                android:text="COLECTADO $:"
-                android:textSize="18sp"
+                android:autoText="false"
+                android:background="#e6e6e6"
+                android:text="METROS DE SALIDA"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/otot_cole"
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="false"
-                android:inputType="numberDecimal"
-                android:text="0.00"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tools:layout_editor_absoluteX="182dp"
-                tools:layout_editor_absoluteY="147dp" />
-        </LinearLayout>
+            <!--  ACTUAL [A] -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
 
-        <!--  PREMIOS -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_weight="0"
-            android:orientation="horizontal">
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="ACTUAL [A]:"
+                    android:textSize="23dp" />
+
+                <EditText
+                    android:id="@+id/osa_act"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="textPersonName|number"
+                    android:selectAllOnFocus="true"
+                    android:text="0"
+                    android:textSize="23dp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <!--  ANTERIOR [A] -->
+
+            <!--  VALOR [A] -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/olsa_ant"
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="ANTERIOR [A]:"
+                    android:textSize="23dp" />
+
+                <EditText
+                    android:id="@+id/osa_ant"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="textPersonName|number"
+                    android:selectAllOnFocus="true"
+                    android:text="0"
+                    android:textSize="23dp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="RESULTADO [A]:"
+                    android:textColor="?attr/colorPrimaryDark"
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/osa_dif"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:editable="false"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="textPersonName|number"
+                    android:text="0"
+                    android:textColor="?attr/colorPrimaryDark"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp" />
+
+            <!--  ACTUAL [B] -->
+            <LinearLayout
+                android:id="@+id/olayoutb_sact"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/olsb_act"
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="ACTUAL [B]:"
+                    android:textSize="23dp" />
+
+                <EditText
+                    android:id="@+id/osb_act"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="textPersonName|number"
+                    android:selectAllOnFocus="true"
+                    android:text="0"
+                    android:textSize="23dp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <!--  ANTERIOR [B] -->
+            <LinearLayout
+                android:id="@+id/olayoutb_sant"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/olsb_ant"
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="ANTERIOR [B]:"
+                    android:textSize="23dp" />
+
+                <EditText
+                    android:id="@+id/osb_ant"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="textPersonName|number"
+                    android:selectAllOnFocus="true"
+                    android:text="0"
+                    android:textSize="23dp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+
+            </LinearLayout>
+
+            <!--  VALOR [B] -->
+            <LinearLayout
+                android:id="@+id/olayoutb_sdif"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/olsb_dif"
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="RESULTADO [B]:"
+                    android:textColor="?attr/colorPrimaryDark"
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/osb_dif"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:editable="false"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="textPersonName|number"
+                    android:text="0"
+                    android:textColor="?attr/colorPrimaryDark"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <Space
+                android:id="@+id/oSpaceb_ssep"
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
             <TextView
-                android:id="@+id/oltot_cred"
-                style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                android:layout_width="133dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:enabled="true"
-                android:text="PREMIOS $:"
-                android:textSize="18sp"
+                android:autoText="false"
+                android:background="#e6e6e6"
+                android:text="RESULTADOS"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="20sp"
                 android:textStyle="bold" />
 
-            <EditText
-                android:id="@+id/otot_cred"
-                android:layout_width="105dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="false"
-                android:inputType="numberDecimal"
-                android:text="0.00"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                tools:layout_editor_absoluteX="182dp"
-                tools:layout_editor_absoluteY="147dp" />
+            <!--  COLECTADO -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
 
+
+                <TextView
+                    android:id="@+id/oltot_cole"
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="COLECTADO $:"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/otot_cole"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:editable="false"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="numberDecimal"
+                    android:text="0.00"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <!--  PREMIOS -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/oltot_cred"
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="PREMIOS $:"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/otot_cred"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:editable="false"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="numberDecimal"
+                    android:text="0.00"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+
+            </LinearLayout>
+
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="15dp"
+                android:layout_weight="0" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="11dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="OBSERVACIONES:"
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/otot_notas"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:layout_weight="1"
+                    android:background="#fff586"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="textMultiLine"
+                    android:selectAllOnFocus="true"
+                    android:tooltipText="ESCRIBA EL DETALLE AQUI" />
+
+            </LinearLayout>
         </LinearLayout>
-
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp"
-            android:layout_weight="0" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="0"
-            android:orientation="horizontal">
-
-            <TextView
-                style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                android:layout_width="11dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="OBSERVACIONES:"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <EditText
-                android:id="@+id/otot_notas"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_weight="1"
-                android:ems="10"
-                android:enabled="true"
-                android:inputType="textMultiLine"
-                android:selectAllOnFocus="true"
-                android:tooltipText="ESCRIBA EL DETALLE AQUI" />
-
-        </LinearLayout>
-    </LinearLayout>
     </ScrollView>
 </android.support.constraint.ConstraintLayout>

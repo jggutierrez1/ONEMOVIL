@@ -103,12 +103,17 @@ public class sync_data extends AppCompatActivity {
 
             @Override
             public void onClick(View arg0) {
+
+                btn_proc.setEnabled(false);
+                btn_proc.setClickable(false);
+
+                btn_regr.setEnabled(false);
+                btn_regr.setClickable(false);
+
                 String cParsString = "";
                 String cSql_Ln = "";
 
                 memo.setText("");
-                btn_proc.setEnabled(false);
-                btn_regr.setEnabled(false);
 
                 Global.Create_Sql_Tables(ock_rene.isChecked(), ock_delc.isChecked());
 
@@ -228,7 +233,11 @@ public class sync_data extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                btn_proc.setEnabled(true);
+                btn_proc.setClickable(true);
+
                 btn_regr.setEnabled(true);
+                btn_regr.setClickable(true);
 
             }
         });
