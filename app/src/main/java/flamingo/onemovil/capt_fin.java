@@ -350,6 +350,7 @@ public class capt_fin extends AppCompatActivity {
         this.obtn_totfin_unlock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Global.PasswordTitle = "OPCION PARA DESBLOQUEO DE MONTOS";
                 Global.iObj_Select = 99;
                 Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
                 startActivityForResult(Int_GetPass, REQUEST_GET_PASS);
@@ -689,7 +690,7 @@ public class capt_fin extends AppCompatActivity {
                 startActivityForResult(Int_PrnMaqScreen, Global.REQUEST_PRINT);
 
                 oDb5.close();
-                Global.ExportDB();
+                //Global.ExportDB();
 
                 finish();
             }

@@ -76,7 +76,7 @@ public class login extends AppCompatActivity {
         }
         //Global.Create_Sql_Tables_Emp();
         Global.Get_Config();
-        //Global.ExportDB();
+        Global.ExportDB();
 
         obtn_entar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,9 +114,9 @@ public class login extends AppCompatActivity {
         oLogin_device.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Global.PasswordTitle = "OPCION PARA RESETEO DE EQUIPO";
                 Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
                 startActivityForResult(Int_GetPass, REQUEST_GET_PASS1);
-
             }
         });
 
@@ -130,7 +130,7 @@ public class login extends AppCompatActivity {
             switch (resultCode) {
                 case RESULT_OK:
                     int ipass = data.getIntExtra("PASSWORD", -1);
-                    if (ipass == 123) {
+                    if (ipass == 82878884) {
                         Global.Create_Sql_Tables(true, true);
                         finish();
                         System.exit(0);

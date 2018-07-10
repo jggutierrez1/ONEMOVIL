@@ -13,7 +13,7 @@ import android.widget.Toast;
 public class get_password extends AppCompatActivity {
     private Button obtn_acept, obtn_cancel;
     private EditText oPassw_value;
-    private TextView oPassw_device;
+    private TextView oPassw_device, opassw_title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,6 +22,10 @@ public class get_password extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
+        Global.oActual_Context = null;
+        Global.oActual_Context = this.getApplicationContext();
+
+        this.opassw_title = (TextView) findViewById(R.id.passw_title);
         this.obtn_acept = (Button) findViewById(R.id.btn_acept);
         this.obtn_cancel = (Button) findViewById(R.id.btn_cancel);
 
@@ -29,17 +33,35 @@ public class get_password extends AppCompatActivity {
         this.oPassw_device = (TextView) findViewById(R.id.Passw_device);
 
         this.oPassw_device.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
+        this.opassw_title.setText(Global.PasswordTitle);
 
         obtn_acept.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
                 Intent i = getIntent();
-                i.putExtra("PASSWORD", Integer.parseInt(oPassw_value.getText().toString()));
-                setResult(RESULT_OK, i);
+                int iPassword = -1;
+                String cPassword = "";
+                cPassword = oPassw_value.getText().toString();
+                if (!cPassword.isEmpty()) {
 
-                Global.stringResult = oPassw_value.getText().toString();
-                finish();
+                    try {
+                        iPassword = Integer.parseInt(cPassword);
+                        System.out.println(cPassword + ": is a number");
+
+                        i.putExtra("PASSWORD", iPassword);
+                        setResult(RESULT_OK, i);
+
+                        Global.stringResult = oPassw_value.getText().toString();
+                        finish();
+
+                    } catch (NumberFormatException e) {
+                        System.out.println(cPassword + ": is not a number");
+                        Toast.makeText(Global.oActual_Context, "EL VALOR DEBE SER UN NUMERO", Toast.LENGTH_SHORT).show();
+                        oPassw_value.setText("");
+                    }
+
+                }
             }
         });
 

@@ -435,7 +435,7 @@ public class capt_data extends AppCompatActivity {
         this.oSemanas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (oSemanas.getText().toString().isEmpty()){
+                if (oSemanas.getText().toString().isEmpty()) {
                     oSemanas.setText("1");
                 }
             }
@@ -473,6 +473,7 @@ public class capt_data extends AppCompatActivity {
         this.btn_unlock_capt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Global.PasswordTitle = "OPCION PARA DESBLOQUEO DE METROS";
                 Global.iObj_Select = 99;
                 Intent Int_GetPass = new Intent(getApplicationContext(), get_password.class);
                 startActivityForResult(Int_GetPass, Global.REQUEST_GET_PASS);
@@ -1238,7 +1239,7 @@ public class capt_data extends AppCompatActivity {
 
             if (cte_pag_impm == 0)
                 Op_tot_impmunic = data4.getDouble(data4.getColumnIndex("mun_impuesto"));
-       }
+        }
 
         switch (data4.getInt(data4.getColumnIndex("maqtc_metros"))) {
             case 1:

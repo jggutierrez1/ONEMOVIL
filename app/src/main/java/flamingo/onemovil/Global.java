@@ -2,24 +2,35 @@ package flamingo.onemovil;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.app.AlertDialog;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaScannerConnection;
+
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+
 import android.os.Build;
 import android.os.Environment;
 import android.os.StrictMode;
+
 import android.provider.MediaStore;
 import android.provider.Settings;
-import android.support.v7.app.AlertDialog;
+
+//import android.support.v7.app.AlertDialog;
 import android.text.InputType;
 import android.util.Log;
+
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListAdapter;
@@ -31,6 +42,7 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -40,24 +52,30 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+
 import java.lang.reflect.Field;
 import java.math.BigInteger;
+
 import java.net.HttpURLConnection;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.Socket;
+import java.net.SocketAddress;
 import java.net.URL;
+import java.net.URLConnection;
 import java.net.URLEncoder;
+
 import java.nio.channels.FileChannel;
 import java.lang.String;
 import java.sql.ResultSetMetaData;
 import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Random;
@@ -105,10 +123,9 @@ public class Global {
     public static Intent oPictureActionIntent = null;
     public static SQLiteDatabase oGen_Db;
     public static Cursor oGen_Cursor;
-    //public static String SERVER_URL = "http://190.140.40.242";
-    public static String SERVER_URL0 = "http://192.168.3.80";
     public static String SERVER_URL = "http://190.140.2.84";
-    //public static String SERVER_URL = "http://190.140.2.84";
+    public static String[] SERVER_URL_LIST = {"http://186.75.183.220", "http://186.75.183.221", "http://190.140.2.84"};
+    public static int SERVER_ITEM_LIST = -1;
     public static String SERVER_URL_FLES = SERVER_URL + "/flam/UploadToServer.php";
     public static String SERVER_DIR_IMGS = SERVER_URL + "/flam/images/";
     public static String stringResult = "";
@@ -116,6 +133,8 @@ public class Global {
     public static Boolean ValidateOk = false;
     public static String PasswChgAmmout = "";
     public static String PasswChgMeters = "";
+    public static String PasswordTitle = "";
+
     public static int Correl_Device;
     public static JSONObject Genobj;
     public static String DialogConfirmText = "";
@@ -131,6 +150,7 @@ public class Global {
     public static int REQUEST_SEL_LIS2 = 8;
     public static int REQUEST_PRINT = 9;
     public static int REQUEST_CAMERA = 1;
+    public static int MR_Dialog_Resp = 0;
 
     public static boolean bAutoSelEmp = false,
             bAutoSelCte = false,
@@ -1576,4 +1596,168 @@ public class Global {
         int id = Integer.parseInt(new SimpleDateFormat("ddHHmmss", Locale.US).format(now));
         return id;
     }
+
+    public static boolean isConnectedToServer(String url, int timeout) {
+        try {
+            URL myUrl = new URL(url);
+            URLConnection connection = myUrl.openConnection();
+            connection.setConnectTimeout(timeout);
+            connection.connect();
+            return true;
+        } catch (java.io.IOException e) {
+            return false;
+        } catch (Exception e) {
+            // Handle your exceptions
+            return false;
+        }
+    }
+
+    public static void showSimpleOKAlertDialog(Context context, String cTitle, String cMessage) {
+
+        new android.app.AlertDialog.Builder(context)
+                // Setting Dialog Title
+                .setTitle(cTitle)
+                // Setting Dialog Message
+                .setMessage(cMessage)
+                // Setting Icon to Dialog
+                //.setIcon(R.drawable.tick)
+                .setPositiveButton("OK", null)
+                .show();
+        Global.MR_Dialog_Resp = 0;
+    }
+
+    public static void showSimpleYES_NOAlertDialog(Activity activity, String cTitle, String cMessage) {
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+
+        // Setting Dialog Title
+        alertDialog.setTitle("Confirm Delete...");
+
+        // Setting Dialog Message
+        alertDialog.setMessage("Are you sure you want delete this?");
+
+        // Setting Icon to Dialog
+        //alertDialog.setIcon(R.drawable.delete);
+
+        // Setting Positive "Yes" Button
+        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+
+                // Write your code here to invoke YES event
+                //Toast.makeText(Global.oActual_Context, "You clicked on YES", Toast.LENGTH_SHORT).show();
+                Global.MR_Dialog_Resp = 1;
+            }
+        });
+
+        // Setting Negative "NO" Button
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // Write your code here to invoke NO event
+                //Toast.makeText(Global.oActual_Context, "You clicked on NO", Toast.LENGTH_SHORT).show();
+                dialog.cancel();
+                Global.MR_Dialog_Resp = 0;
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+    }
+
+    public static void showSimpleYES_NO_CANCELAlertDialog(Activity activity, String cTitle, String cMessage) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(activity);
+
+        // Setting Dialog Title
+        alertDialog.setTitle("Save File...");
+
+        // Setting Dialog Message
+        alertDialog.setMessage("Do you want to save this file?");
+
+        // Setting Icon to Dialog
+        //alertDialog.setIcon(R.drawable.save);
+
+        // Setting Positive "Yes" Button
+        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // User pressed YES button. Write Logic Here
+                //Toast.makeText(Global.oActual_Context, "You clicked on YES", Toast.LENGTH_SHORT).show();
+                Global.MR_Dialog_Resp = 1;
+            }
+        });
+
+        // Setting Negative "NO" Button
+        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // User pressed No button. Write Logic Here
+                //Toast.makeText(Global.oActual_Context, "You clicked on NO", Toast.LENGTH_SHORT).show();
+                Global.MR_Dialog_Resp = 0;
+            }
+        });
+
+        // Setting Netural "Cancel" Button
+        alertDialog.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                // User pressed Cancel button. Write Logic Here
+                //Toast.makeText(Global.oActual_Context, "You clicked on Cancel", Toast.LENGTH_SHORT).show();
+                Global.MR_Dialog_Resp = 2;
+            }
+        });
+
+        // Showing Alert Message
+        alertDialog.show();
+
+    }
+
+    public static boolean checkIfURLExists(String targetUrl) {
+        HttpURLConnection connection;
+
+        URL url = null;
+        String response = null;
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        try {
+            url = new URL(targetUrl);
+            Log.d(TAG, "CONECTADO A:[" + targetUrl + "]");
+            Toast.makeText(Global.oActual_Context, "CONECTADO A:[" + targetUrl + "]", Toast.LENGTH_SHORT).show();
+
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setConnectTimeout(1500);
+            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+            connection.setRequestProperty("Accept", "application/json;charset=UTF-8");
+            connection.setRequestMethod("GET");
+
+            int responseCode = connection.getResponseCode();
+            System.out.println("\nSending 'GET' request to URL : " + url);
+            System.out.println("Response Code : " + responseCode);
+            return true;
+
+        } catch (UnsupportedEncodingException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean Check_Ip_Disp() {
+        String cHost = "";
+        for (int i = 0; i < 3; i++) {
+            cHost = Global.SERVER_URL_LIST[i];
+            if (Global.checkIfURLExists(cHost)) {
+                Global.SERVER_ITEM_LIST = i;
+                Global.SERVER_URL = cHost;
+                i = 3;
+            } else {
+                Global.SERVER_ITEM_LIST = -1;
+            }
+        }
+        if (Global.SERVER_ITEM_LIST < 0)
+            return false;
+        else
+            return true;
+    }
+
 }

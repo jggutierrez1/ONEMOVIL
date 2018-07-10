@@ -65,6 +65,8 @@ public class sync_data extends AppCompatActivity {
 
         String cInternetAnswer = "";
         Boolean bInternetConnected = false;
+        Toast.makeText(Global.oActual_Context, "VERIFICANDO CONECTIVIDAD WIFI/3G/LTE", Toast.LENGTH_SHORT).show();
+
         ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         if (null != activeNetwork) {
@@ -84,12 +86,14 @@ public class sync_data extends AppCompatActivity {
 
         InternetStatus.setText(cInternetAnswer);
         if (bInternetConnected == true) {
+            Global.Check_Ip_Disp();
             InternetStatus.setTextColor(Color.parseColor("#009900"));
             getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffffff"));
             btn_proc.setEnabled(true);
         } else {
             getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffc2b3"));
             InternetStatus.setTextColor(Color.parseColor("#ff0000"));
+            Global.showSimpleOKAlertDialog(this ,"FALLO DE CONEXION","SIN ACTIVIDAD DE INTERNET EN ESTE MOMENTO." );
             btn_proc.setEnabled(false);
         }
 

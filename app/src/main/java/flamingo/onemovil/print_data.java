@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Set;
 import java.util.UUID;
@@ -59,13 +60,17 @@ public class print_data extends AppCompatActivity {
 
     TextView lblPrinterName;
     ListView ListMaq;
-    EditText textBox;
+    TextView textBox;
     TextView olab_cte;
     private SQLiteDatabase oDb6;
     private Cursor oData1, oData2;
     private String cSqlLn = "";
     private String cDatabasePath = "";
     private ArrayList<String> theList = new ArrayList<>();
+    private static final int iLineNo = 69;
+    private String cLineSing = String.format("%0" + iLineNo + "d", 0).replace("0", "-");
+    private String cLineDoub = String.format("%0" + iLineNo + "d", 0).replace("0", "=");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +90,6 @@ public class print_data extends AppCompatActivity {
         Button btnPrint = (Button) findViewById(R.id.btnPrint);
         Button btnRegr = (Button) findViewById(R.id.btnRegr);
 
-        this.textBox = (EditText) findViewById(R.id.txtText);
         this.lblPrinterName = (TextView) findViewById(R.id.lblPrinterName);
         this.olab_cte = (TextView) findViewById(R.id.lab_cte3);
 
@@ -187,7 +191,7 @@ public class print_data extends AppCompatActivity {
 
             bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (bluetoothAdapter == null) {
-                lblPrinterName.setText("No Bluetooth Adapter found");
+                lblPrinterName.setText("NO SE ENCONTRO DISPOSITIBO BLUETOOTH");
                 getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffc2b3"));
             }
             if (bluetoothAdapter.isEnabled()) {
@@ -197,15 +201,16 @@ public class print_data extends AppCompatActivity {
 
             Set<BluetoothDevice> pairedDevice = bluetoothAdapter.getBondedDevices();
 
-            lblPrinterName.setText("Bluetooth Printer NOT ATTACHED: ");
+            lblPrinterName.setText("CONECTADO A: [SIN IMPRESORA]");
             lblPrinterName.setTextColor(Color.parseColor("#ff0000"));
 
             if (pairedDevice.size() > 0) {
                 for (BluetoothDevice pairedDev : pairedDevice) {
                     // My Bluetoth printer name is BTP_F09F1A
-                    if (pairedDev.getName().equals("BlueTooth Printer")) {
+                    String sPrinterName = pairedDev.getName().toUpperCase();
+                    if (sPrinterName.equals("BlueTooth Printer") || sPrinterName.equals("AB-341M_ZX1606")) {
                         bluetoothDevice = pairedDev;
-                        lblPrinterName.setText("Bluetooth Printer Attached: " + pairedDev.getName());
+                        lblPrinterName.setText("CONECTADO A: [" + pairedDev.getName() + "]");
                         lblPrinterName.setTextColor(Color.parseColor("#009900"));
                         getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffffff"));
                         break;
@@ -215,7 +220,7 @@ public class print_data extends AppCompatActivity {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            lblPrinterName.setText("Bluetooth Printer ERROR...");
+            lblPrinterName.setText("[ERROR AL TRATAR DE DETECTAR LA IMPRESORA]");
             lblPrinterName.setTextColor(Color.parseColor("#ff0000"));
             getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffc2b3"));
         }
@@ -299,21 +304,21 @@ public class print_data extends AppCompatActivity {
 
     // Printing Text to Bluetooth Printer //
     void printData() throws IOException {
-        try {
+    /*       try {
             String msg = textBox.getText().toString();
             msg += "\n";
             outputStream.write(msg.getBytes());
-            lblPrinterName.setText("Printing Text...");
+            lblPrinterName.setText("IMPRIMIENDO TEXTO...");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+      */
     }
 
     void printString(String msg) {
         try {
             msg += "\n";
             outputStream.write(msg.getBytes());
-            lblPrinterName.setText("Printing Text...");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -326,14 +331,14 @@ public class print_data extends AppCompatActivity {
             outputStream.close();
             inputStream.close();
             bluetoothSocket.close();
-            lblPrinterName.setText("Printer Disconnected.");
+            lblPrinterName.setText("IMPRESORA DESCONECTADA.");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
 
     private boolean Listar_Maquinas() {
-
+        String cPrnLn="";
         cSqlLn = "";
         cSqlLn += "SELECT ";
         cSqlLn += "trim(op.op_chapa ) || SUBSTR('                   ', 1, 12-length(trim(op.op_chapa ))) || ";
@@ -341,8 +346,8 @@ public class print_data extends AppCompatActivity {
         cSqlLn += " op.op_chapa, ";
         cSqlLn += " op.op_modelo, ";
         cSqlLn += " SUM(op.op_tot_colect) AS tot_cole, ";
-        cSqlLn += "SUM(op.op_tot_cred)   AS tot_cred, ";
-        cSqlLn += "(SUM(op.op_tot_colect)-SUM(op.op_tot_cred)) AS tot_dife ";
+        cSqlLn += " SUM(op.op_tot_cred)   AS tot_cred, ";
+        cSqlLn += " (SUM(op.op_tot_colect)-SUM(op.op_tot_cred)) AS tot_dife ";
         cSqlLn += "FROM operacion op ";
         cSqlLn += "WHERE (op.id_device='" + Global.cid_device + "') ";
         cSqlLn += "AND   (op.op_emp_id='" + Global.cEmp_Id + "') ";
@@ -359,7 +364,16 @@ public class print_data extends AppCompatActivity {
 
             oData1.moveToFirst();
             do {
-                theList.add(oData1.getString(0));
+                cPrnLn = String.format("%-8s %-20s %12.2f %12.2f %12.2f",
+                        oData1.getString(1).trim(),
+                        oData1.getString(2).trim(),
+                        oData1.getDouble(3),
+                        oData1.getDouble(4),
+                        oData1.getDouble(5)
+                );
+
+                //theList.add(oData1.getString(0));
+                theList.add(cPrnLn);
                 ListAdapter listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, theList);
                 ListMaq.setAdapter(listAdapter);
 
@@ -392,41 +406,58 @@ public class print_data extends AppCompatActivity {
     }
 
     private boolean Imprimir_Maquinas() {
-
+        String cPrnLn = "";
         if ((oData1 == null) || (oData1.getCount() == 0)) {
             return false;
         } else {
-            printString(Global.center(Global.cEmp_De.toUpperCase(), 30, ' '));
             printString("");
-            printString("LISTADO DE MAQUINAS COLECTADAS");
-            printString("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
-            printString("______________________________");
+            printString(Global.center(Global.cEmp_De.toUpperCase(), iLineNo, ' '));
+            printString(Global.center("LISTADO DE MAQUINAS COLECTADAS", iLineNo, ' '));
+            printString(Global.center("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]", iLineNo, ' '));
+            cPrnLn = String.format("%-8s %-20s %12s %12s %12s", "CHAPA", "JUEGO", "ENTARDA", "SALIDA", "DIF.");
+            printString(cPrnLn);
+            printString(cLineSing);
             oData1.moveToFirst();
             do {
-                printString(oData1.getString(0).trim());
+                cPrnLn = String.format(Locale.US, "%-8s %-20s %12.2f %12.2f %12.2f",
+                        oData1.getString(1).trim(),
+                        oData1.getString(2).trim(),
+                        oData1.getDouble(3),
+                        oData1.getDouble(4),
+                        oData1.getDouble(5)
+                );
+                printString(cPrnLn);
             } while (oData1.moveToNext());
-            printString("");
-            printString("");
-
             return true;
         }
     }
 
     private boolean Imprimir_Montos() {
-
+        String cPrnLn = "";
         if ((oData2 == null) || (oData2.getCount() == 0)) {
             return false;
         } else {
-            printString("");
+            //printString("");
             oData2.moveToFirst();
-            printString("==============================");
+            printString(cLineDoub);
             do {
+                cPrnLn = String.format(Locale.US,"%-8s %-20s %12.2f %12.2f %12.2f",
+                        "TOTALES", "",
+                        oData2.getDouble(0),
+                        oData2.getDouble(1),
+                        oData2.getDouble(2));
+                printString(cPrnLn);
+                /*
                 printString("Colectado : " + String.format("%12.2f", oData2.getDouble(0)).trim());
                 printString("Credito   : " + String.format("%12.2f", oData2.getDouble(1)).trim());
                 printString("Diferencia: " + String.format("%12.2f", oData2.getDouble(2)).trim());
+                 */
             } while (oData2.moveToNext());
-            printString("==============================");
+            printString(cLineDoub);
 
+            printString("");
+            printString("");
+            printString("");
             return true;
         }
     }
@@ -434,29 +465,31 @@ public class print_data extends AppCompatActivity {
     private boolean Imprimir_Montos2() {
         if (Global.iPrn_Data == 2) {
             try {
+                printString(cLineDoub);
+                printString("COLECTADO :" + String.format("%10.2f", Global.Genobj.getDouble("tot_cole")));
+                printString("TIMBRES   :" + String.format("%10.2f", Global.Genobj.getDouble("tot_timb")));
+                printString("IMUESTOS  :" + String.format("%10.2f", Global.Genobj.getDouble("tot_impm")));
+                printString("J.C.J     :" + String.format("%10.2f", Global.Genobj.getDouble("dot__jcj")));
+                printString("SERV. TEC.:" + String.format("%10.2f", Global.Genobj.getDouble("tot_tecn")));
+                printString("TOT. DEVO.:" + String.format("%10.2f", Global.Genobj.getDouble("tot_devo")));
+                printString("TOT. OTRO :" + String.format("%10.2f", Global.Genobj.getDouble("tot_otro")));
+                printString("TOT. CRED.:" + String.format("%10.2f", Global.Genobj.getDouble("tot_cred")));
+                printString("SUB-TOTAL :" + String.format("%10.2f", Global.Genobj.getDouble("Sub_tota")));
+                printString("TOT. IMP. :" + String.format("%10.2f", Global.Genobj.getDouble("tot_impu")));
+                printString("TOTAL     :" + String.format("%10.2f", Global.Genobj.getDouble("tot_tota")));
+                printString("BRUTO CTE.:" + String.format("%10.2f", Global.Genobj.getDouble("tot_bloc")));
+                printString("BRUTO EMP.:" + String.format("%10.2f", Global.Genobj.getDouble("tot_bemp")));
+                printString("NETO  CTE.:" + String.format("%10.2f", Global.Genobj.getDouble("tot_nloc")));
+                printString("NETO  EMP.:" + String.format("%10.2f", Global.Genobj.getDouble("tot_nemp")));
+                printString(cLineDoub);
 
-                printString("==============================");
-                printString("COLECTADO :" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_cole")));
-                printString("TIMBRES   :" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_timb")));
-                printString("IMUESTOS  :" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_impm")));
-                printString("J.C.J     :" + String.format("%10.2f%n", Global.Genobj.getDouble("dot__jcj")));
-                printString("SERV. TEC.:" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_tecn")));
-                printString("TOT. DEVO.:" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_devo")));
-                printString("TOT. OTRO :" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_otro")));
-                printString("TOT. CRED.:" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_cred")));
-                printString("SUB-TOTAL :" + String.format("%10.2f%n", Global.Genobj.getDouble("Sub_tota")));
-                printString("TOT. IMP. :" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_impu")));
-                printString("TOTAL     :" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_tota")));
-                printString("BRUTO CTE.:" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_bloc")));
-                printString("BRUTO EMP.:" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_bemp")));
-                printString("NETO  CTE.:" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_nloc")));
-                printString("NETO  EMP.:" + String.format("%10.2f%n", Global.Genobj.getDouble("tot_nemp")));
-                printString("==============================");
+                printString("");
+                printString("");
+                printString("");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
-
         return true;
     }
 }

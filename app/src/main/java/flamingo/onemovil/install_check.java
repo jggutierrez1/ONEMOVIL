@@ -57,6 +57,7 @@ public class install_check extends AppCompatActivity {
         }
         InternetStatus.setText(cInternetAnswer);
         if (bInternetConnected == true) {
+            Global.Check_Ip_Disp();
             InternetStatus.setTextColor(Color.parseColor("#009900"));
             getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffffff"));
             obtn_check_ok.setEnabled(true);
