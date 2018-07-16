@@ -25,6 +25,7 @@ public class select_emp extends AppCompatActivity {
     private SQLiteDatabase db3;
     private Cursor data;
     private String cSqlLn;
+    private Context oThis= this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

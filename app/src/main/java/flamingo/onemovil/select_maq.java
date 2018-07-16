@@ -29,6 +29,7 @@ public class select_maq extends AppCompatActivity {
     private SQLiteDatabase db4;
     private Cursor data;
     private String cSqlLn;
+    private Context oThis= this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

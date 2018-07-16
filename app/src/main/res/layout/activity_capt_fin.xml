@@ -599,6 +599,44 @@
                     android:textStyle="bold"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:layout_weight="0" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="# FACT. GLOBAL"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/op_fact_global"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:editable="false"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:hint="DIGITE NUMERO DE FACT. GOBAL."
+                    android:inputType="text"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
 
             </LinearLayout>
 
@@ -628,12 +666,12 @@
                     android:layout_height="127dp"
                     android:layout_weight="1"
                     android:background="#fff586"
+                    android:digits=" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789."
                     android:ems="10"
                     android:enabled="true"
                     android:inputType="textMultiLine"
                     android:selectAllOnFocus="true"
                     android:tooltipText="ESCRIBA EL DETALLE AQUI" />
-
             </LinearLayout>
 
 

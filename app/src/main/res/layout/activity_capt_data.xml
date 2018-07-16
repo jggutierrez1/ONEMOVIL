@@ -718,8 +718,8 @@
                     android:enabled="true"
                     android:inputType="textMultiLine"
                     android:selectAllOnFocus="true"
-                    android:tooltipText="ESCRIBA EL DETALLE AQUI" />
-
+                    android:tooltipText="ESCRIBA EL DETALLE AQUI"
+                    android:digits=" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789."/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

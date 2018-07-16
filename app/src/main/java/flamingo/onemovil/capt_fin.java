@@ -53,12 +53,13 @@ public class capt_fin extends AppCompatActivity {
     private Button obtn_print_maq, obtn_totfin_hide, obtn_totfin_save, obtn_totfin_canc, obtn_totfin_unlock;
     private EditText oOp_tot_cole, oOp_tot_timb, oOp_tot_impm, oOp_tot_jcj, oOp_tot_tenc, oOp_tot_devo, oOp_tot_otro,
             oOp_tot_cred, oOp_tot_subt, oOp_tot_impu, oOp_tot_tota, oOp_tot_bloc, oOp_tot_bemp, oOp_tot_nloc, oOp_tot_nemp,
-            ototfin_notas;
+            ototfin_notas, oOp_fact_global;
     private TextView olab_cte, olOp_tot_cole, olOp_tot_cred, olop_tot_jcj, oapf_device;
     private SQLiteDatabase oDb5;
     private Cursor oData5;
     private double fPorc_Loc = 0.00;
     private int itotfin_bruto, itotfin_prem, itotfin_devo, itotfin_otros, itotfin_total, itotfin_gast, itotfin_neto, itotfin_notas;
+    private Context oThis = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,6 +104,7 @@ public class capt_fin extends AppCompatActivity {
         this.oOp_tot_nemp = (EditText) findViewById(R.id.op_tot_nemp);
 
         this.ototfin_notas = (EditText) findViewById(R.id.totfin_notas);
+        this.oOp_fact_global = (EditText) findViewById(R.id.op_fact_global);
 
         this.olab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
         this.oapf_device.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
@@ -369,6 +371,13 @@ public class capt_fin extends AppCompatActivity {
         this.obtn_totfin_save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String cOp_fact_global = oOp_fact_global.getText().toString().trim();
+                if (cOp_fact_global.isEmpty() == true) {
+                    Global.showSimpleOKAlertDialog(oThis, "AVISO IMPORTANTE.", "NO ES POSIBLE GUARDAR SIN COLOCAR EL NUMERO DE LA FACTURA GLOBAL.");
+                    oOp_fact_global.requestFocus();
+                    return;
+                }
+
                 int iRegs_Cnt = 0;
                 String cSql_Ln = "";
 
@@ -472,9 +481,10 @@ public class capt_fin extends AppCompatActivity {
                         "SELECT " +
                         "   COUNT(op_chapa) AS cnt " +
                         "FROM operacion " +
-                        "WHERE id_device ='" + Global.cid_device + "' " +
-                        "AND   cte_id    ='" + Global.cCte_Id + "' " +
-                        "AND   IFNULL(op_baja_prod,0)=0;";
+                        "WHERE (op_emp_id = '" + Global.cEmp_Id + "') " +
+                        "AND   (id_device = '" + Global.cid_device + "') " +
+                        "AND   (cte_id    = '" + Global.cCte_Id + "') " +
+                        "AND   (IFNULL(op_baja_prod,0)=0);";
 
                 oData5 = oDb5.rawQuery(cSql_Ln, null);
                 if (oData5.getCount() == 0) {
@@ -515,15 +525,17 @@ public class capt_fin extends AppCompatActivity {
                 cSql_Ln += " op_tot_sub      = 0.00,";
                 cSql_Ln += " op_tot_itbm     = 0.00,";
                 cSql_Ln += " op_tot_tot      = 0.00,";
-                cSql_Ln += " op_nodoc        ='" + cNumDoc + "',";
+                //cSql_Ln += " op_nodoc        ='" + cNumDoc + "',";
+                cSql_Ln += " op_nodoc        ='" + cOp_fact_global.trim()  + "'||'-'|| trim(op_chapa),";
                 cSql_Ln += " op_fecha        ='" + cDateMysql + "',";
                 cSql_Ln += " u_usuario_modif ='TABLET',";
                 cSql_Ln += " op_fecha_modif  ='" + cDateMysql + "', ";
                 cSql_Ln += " op_usermodify   = 1, ";
                 cSql_Ln += " id_group        ='" + Integer.toString(iId_Group) + "' ";
-                cSql_Ln += "WHERE id_device ='" + Global.cid_device + "' ";
-                cSql_Ln += "AND   cte_id    ='" + Global.cCte_Id + "' ";
-                cSql_Ln += "AND IFNULL(op_baja_prod,0)=1;";
+                cSql_Ln += "WHERE (op_emp_id = '" + Global.cEmp_Id + "') ";
+                cSql_Ln += "AND   (id_device = '" + Global.cid_device + "') ";
+                cSql_Ln += "AND   (cte_id    = '" + Global.cCte_Id + "') ";
+                cSql_Ln += "AND   (IFNULL(op_baja_prod,0)=1);";
                 Global.logLargeString(cSql_Ln);
                 oDb5.execSQL(cSql_Ln);
                 //------------------------------------------------------------------------------------------------//
@@ -563,15 +575,17 @@ public class capt_fin extends AppCompatActivity {
                     cSql_Ln += " op_tot_sub     = 0.00,";
                     cSql_Ln += " op_tot_itbm    = 0.00,";
                     cSql_Ln += " op_tot_tot     = 0.00,";
-                    cSql_Ln += " op_nodoc       ='" + cNumDoc + "',";
+                    //cSql_Ln += " op_nodoc       ='" + cNumDoc + "',";
+                    cSql_Ln += " op_nodoc        ='" + cOp_fact_global.trim()  + "'||'-'|| trim(op_chapa),";
                     cSql_Ln += " op_fecha       ='" + cDateMysql + "',";
                     cSql_Ln += " u_usuario_modif ='TABLET',";
                     cSql_Ln += " op_fecha_modif ='" + cDateMysql + "', ";
                     cSql_Ln += " op_usermodify  =1, ";
                     cSql_Ln += " id_group        ='" + Integer.toString(iId_Group) + "' ";
-                    cSql_Ln += "WHERE id_device ='" + Global.cid_device + "' ";
-                    cSql_Ln += "AND   cte_id    ='" + Global.cCte_Id + "' ";
-                    cSql_Ln += "AND IFNULL(op_baja_prod,0)=0;";
+                    cSql_Ln += "WHERE (op_emp_id = '" + Global.cEmp_Id + "') ";
+                    cSql_Ln += "AND   (id_device = '" + Global.cid_device + "') ";
+                    cSql_Ln += "AND   (cte_id    = '" + Global.cCte_Id + "') ";
+                    cSql_Ln += "AND   (IFNULL(op_baja_prod,0)=0);";
                     Global.logLargeString(cSql_Ln);
                     oDb5.execSQL(cSql_Ln);
 
@@ -579,25 +593,30 @@ public class capt_fin extends AppCompatActivity {
                     cSql_Ln += "UPDATE operacion SET ";
                     cSql_Ln += " op_tot_sub     =(op_tot_colect - (op_tot_timbres + op_tot_impmunic + op_tot_impjcj + op_tot_tec) - (op_tot_dev + op_tot_otros + op_tot_cred)),";
                     cSql_Ln += " op_tot_itbm    = 0.00 ";
-                    cSql_Ln += "WHERE id_device ='" + Global.cid_device + "' ";
-                    cSql_Ln += "AND   cte_id    ='" + Global.cCte_Id + "' ";
-                    cSql_Ln += "AND IFNULL(op_baja_prod,0)=0;";
+                    cSql_Ln += "WHERE (op_emp_id = '" + Global.cEmp_Id + "') ";
+                    cSql_Ln += "AND   (id_device = '" + Global.cid_device + "') ";
+                    cSql_Ln += "AND   (cte_id    = '" + Global.cCte_Id + "') ";
+                    cSql_Ln += "AND   (IFNULL(op_baja_prod,0)=0);";
+                    Global.logLargeString(cSql_Ln);
                     oDb5.execSQL(cSql_Ln);
 
                     cSql_Ln = "";
                     cSql_Ln += "UPDATE operacion SET ";
                     cSql_Ln += " op_tot_tot     = (op_tot_sub - op_tot_itbm) ";
-                    cSql_Ln += "WHERE id_device ='" + Global.cid_device + "' ";
-                    cSql_Ln += "AND   cte_id    ='" + Global.cCte_Id + "' ";
-                    cSql_Ln += "AND IFNULL(op_baja_prod,0)=0;";
+                    cSql_Ln += "WHERE (op_emp_id = '" + Global.cEmp_Id + "') ";
+                    cSql_Ln += "AND   (id_device = '" + Global.cid_device + "') ";
+                    cSql_Ln += "AND   (cte_id    = '" + Global.cCte_Id + "') ";
+                    cSql_Ln += "AND   (IFNULL(op_baja_prod,0)=0);";
+                    Global.logLargeString(cSql_Ln);
                     oDb5.execSQL(cSql_Ln);
-
+/*
                     cSql_Ln = "" +
                             "UPDATE operacion SET " +
                             " op_tot_brutoloc = CASE WHEN (op_cporc_Loc == 100) THEN (0.00)       ELSE (op_tot_tot * (op_cporc_Loc / 100)) END " +
                             "WHERE id_device ='" + Global.cid_device + "' " +
                             "AND   cte_id    ='" + Global.cCte_Id + "' " +
                             "AND IFNULL(op_baja_prod,0)=0;";
+                    Global.logLargeString(cSql_Ln);
                     oDb5.execSQL(cSql_Ln);
 
                     cSql_Ln = "" +
@@ -606,6 +625,7 @@ public class capt_fin extends AppCompatActivity {
                             "WHERE id_device ='" + Global.cid_device + "' " +
                             "AND   cte_id    ='" + Global.cCte_Id + "' " +
                             "AND IFNULL(op_baja_prod,0)=0;";
+                    Global.logLargeString(cSql_Ln);
                     oDb5.execSQL(cSql_Ln);
 
                     cSql_Ln = "" +
@@ -614,6 +634,7 @@ public class capt_fin extends AppCompatActivity {
                             "WHERE id_device ='" + Global.cid_device + "' " +
                             "AND   cte_id    ='" + Global.cCte_Id + "' " +
                             "AND IFNULL(op_baja_prod,0)=0; ";
+                    Global.logLargeString(cSql_Ln);
                     oDb5.execSQL(cSql_Ln);
 
                     cSql_Ln = "" +
@@ -622,14 +643,48 @@ public class capt_fin extends AppCompatActivity {
                             "WHERE id_device ='" + Global.cid_device + "' " +
                             "AND   cte_id    ='" + Global.cCte_Id + "' " +
                             "AND IFNULL(op_baja_prod,0)=0;";
+                    Global.logLargeString(cSql_Ln);
+                    oDb5.execSQL(cSql_Ln);
+*/
+                    cSql_Ln = "";
+                    cSql_Ln += "" +
+                            "UPDATE operacion " +
+                            "   SET op_tot_brutoloc = " +
+                            "       (CASE WHEN  (SELECT IFNULL(clientes.cte_poc_ret,0) FROM clientes WHERE clientes.cte_id = cte_id)==100 " +
+                            "       THEN 000000000000.00 " +
+                            "       ELSE (op_tot_tot * ((SELECT IFNULL(clientes.cte_poc_ret,0) FROM clientes WHERE clientes.cte_id = cte_id)/100)) " +
+                            "       END) " +
+                            "WHERE (op_emp_id = '" + Global.cEmp_Id + "') " +
+                            "AND   (id_device = '" + Global.cid_device + "') " +
+                            "AND   (cte_id    = '" + Global.cCte_Id + "') " +
+                            "AND   (IFNULL(op_baja_prod,0)=0);";
+                    Global.logLargeString(cSql_Ln);
+                    oDb5.execSQL(cSql_Ln);
+
+                    cSql_Ln = "";
+                    cSql_Ln += "" +
+                            "UPDATE operacion SET " +
+                            "op_tot_brutoemp = " +
+                            "   (CASE WHEN  (SELECT IFNULL(clientes.cte_poc_ret,0) FROM clientes WHERE clientes.cte_id = cte_id)==100 " +
+                            "    THEN (op_tot_tot) " +
+                            "    ELSE (op_tot_tot - op_tot_brutoloc) " +
+                            "    END), " +
+                            "op_tot_netoloc	 = (op_tot_dev + op_tot_otros + op_tot_cred + op_tot_brutoloc), " +
+                            "op_tot_netoemp	 = (op_tot_timbres + op_tot_impmunic + op_tot_impjcj + op_tot_tec + op_tot_brutoemp) " +
+                            "WHERE (op_emp_id = '" + Global.cEmp_Id + "') " +
+                            "AND   (id_device = '" + Global.cid_device + "') " +
+                            "AND   (cte_id    = '" + Global.cCte_Id + "') " +
+                            "AND   (IFNULL(op_baja_prod,0)=0);";
+                    Global.logLargeString(cSql_Ln);
                     oDb5.execSQL(cSql_Ln);
                 }
 
                 cSql_Ln = "";
                 cSql_Ln += "" +
                         "DELETE FROM operaciong " +
-                        "WHERE id_device ='" + Global.cid_device + "' " +
-                        "AND   cte_id    ='" + Global.cCte_Id + "' ";
+                        "WHERE  (op_emp_id = '" + Global.cEmp_Id + "') " +
+                        "AND 	(id_device = '" + Global.cid_device + "') " +
+                        "AND 	(cte_id    = '" + Global.cCte_Id + "'); ";
                 Global.logLargeString(cSql_Ln);
                 oDb5.execSQL(cSql_Ln);
 
@@ -649,7 +704,8 @@ public class capt_fin extends AppCompatActivity {
                 cSql_Ln += "op_tot_netoloc  ,op_tot_netoemp,";
                 cSql_Ln += "op_emp_id       ,id_device,";
                 cSql_Ln += "id_group        ,op_usermodify,";
-                cSql_Ln += "op_fecha_alta   ,op_fecha_modif, op_observ,";
+                cSql_Ln += "op_fecha_alta   ,op_fecha_modif,";
+                cSql_Ln += "op_observ       ,op_fact_global,";
                 cSql_Ln += "op_usuario_alta ,op_usuario_modif) VALUES (";
                 cSql_Ln += "'" + Global.cCte_Id + "',";
                 cSql_Ln += "'" + cDateMysql + "',";
@@ -679,7 +735,8 @@ public class capt_fin extends AppCompatActivity {
                 cSql_Ln += "'1',";
                 cSql_Ln += "'" + cDateMysql + "',";
                 cSql_Ln += "'" + cDateMysql + "',";
-                cSql_Ln += "'" + ototfin_notas.getText().toString() + "',";
+                cSql_Ln += "'" + ototfin_notas.getText().toString().trim() + "',";
+                cSql_Ln += "'" + oOp_fact_global.getText().toString().trim() + "',";
                 cSql_Ln += "'TABLET',";
                 cSql_Ln += "'TABLET')";
                 Global.logLargeString(cSql_Ln);
@@ -831,7 +888,6 @@ public class capt_fin extends AppCompatActivity {
     }
 
     private void Find_Values() {
-
         String cSql_Ln = "";
 
         cSql_Ln = "";
@@ -840,9 +896,10 @@ public class capt_fin extends AppCompatActivity {
         cSql_Ln += "    SUM(op_tot_cred) AS op_tot_cred, ";
         cSql_Ln += "    SUM(op_semanas_imp)*37.50 AS op_tot_jcj ";
         cSql_Ln += "FROM operacion ";
-        cSql_Ln += "WHERE id_device    ='" + Global.cid_device + "' ";
-        cSql_Ln += "AND   cte_id       ='" + Global.cCte_Id + "' ";
-        cSql_Ln += "AND   IFNULL(op_baja_prod,0) =0 ";
+        cSql_Ln += "WHERE (op_emp_id = '" + Global.cEmp_Id + "') ";
+        cSql_Ln += "AND   (id_device = '" + Global.cid_device + "') ";
+        cSql_Ln += "AND   (cte_id    = '" + Global.cCte_Id + "') ";
+        cSql_Ln += "AND   (IFNULL(op_baja_prod,0) =0); ";
 
         Log.e("SQL", cSql_Ln);
         oData5 = oDb5.rawQuery(cSql_Ln, null);
@@ -976,7 +1033,7 @@ public class capt_fin extends AppCompatActivity {
         oData8 = oDb8.rawQuery(cSqlLn, null);
 
         if ((oData8 == null) || (oData8.getCount() == 0)) {
-            Toast.makeText(getApplicationContext(), "El código de máquina no existe o no tiene un cliente asignado", Toast.LENGTH_LONG).show();
+            Global.showSimpleOKAlertDialog(oThis ,"AVISO IMPORTANTE","El código de máquina no existe o no tiene un cliente asignado.");
             oData8.close();
             return false;
         } else {

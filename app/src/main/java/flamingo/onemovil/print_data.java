@@ -70,6 +70,7 @@ public class print_data extends AppCompatActivity {
     private static final int iLineNo = 69;
     private String cLineSing = String.format("%0" + iLineNo + "d", 0).replace("0", "-");
     private String cLineDoub = String.format("%0" + iLineNo + "d", 0).replace("0", "=");
+    private Context oThis= this;
 
 
     @Override

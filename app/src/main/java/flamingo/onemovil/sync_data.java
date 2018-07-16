@@ -38,6 +38,7 @@ public class sync_data extends AppCompatActivity {
     private EditText memo;
     private TextView lurl, InternetStatus;
     private String myurl;
+    private Context oThis = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +94,7 @@ public class sync_data extends AppCompatActivity {
         } else {
             getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffc2b3"));
             InternetStatus.setTextColor(Color.parseColor("#ff0000"));
-            Global.showSimpleOKAlertDialog(this ,"FALLO DE CONEXION","SIN ACTIVIDAD DE INTERNET EN ESTE MOMENTO." );
+            Global.showSimpleOKAlertDialog(this, "FALLO DE CONEXION", "SIN ACTIVIDAD DE INTERNET EN ESTE MOMENTO.");
             btn_proc.setEnabled(false);
         }
 
@@ -179,7 +180,7 @@ public class sync_data extends AppCompatActivity {
                 memo.append("REGISTROS EN RUTAS         :" + Lite_Query_Result("SELECT COUNT(*) AS CNT FROM rutas") + "\n");
                 memo.append(Global.repeat('-', 80) + "\n");
 
-                String cJsonResult ="";
+                String cJsonResult = "";
 
                 cParsString = "device=" + Global.cid_device;
                 cJsonResult = Global.gen_execute_post(Global.SERVER_URL, "/flam/update_last_access.php", cParsString);
@@ -210,7 +211,7 @@ public class sync_data extends AppCompatActivity {
 
                     cSql_Ln = "";
                     cSql_Ln += "INSERT INTO dispositivos (emp_id,clave_metros,clave_montos,dbname,serial ) VALUES  ";
-                    cSql_Ln += "('0','"+ cRem_Clave_Metros + "','"+ cRem_Clave_Montos + "','"+ cRem_Db_Name + "','" + Global.cid_device + "')";
+                    cSql_Ln += "('0','" + cRem_Clave_Metros + "','" + cRem_Clave_Montos + "','" + cRem_Db_Name + "','" + Global.cid_device + "')";
                     db2.execSQL(cSql_Ln);
 
                     /*

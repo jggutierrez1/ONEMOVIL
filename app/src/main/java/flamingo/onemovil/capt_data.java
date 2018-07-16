@@ -93,6 +93,7 @@ public class capt_data extends AppCompatActivity {
     private double fDenom_Ent_Val, fDenom_Sal_Val, Porc_Loc;
     //private double ftot_cole, ftot_prem;
     private double iMetro_EntDif, iMetroA_EntDif, iMetroB_EntDif, iMetro_SalDif, iMetroA_SalDif, iMetroB_SalDif;
+    private Context oThis= this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -502,12 +503,12 @@ public class capt_data extends AppCompatActivity {
                 Double dtot_cred = Double.valueOf(tot_cred.getText().toString()).doubleValue();
 
                 if (iMetro_EntDif < 0) {
-                    Toast.makeText(getApplicationContext(), "PARA GUARDAR COLOQUE CORRECTAMENTE LOS METROS DE ENTRADA.", Toast.LENGTH_LONG).show();
+                    Global.showSimpleOKAlertDialog(oThis, "AVISO IMPORTANTE.", "PARA GUARDAR COLOQUE CORRECTAMENTE LOS METROS DE ENTRADA.");
                     return;
                 }
 
                 if (iMetro_SalDif < 0) {
-                    Toast.makeText(getApplicationContext(), "PARA GUARDAR COLOQUE CORRECTAMENTE LOS METROS DE SALIDA.", Toast.LENGTH_LONG).show();
+                    Global.showSimpleOKAlertDialog(oThis, "AVISO IMPORTANTE.", "PARA GUARDAR COLOQUE CORRECTAMENTE LOS METROS DE SALIDA.");
                     return;
                 }
 /*
@@ -772,10 +773,10 @@ public class capt_data extends AppCompatActivity {
             if (requestCode == Global.REQUEST_CAMERA) {
                 switch (resultCode) {
                     case RESULT_OK:
-                        Toast.makeText(this, "PROCESADO", Toast.LENGTH_SHORT).show();
+                        Global.showSimpleOKAlertDialog(oThis ,"AVISO IMPORTANTE","PROCESADO.");
                         break;
                     case RESULT_CANCELED:
-                        Toast.makeText(this, "ERROR INESPERADO", Toast.LENGTH_SHORT).show();
+                        Global.showSimpleOKAlertDialog(oThis ,"AVISO IMPORTANTE","ERROR INESPERADO.");
                         break;
                 }
             }
@@ -1127,7 +1128,7 @@ public class capt_data extends AppCompatActivity {
         data4 = db4.rawQuery(cSqlLn, null);
 
         if ((data4 == null) || (data4.getCount() == 0)) {
-            Toast.makeText(getApplicationContext(), "El código de máquina no existe o no tiene un cliente asignado", Toast.LENGTH_LONG).show();
+            Global.showSimpleOKAlertDialog(oThis ,"AVISO IMPORTANTE","El código de máquina no existe o no tiene un cliente asignado.");
             return false;
         } else {
             return true;

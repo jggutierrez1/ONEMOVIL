@@ -107,8 +107,10 @@ public class Global {
     public static String cid_device = "";
 
     public static String PACKAGE_NAME = "";
-    public static String cApp_Folder_Storage_0 = "";
+    public static String cApp_Folder_Storage_0 = "/FLAMINGO_APP";
     public static String cApp_Folder_Storage = "";
+    public static String cApp_Folder_Db_Backup = "/LOCAL_BACKUP_DB";
+    public static String cApp_Folder_Db_Extern = "/EXTERNAL_BACKUP_DB";
     public static String cStorageDirectory_0 = "";
     public static String cStorageDirectory = "";
     public static String cStorageDirectoryPhoto = "";
@@ -116,6 +118,7 @@ public class Global {
     public static String cDataStorageDirectory = "";
     public static String cFileDbPathDest = "";
     public static String cFileDbPathOrig = "";
+
     public static String cLastFilePhoto = "";
     public static String cLastFullPathFilePhoto = "";
     public static Uri oLastSelectedImageId = null;
@@ -164,6 +167,8 @@ public class Global {
         PACKAGE_NAME = "flamingo.onemovil";
         cApp_Folder_Storage_0 = "/FLAMINGO_APP";
         cApp_Folder_Storage = "/FLAMINGO_APP/" + cid_device;
+        cApp_Folder_Db_Backup = "/LOCAL_BACKUP_DB";
+        cApp_Folder_Db_Extern = "/EXTERNAL_BACKUP_DB";
 
         cStorageDirectory_0 = Environment.getExternalStorageDirectory() + "";
         cStorageDirectory = Environment.getExternalStorageDirectory() + cApp_Folder_Storage;
@@ -177,6 +182,14 @@ public class Global {
         cFileDbPathDest = cApp_Folder_Storage + "/" + cid_device + "-one2009.db";
     }
 
+    /*
+
+
+            cFileDbPathOrig = cApp_Data_Storage + "one2009.db";
+            cFileDbPathDest = cApp_Folder_Db_Backup + "/" + cid_device + "-one2009.db";
+            cFileDbPathOrigExtern = cApp_Folder_Db_Extern + "/one2009.db";
+
+     */
     public static void Get_Config() {
 
         String cSql_Ln = "" +
@@ -211,6 +224,15 @@ public class Global {
             dir_create(cStorageDirectory_0 + cApp_Folder_Storage);
         }
 
+/*
+        if (!dir_exists(cStorageDirectory + cApp_Folder_Db_Backup)) {
+            dir_create(cStorageDirectory + cApp_Folder_Db_Backup);
+        }
+
+        if (!dir_exists(cStorageDirectory + cApp_Folder_Db_Extern)) {
+            dir_create(cStorageDirectory + cApp_Folder_Db_Extern);
+        }
+*/
         if (!dir_exists(cStorageDirectoryPhoto)) {
             dir_create(cStorageDirectoryPhoto);
         }
@@ -1430,7 +1452,7 @@ public class Global {
         cSql_Ln += "op_serie        INTEGER NULL DEFAULT 1,";
         cSql_Ln += "op_chapa        CHAR(12) NULL DEFAULT '',";
         cSql_Ln += "op_fecha        DATETIME NULL,";
-        cSql_Ln += "op_nodoc        CHAR (12) NULL DEFAULT '',";
+        cSql_Ln += "op_nodoc        CHAR (30) NULL DEFAULT '',";
         cSql_Ln += "op_modelo       CHAR(60) NULL DEFAULT '',";
         cSql_Ln += "op_e_pantalla   NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "op_ea_metroan   NUMERIC(12, 2) DEFAULT 0.000,";
@@ -1521,6 +1543,7 @@ public class Global {
         cSql_Ln += "op_tot_netoloc  NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "op_tot_netoemp  NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "op_observ       TEXT,";
+        cSql_Ln += "op_fact_global  VARCHAR(30) NULL DEFAULT '',";
         cSql_Ln += "op_emp_id       INTEGER(1)  DEFAULT 0,";
         cSql_Ln += "id_device       VARCHAR(30) DEFAULT 'MANUAL',";
         cSql_Ln += "id_group        VARCHAR(30) NULL DEFAULT 0,";
@@ -1545,6 +1568,9 @@ public class Global {
         Global.oGen_Db.execSQL(cSql_Ln);
 
         cSql_Ln = "CREATE INDEX IF NOT EXISTS id_group ON operaciong ('id_group')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS op_fact_global ON operaciong ('op_fact_global')";
         Global.oGen_Db.execSQL(cSql_Ln);
     }
 

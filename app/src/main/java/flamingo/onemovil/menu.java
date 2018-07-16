@@ -20,6 +20,8 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Environment;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -70,6 +72,7 @@ public class menu extends AppCompatActivity {
 
     // will enable user to enter any text to be printed
     EditText myTextbox;
+    private Context oThis = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -347,167 +350,193 @@ public class menu extends AppCompatActivity {
                 String Sql_Ln = "";
                 String PEMP_ID = "";
 
-                Sql_Ln = "" +
-                        "SELECT " +
-                        "IFNULL(cte_id         ,' ')  AS cte_id, " +
-                        "IFNULL(cte_nombre_loc ,' ')  AS cte_nombre_loc, " +
-                        "IFNULL(cte_nombre_com ,' ')  AS cte_nombre_com, " +
-                        "IFNULL(op_cporc_Loc   ,0.00) AS op_cporc_Loc  , " +
-                        "IFNULL(cte_pag_jcj    ,0)    AS cte_pag_jcj   , " +
-                        "IFNULL(cte_pag_spac   ,0)    AS cte_pag_spac  , " +
-                        "IFNULL(cte_pag_impm   ,0)    AS cte_pag_impm  , " +
-                        "IFNULL(maqtc_denom_e  ,0)    AS maqtc_denom_e , " +
-                        "IFNULL(maqtc_denom_s  ,0)    AS maqtc_denom_s , " +
-                        "IFNULL(den_valore     ,0.00) AS den_valore    , " +
-                        "IFNULL(den_valors     ,0.00) AS den_valors    , " +
-                        "IFNULL(den_fact_e     ,0)    AS den_fact_e    , " +
-                        "IFNULL(den_fact_s     ,0)    AS den_fact_s    , " +
-                        "IFNULL(MaqLnk_Id      ,0)    AS MaqLnk_Id     , " +
-                        "IFNULL(maqtc_tipomaq  ,0)    AS maqtc_tipomaq , " +
-                        "IFNULL(op_serie       ,0)    AS op_serie      , " +
-                        "IFNULL(op_chapa       ,' ')  AS op_chapa      , " +
-                        "IFNULL(op_modelo      ,' ')  AS op_modelo     , " +
-                        "IFNULL(op_fecha       ,date('now')) AS op_fecha    , " +
-                        "IFNULL(op_e_pantalla  ,0)    AS op_e_pantalla , " +
-                        "IFNULL(op_ea_metroan  ,0)    AS op_ea_metroan , " +
-                        "IFNULL(op_ea_metroac  ,0)    AS op_ea_metroac , " +
-                        "IFNULL(op_ea_met      ,0)    AS op_ea_met     , " +
-                        "IFNULL(op_sa_metroan  ,0)    AS op_sa_metroan , " +
-                        "IFNULL(op_sa_metroac  ,0)    AS op_sa_metroac , " +
-                        "IFNULL(op_sa_met      ,0)    AS op_sa_met     , " +
-                        "IFNULL(op_eb_metroan  ,0)    AS op_eb_metroan , " +
-                        "IFNULL(op_eb_metroac  ,0)    AS op_eb_metroac , " +
-                        "IFNULL(op_eb_met      ,0)    AS op_eb_met     , " +
-                        "IFNULL(op_sb_metroan  ,0)    AS op_sb_metroan , " +
-                        "IFNULL(op_sb_metroac  ,0)    AS op_sb_metroac , " +
-                        "IFNULL(op_sb_met      ,0)    AS op_sb_met     , " +
-                        "IFNULL(op_s_pantalla  ,0)    AS op_s_pantalla , " +
-                        "IFNULL(op_cal_colect  ,0.00) AS op_cal_colect , " +
-                        "IFNULL(op_tot_colect  ,0.00) AS op_tot_colect , " +
-                        "IFNULL(op_tot_cred    ,0.00) AS op_tot_cred   , " +
-                        "IFNULL(op_cal_cred    ,0.00) AS op_cal_cred   , " +
-                        "IFNULL(op_tot_brutoloc ,0.00) AS op_tot_brutoloc, " +
-                        "IFNULL(op_tot_brutoemp,0.00) AS op_tot_brutoemp, " +
-                        "IFNULL(op_tot_netoloc ,0.00) AS op_tot_netoloc, " +
-                        "IFNULL(op_tot_netoemp ,0.00) AS op_tot_netoemp, " +
-                        "IFNULL(op_tot_timbres ,0.00) AS op_tot_timbres, " +
-                        "IFNULL(op_tot_impmunic,0.00) AS op_tot_impmunic, " +
-                        "IFNULL(op_tot_impjcj  ,0.00) AS op_tot_impjcj , " +
-                        "IFNULL(op_tot_spac    ,0.00) AS op_tot_spac , " +
-                        "IFNULL(op_tot_tec     ,0.00) AS op_tot_tec    , " +
-                        "IFNULL(op_tot_dev     ,0.00) AS op_tot_dev    , " +
-                        "IFNULL(op_tot_otros   ,0.00) AS op_tot_otros  , " +
-                        "IFNULL(op_tot_sub     ,0.00) AS op_tot_sub    , " +
-                        "IFNULL(op_tot_itbm    ,0.00) AS op_tot_itbm   , " +
-                        "IFNULL(op_tot_tot     ,0.00) AS op_tot_tot    , " +
-                        "IFNULL(op_fecha_alta  ,date('now')) AS op_fecha_alta, " +
-                        "IFNULL(op_fecha_modif ,date('now')) AS op_fecha_modif, " +
-                        "IFNULL(u_usuario_alta ,'tablet')    AS u_usuario_alta, " +
-                        "IFNULL(u_usuario_modif,'tablet')    AS u_usuario_modif, " +
-                        "IFNULL(op_emp_id,0)          AS op_emp_id     , " +
-                        "IFNULL(id_device,' ')        AS id_device     , " +
-                        "IFNULL(op_semanas_imp,1)     AS op_semanas_imp, " +
-                        "IFNULL(op_nodoc,' ')         AS op_nodoc      , " +
-                        "IFNULL(op_baja_prod,0)       AS op_baja_prod  , " +
-                        "IFNULL(op_image_name,' ')    AS op_image_name , " +
-                        "IFNULL(op_usermodify,0)      AS op_usermodify , " +
-                        "IFNULL(id_group,'0')         AS id_group      , " +
-                        "IFNULL(op_observ,' ')        AS op_observ        " +
-                        "FROM operacion " +
-                        "WHERE id_device   ='" + Global.cid_device + "' " +
-                        "AND  op_usermodify='1' ";
+                String cInternetAnswer = "";
+                Boolean bInternetConnected = false;
+                ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+                if (null != activeNetwork) {
+                    if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                        cInternetAnswer = "CONEXION INTERNET WIFI.";
+                        bInternetConnected = true;
+                    }
 
-                //	op_e_pantalla,op_s_pantalla,op_num_sem,op_tot_colect2,op_tot_cred2
-
-                Global.logLargeString(Sql_Ln);
-
-                cJsonResult = Global.getJsonResults2(Sql_Ln, "operacion");
-                Global.logLargeString(Sql_Ln);
-                Global.logLargeString(cJsonResult);
-
-                String cParsString;
-                String script;
-
-                cParsString = "";
-                cParsString += "dbname=one2009_1";
-                cParsString += "&device=" + Global.cid_device;
-                cParsString += "&Json=" + cJsonResult;
-                cParsString += "&optn=1";
-                script = Global.gen_execute_post(Global.SERVER_URL, "/flam/subir_datos.php", cParsString);
-                Global.logLargeString(script);
-                if (script.contentEquals("1")) {
-                    Toast.makeText(getApplicationContext(), "LOS DATOS SE SUBIERON CORRECTAMENTE.", Toast.LENGTH_SHORT).show();
-                    String cSql_Ln = "DELETE FROM operacion " +
-                            "WHERE id_device ='" + Global.cid_device + "' " +
-                            "AND   op_emp_id ='" + PEMP_ID + "' ";
-                    db.execSQL(cSql_Ln);
+                    if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                        cInternetAnswer = "CONEXION INTERNET MOBIL DATA.";
+                    }
                 } else {
-                    Toast.makeText(getApplicationContext(), "NO SE PUDIERON SUBIR LOS DATOS CORRECTAMENTE.", Toast.LENGTH_SHORT).show();
+                    cInternetAnswer = "SIN CONEXION A INTERNET.";
                 }
+                //Toast.makeText(getApplicationContext(), cInternetAnswer, Toast.LENGTH_SHORT).show();
 
-                Sql_Ln = "" +
-                        "SELECT " +
-                        "IFNULL(cte_id         ,' ')  AS cte_id, " +
-                        "IFNULL(cte_nombre_loc ,' ')  AS cte_nombre_loc, " +
-                        "IFNULL(cte_nombre_com ,' ')  AS cte_nombre_com, " +
-                        "IFNULL(op_cal_colect  ,0.00) AS op_cal_colect , " +
-                        "IFNULL(op_tot_colect  ,0.00) AS op_tot_colect , " +
-                        "IFNULL(op_tot_cred    ,0.00) AS op_tot_cred   , " +
-                        "IFNULL(op_cal_cred    ,0.00) AS op_cal_cred   , " +
-                        "IFNULL(op_tot_brutoloc ,0.00) AS op_tot_brutoloc, " +
-                        "IFNULL(op_tot_brutoemp,0.00) AS op_tot_brutoemp, " +
-                        "IFNULL(op_tot_netoloc ,0.00) AS op_tot_netoloc, " +
-                        "IFNULL(op_tot_netoemp ,0.00) AS op_tot_netoemp, " +
-                        "IFNULL(op_tot_timbres ,0.00) AS op_tot_timbres, " +
-                        "IFNULL(op_tot_spac ,0.00) AS op_tot_spac, " +
-                        "IFNULL(op_tot_impmunic,0.00) AS op_tot_impmunic, " +
-                        "IFNULL(op_tot_impjcj  ,0.00) AS op_tot_impjcj , " +
-                        "IFNULL(op_tot_tec     ,0.00) AS op_tot_tec    , " +
-                        "IFNULL(op_tot_dev     ,0.00) AS op_tot_dev    , " +
-                        "IFNULL(op_tot_otros   ,0.00) AS op_tot_otros  , " +
-                        "IFNULL(op_tot_sub     ,0.00) AS op_tot_sub    , " +
-                        "IFNULL(op_tot_itbm    ,0.00) AS op_tot_itbm   , " +
-                        "IFNULL(op_tot_tot     ,0.00) AS op_tot_tot    , " +
-                        "IFNULL(op_fecha_alta ,date('now')) AS op_fecha_alta, " +
-                        "IFNULL(op_fecha_modif,date('now')) AS op_fecha_modif, " +
-                        "IFNULL(op_emp_id,0)          AS op_emp_id     , " +
-                        "IFNULL(id_device,' ')        AS id_device     , " +
-                        "IFNULL(id_group,'0')         AS id_group      , " +
-                        "IFNULL(op_usermodify,0)      AS op_usermodify , " +
-                        "IFNULL(op_observ,' ')        AS op_observ " +
-                        "FROM operaciong " +
-                        "WHERE id_device   ='" + Global.cid_device + "' " +
-                        "AND  op_usermodify='1' ";
+                if (bInternetConnected == true) {
+                    Global.Check_Ip_Disp();
 
-                Global.logLargeString(Sql_Ln);
+                    Sql_Ln = "" +
+                            "SELECT " +
+                            "IFNULL(cte_id         ,' ')  AS cte_id, " +
+                            "IFNULL(cte_nombre_loc ,' ')  AS cte_nombre_loc, " +
+                            "IFNULL(cte_nombre_com ,' ')  AS cte_nombre_com, " +
+                            "IFNULL(op_cporc_Loc   ,0.00) AS op_cporc_Loc  , " +
+                            "IFNULL(cte_pag_jcj    ,0)    AS cte_pag_jcj   , " +
+                            "IFNULL(cte_pag_spac   ,0)    AS cte_pag_spac  , " +
+                            "IFNULL(cte_pag_impm   ,0)    AS cte_pag_impm  , " +
+                            "IFNULL(maqtc_denom_e  ,0)    AS maqtc_denom_e , " +
+                            "IFNULL(maqtc_denom_s  ,0)    AS maqtc_denom_s , " +
+                            "IFNULL(den_valore     ,0.00) AS den_valore    , " +
+                            "IFNULL(den_valors     ,0.00) AS den_valors    , " +
+                            "IFNULL(den_fact_e     ,0)    AS den_fact_e    , " +
+                            "IFNULL(den_fact_s     ,0)    AS den_fact_s    , " +
+                            "IFNULL(MaqLnk_Id      ,0)    AS MaqLnk_Id     , " +
+                            "IFNULL(maqtc_tipomaq  ,0)    AS maqtc_tipomaq , " +
+                            "IFNULL(op_serie       ,0)    AS op_serie      , " +
+                            "IFNULL(op_chapa       ,' ')  AS op_chapa      , " +
+                            "IFNULL(op_modelo      ,' ')  AS op_modelo     , " +
+                            "IFNULL(op_fecha       ,date('now')) AS op_fecha    , " +
+                            "IFNULL(op_e_pantalla  ,0)    AS op_e_pantalla , " +
+                            "IFNULL(op_ea_metroan  ,0)    AS op_ea_metroan , " +
+                            "IFNULL(op_ea_metroac  ,0)    AS op_ea_metroac , " +
+                            "IFNULL(op_ea_met      ,0)    AS op_ea_met     , " +
+                            "IFNULL(op_sa_metroan  ,0)    AS op_sa_metroan , " +
+                            "IFNULL(op_sa_metroac  ,0)    AS op_sa_metroac , " +
+                            "IFNULL(op_sa_met      ,0)    AS op_sa_met     , " +
+                            "IFNULL(op_eb_metroan  ,0)    AS op_eb_metroan , " +
+                            "IFNULL(op_eb_metroac  ,0)    AS op_eb_metroac , " +
+                            "IFNULL(op_eb_met      ,0)    AS op_eb_met     , " +
+                            "IFNULL(op_sb_metroan  ,0)    AS op_sb_metroan , " +
+                            "IFNULL(op_sb_metroac  ,0)    AS op_sb_metroac , " +
+                            "IFNULL(op_sb_met      ,0)    AS op_sb_met     , " +
+                            "IFNULL(op_s_pantalla  ,0)    AS op_s_pantalla , " +
+                            "IFNULL(op_cal_colect  ,0.00) AS op_cal_colect , " +
+                            "IFNULL(op_tot_colect  ,0.00) AS op_tot_colect , " +
+                            "IFNULL(op_tot_cred    ,0.00) AS op_tot_cred   , " +
+                            "IFNULL(op_cal_cred    ,0.00) AS op_cal_cred   , " +
+                            "IFNULL(op_tot_brutoloc ,0.00) AS op_tot_brutoloc, " +
+                            "IFNULL(op_tot_brutoemp,0.00) AS op_tot_brutoemp, " +
+                            "IFNULL(op_tot_netoloc ,0.00) AS op_tot_netoloc, " +
+                            "IFNULL(op_tot_netoemp ,0.00) AS op_tot_netoemp, " +
+                            "IFNULL(op_tot_timbres ,0.00) AS op_tot_timbres, " +
+                            "IFNULL(op_tot_impmunic,0.00) AS op_tot_impmunic, " +
+                            "IFNULL(op_tot_impjcj  ,0.00) AS op_tot_impjcj , " +
+                            "IFNULL(op_tot_spac    ,0.00) AS op_tot_spac , " +
+                            "IFNULL(op_tot_tec     ,0.00) AS op_tot_tec    , " +
+                            "IFNULL(op_tot_dev     ,0.00) AS op_tot_dev    , " +
+                            "IFNULL(op_tot_otros   ,0.00) AS op_tot_otros  , " +
+                            "IFNULL(op_tot_sub     ,0.00) AS op_tot_sub    , " +
+                            "IFNULL(op_tot_itbm    ,0.00) AS op_tot_itbm   , " +
+                            "IFNULL(op_tot_tot     ,0.00) AS op_tot_tot    , " +
+                            "IFNULL(op_fecha_alta  ,date('now')) AS op_fecha_alta, " +
+                            "IFNULL(op_fecha_modif ,date('now')) AS op_fecha_modif, " +
+                            "IFNULL(u_usuario_alta ,'tablet')    AS u_usuario_alta, " +
+                            "IFNULL(u_usuario_modif,'tablet')    AS u_usuario_modif, " +
+                            "IFNULL(op_emp_id,0)          AS op_emp_id     , " +
+                            "IFNULL(id_device,' ')        AS id_device     , " +
+                            "IFNULL(op_semanas_imp,1)     AS op_semanas_imp, " +
+                            "IFNULL(op_nodoc,' ')         AS op_nodoc      , " +
+                            "IFNULL(op_baja_prod,0)       AS op_baja_prod  , " +
+                            "IFNULL(op_image_name,' ')    AS op_image_name , " +
+                            "IFNULL(op_usermodify,0)      AS op_usermodify , " +
+                            "IFNULL(id_group,'0')         AS id_group      , " +
+                            "IFNULL(op_observ,' ')        AS op_observ        " +
+                            "FROM operacion " +
+                            "WHERE id_device   ='" + Global.cid_device + "' " +
+                            "AND  op_usermodify='1' ";
 
-                cJsonResult = Global.getJsonResults2(Sql_Ln, "operaciong");
-                Global.logLargeString(Sql_Ln);
-                Global.logLargeString(cJsonResult);
+                    //	op_e_pantalla,op_s_pantalla,op_num_sem,op_tot_colect2,op_tot_cred2
 
-                cParsString = "";
-                cParsString += "dbname=one2009_1";
-                cParsString += "&device=" + Global.cid_device;
-                cParsString += "&Json=" + cJsonResult;
-                cParsString += "&optn=2";
-                script = Global.gen_execute_post(Global.SERVER_URL, "/flam/subir_datos_v2.php", cParsString);
-                Global.logLargeString(script);
-                if (script.contentEquals("1")) {
-                    Toast.makeText(getApplicationContext(), "LOS DATOS SE SUBIERON CORRECTAMENTE.", Toast.LENGTH_SHORT).show();
-                    String cSql_Ln = "DELETE FROM operaciong " +
+                    Global.logLargeString(Sql_Ln);
+
+                    cJsonResult = Global.getJsonResults2(Sql_Ln, "operacion");
+                    Global.logLargeString(Sql_Ln);
+                    Global.logLargeString(cJsonResult);
+
+                    String cParsString;
+                    String script;
+
+                    cParsString = "";
+                    cParsString += "dbname=one2009_1";
+                    cParsString += "&device=" + Global.cid_device;
+                    cParsString += "&Json=" + cJsonResult;
+                    cParsString += "&optn=1";
+                    //script = Global.gen_execute_post(Global.SERVER_URL, "/flam/subir_datos.php", cParsString);
+                    script = Global.gen_execute_post(Global.SERVER_URL, "/flam/subir_datos_v2.php", cParsString);
+                    Global.logLargeString(script);
+                    if (script.contentEquals("1")) {
+                        Global.showSimpleOKAlertDialog(oThis, "AVISO IMPORTANTE[1]", "LAS FACTURAS POR MAQUINAS SE ENVIARON CORRECTAMENTE.");
+                        //Toast.makeText(getApplicationContext(), "LOS DATOS SE SUBIERON CORRECTAMENTE.", Toast.LENGTH_SHORT).show();
+                        String cSql_Ln = "DELETE FROM operacion " +
+                                "WHERE id_device ='" + Global.cid_device + "' " +
+                                "AND   op_emp_id ='" + PEMP_ID + "' ";
+                        db.execSQL(cSql_Ln);
+                    } else {
+                        Global.showSimpleOKAlertDialog(oThis, "AVISO IMPORTANTE[1]", "NO SE PUDIERON SUBIR LOS DATOS CORRECTAMENTE DE LAS FACTURAS POR MAQUINAS.");
+                        //Toast.makeText(getApplicationContext(), "NO SE PUDIERON SUBIR LOS DATOS CORRECTAMENTE.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    Sql_Ln = "" +
+                            "SELECT " +
+                            "IFNULL(cte_id         ,' ')  AS cte_id, " +
+                            "IFNULL(cte_nombre_loc ,' ')  AS cte_nombre_loc, " +
+                            "IFNULL(cte_nombre_com ,' ')  AS cte_nombre_com, " +
+                            "IFNULL(op_cal_colect  ,0.00) AS op_cal_colect , " +
+                            "IFNULL(op_tot_colect  ,0.00) AS op_tot_colect , " +
+                            "IFNULL(op_tot_cred    ,0.00) AS op_tot_cred   , " +
+                            "IFNULL(op_cal_cred    ,0.00) AS op_cal_cred   , " +
+                            "IFNULL(op_tot_brutoloc ,0.00) AS op_tot_brutoloc, " +
+                            "IFNULL(op_tot_brutoemp,0.00) AS op_tot_brutoemp, " +
+                            "IFNULL(op_tot_netoloc ,0.00) AS op_tot_netoloc, " +
+                            "IFNULL(op_tot_netoemp ,0.00) AS op_tot_netoemp, " +
+                            "IFNULL(op_tot_timbres ,0.00) AS op_tot_timbres, " +
+                            "IFNULL(op_tot_spac ,0.00) AS op_tot_spac, " +
+                            "IFNULL(op_tot_impmunic,0.00) AS op_tot_impmunic, " +
+                            "IFNULL(op_tot_impjcj  ,0.00) AS op_tot_impjcj , " +
+                            "IFNULL(op_tot_tec     ,0.00) AS op_tot_tec    , " +
+                            "IFNULL(op_tot_dev     ,0.00) AS op_tot_dev    , " +
+                            "IFNULL(op_tot_otros   ,0.00) AS op_tot_otros  , " +
+                            "IFNULL(op_tot_sub     ,0.00) AS op_tot_sub    , " +
+                            "IFNULL(op_tot_itbm    ,0.00) AS op_tot_itbm   , " +
+                            "IFNULL(op_tot_tot     ,0.00) AS op_tot_tot    , " +
+                            "IFNULL(op_fecha_alta ,date('now')) AS op_fecha_alta, " +
+                            "IFNULL(op_fecha_modif,date('now')) AS op_fecha_modif, " +
+                            "IFNULL(op_emp_id,0)          AS op_emp_id     , " +
+                            "IFNULL(id_device,' ')        AS id_device     , " +
+                            "IFNULL(id_group,'0')         AS id_group      , " +
+                            "IFNULL(op_usermodify,0)      AS op_usermodify , " +
+                            "IFNULL(op_observ,' ')        AS op_observ " +
+                            "FROM operaciong " +
+                            "WHERE id_device   ='" + Global.cid_device + "' " +
+                            "AND  op_usermodify='1' ";
+
+                    Global.logLargeString(Sql_Ln);
+
+                    cJsonResult = Global.getJsonResults2(Sql_Ln, "operaciong");
+                    Global.logLargeString(Sql_Ln);
+                    Global.logLargeString(cJsonResult);
+
+                    cParsString = "";
+                    cParsString += "dbname=one2009_1";
+                    cParsString += "&device=" + Global.cid_device;
+                    cParsString += "&Json=" + cJsonResult;
+                    cParsString += "&optn=2";
+                    script = Global.gen_execute_post(Global.SERVER_URL, "/flam/subir_datos_v2.php", cParsString);
+                    Global.logLargeString(script);
+                    if (script.contentEquals("1")) {
+                        Global.showSimpleOKAlertDialog(oThis, "AVISO IMPORTANTE[2]", "LAS FACTURAS GLOBALES SE ENVIARON CORRECTAMENTE.");
+                        //Toast.makeText(getApplicationContext(), "LOS DATOS SE SUBIERON CORRECTAMENTE.", Toast.LENGTH_SHORT).show();
+                        String cSql_Ln = "DELETE FROM operaciong " +
+                                "WHERE id_device ='" + Global.cid_device + "' " +
+                                "AND   op_emp_id ='" + PEMP_ID + "' ";
+                        db.execSQL(cSql_Ln);
+                    } else {
+                        Global.showSimpleOKAlertDialog(oThis, "AVISO IMPORTANTE[2]", "NO SE PUDIERON SUBIR LOS DATOS CORRECTAMENTE DE LAS FACTURA GLOBALES.");
+                        //Toast.makeText(getApplicationContext(), "NO SE PUDIERON SUBIR LOS DATOS CORRECTAMENTE.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    cSql_Ln = "" +
+                            "SELECT IFNULL(op_image_name,'') AS op_image_name " +
+                            "FROM operacion " +
                             "WHERE id_device ='" + Global.cid_device + "' " +
-                            "AND   op_emp_id ='" + PEMP_ID + "' ";
-                    db.execSQL(cSql_Ln);
-                } else {
-                    Toast.makeText(getApplicationContext(), "NO SE PUDIERON SUBIR LOS DATOS CORRECTAMENTE.", Toast.LENGTH_SHORT).show();
-                }
-
-                cSql_Ln = "" +
-                        "SELECT IFNULL(op_image_name,'') AS op_image_name " +
-                        "FROM operacion " +
-                        "WHERE id_device ='" + Global.cid_device + "' " +
-                        "AND   op_emp_id ='" + PEMP_ID + "' " +
-                        "AND   IFNULL(op_image_name,'')<>''";
+                            "AND   op_emp_id ='" + PEMP_ID + "' " +
+                            "AND   IFNULL(op_image_name,'')<>''";
 /*
                 Global.Genobj = null;
                 Global.Genobj = new JSONObject();
@@ -524,6 +553,9 @@ public class menu extends AppCompatActivity {
                     }
                 } while (oCur_Im.moveToNext());
 */
+                } else {
+                    Global.showSimpleOKAlertDialog(oThis, "FALLO DE CONEXION", "SIN ACTIVIDAD DE INTERNET EN ESTE MOMENTO.");
+                }
             }
         });
 

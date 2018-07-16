@@ -17,6 +17,7 @@ public class install_check extends AppCompatActivity {
     private Button obtn_check_ok, obtn_check_exit;
     private EditText ocheck_code;
     private TextView InternetStatus, DeviceId;
+    private Context oThis= this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public class install_check extends AppCompatActivity {
         } else {
             getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffc2b3"));
             InternetStatus.setTextColor(Color.parseColor("#ff0000"));
+            Global.showSimpleOKAlertDialog(oThis ,"FALLO DE CONEXION","SIN ACTIVIDAD DE INTERNET EN ESTE MOMENTO." );
             obtn_check_ok.setEnabled(false);
         }
 
