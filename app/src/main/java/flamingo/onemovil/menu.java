@@ -22,8 +22,10 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -80,6 +82,9 @@ public class menu extends AppCompatActivity {
         setContentView(R.layout.activity_menu);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
 
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
@@ -346,6 +351,7 @@ public class menu extends AppCompatActivity {
         btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                btn_send.setEnabled(false);
                 String cJsonResult = null;
                 String Sql_Ln = "";
                 String PEMP_ID = "";
@@ -370,6 +376,8 @@ public class menu extends AppCompatActivity {
 
                 if (bInternetConnected == true) {
                     Global.Check_Ip_Disp();
+                    Toast.makeText(getApplicationContext(), "SERVIDOR CLOUD:[" + Global.SERVER_URL.toUpperCase() + "]", Toast.LENGTH_SHORT).show();
+                    Global.appendLog(Global.cFileLogPathDest, Global.getNow() + " INICIO \n", true);
 
                     Sql_Ln = "" +
                             "SELECT " +
@@ -408,8 +416,10 @@ public class menu extends AppCompatActivity {
                             "IFNULL(op_s_pantalla  ,0)    AS op_s_pantalla , " +
                             "IFNULL(op_cal_colect  ,0.00) AS op_cal_colect , " +
                             "IFNULL(op_tot_colect  ,0.00) AS op_tot_colect , " +
-                            "IFNULL(op_tot_cred    ,0.00) AS op_tot_cred   , " +
+                            "IFNULL(op_tot_colect_m,0.00) AS op_tot_colect_m, " +
                             "IFNULL(op_cal_cred    ,0.00) AS op_cal_cred   , " +
+                            "IFNULL(op_tot_cred    ,0.00) AS op_tot_cred   , " +
+                            "IFNULL(op_tot_cred_m  ,0.00) AS op_tot_cred_m , " +
                             "IFNULL(op_tot_brutoloc ,0.00) AS op_tot_brutoloc, " +
                             "IFNULL(op_tot_brutoemp,0.00) AS op_tot_brutoemp, " +
                             "IFNULL(op_tot_netoloc ,0.00) AS op_tot_netoloc, " +
@@ -444,10 +454,12 @@ public class menu extends AppCompatActivity {
                     //	op_e_pantalla,op_s_pantalla,op_num_sem,op_tot_colect2,op_tot_cred2
 
                     Global.logLargeString(Sql_Ln);
+                    Global.appendLog(Global.cFileLogPathDest, Global.getNow() + " SQL operacion: \n" + Sql_Ln + "\n", false);
 
                     cJsonResult = Global.getJsonResults2(Sql_Ln, "operacion");
                     Global.logLargeString(Sql_Ln);
                     Global.logLargeString(cJsonResult);
+                    Global.appendLog(Global.cFileLogPathDest, Global.getNow() + " JSON operacion: \n" + cJsonResult + "\n", false);
 
                     String cParsString;
                     String script;
@@ -459,6 +471,7 @@ public class menu extends AppCompatActivity {
                     cParsString += "&optn=1";
                     //script = Global.gen_execute_post(Global.SERVER_URL, "/flam/subir_datos.php", cParsString);
                     script = Global.gen_execute_post(Global.SERVER_URL, "/flam/subir_datos_v2.php", cParsString);
+
                     Global.logLargeString(script);
                     if (script.contentEquals("1")) {
                         Global.showSimpleOKAlertDialog(oThis, "AVISO IMPORTANTE[1]", "LAS FACTURAS POR MAQUINAS SE ENVIARON CORRECTAMENTE.");
@@ -477,10 +490,12 @@ public class menu extends AppCompatActivity {
                             "IFNULL(cte_id         ,' ')  AS cte_id, " +
                             "IFNULL(cte_nombre_loc ,' ')  AS cte_nombre_loc, " +
                             "IFNULL(cte_nombre_com ,' ')  AS cte_nombre_com, " +
+                            "IFNULL(op_fecha       ,date('now')) AS op_fecha, " +
+                            "IFNULL(op_fact_global ,' ') AS op_fact_global, " +
                             "IFNULL(op_cal_colect  ,0.00) AS op_cal_colect , " +
                             "IFNULL(op_tot_colect  ,0.00) AS op_tot_colect , " +
-                            "IFNULL(op_tot_cred    ,0.00) AS op_tot_cred   , " +
                             "IFNULL(op_cal_cred    ,0.00) AS op_cal_cred   , " +
+                            "IFNULL(op_tot_cred    ,0.00) AS op_tot_cred   , " +
                             "IFNULL(op_tot_brutoloc ,0.00) AS op_tot_brutoloc, " +
                             "IFNULL(op_tot_brutoemp,0.00) AS op_tot_brutoemp, " +
                             "IFNULL(op_tot_netoloc ,0.00) AS op_tot_netoloc, " +
@@ -501,16 +516,20 @@ public class menu extends AppCompatActivity {
                             "IFNULL(id_device,' ')        AS id_device     , " +
                             "IFNULL(id_group,'0')         AS id_group      , " +
                             "IFNULL(op_usermodify,0)      AS op_usermodify , " +
+                            "IFNULL(op_usuario_alta,'TABLET')  AS op_usuario_alta , " +
+                            "IFNULL(op_usuario_modif,'TABLET') AS op_usuario_modif , " +
                             "IFNULL(op_observ,' ')        AS op_observ " +
                             "FROM operaciong " +
                             "WHERE id_device   ='" + Global.cid_device + "' " +
                             "AND  op_usermodify='1' ";
 
                     Global.logLargeString(Sql_Ln);
+                    Global.appendLog(Global.cFileLogPathDest, Global.getNow() + " SQL operaciong:  \n" + Sql_Ln + "\n", false);
 
                     cJsonResult = Global.getJsonResults2(Sql_Ln, "operaciong");
                     Global.logLargeString(Sql_Ln);
                     Global.logLargeString(cJsonResult);
+                    Global.appendLog(Global.cFileLogPathDest, Global.getNow() + " JSON operaciong:  \n" + cJsonResult + "\n", false);
 
                     cParsString = "";
                     cParsString += "dbname=one2009_1";
@@ -537,6 +556,8 @@ public class menu extends AppCompatActivity {
                             "WHERE id_device ='" + Global.cid_device + "' " +
                             "AND   op_emp_id ='" + PEMP_ID + "' " +
                             "AND   IFNULL(op_image_name,'')<>''";
+
+                    sendEmail("johnn.movil@gmail.com", Global.cFileLogPathDest);
 /*
                 Global.Genobj = null;
                 Global.Genobj = new JSONObject();
@@ -556,6 +577,7 @@ public class menu extends AppCompatActivity {
                 } else {
                     Global.showSimpleOKAlertDialog(oThis, "FALLO DE CONEXION", "SIN ACTIVIDAD DE INTERNET EN ESTE MOMENTO.");
                 }
+                btn_send.setEnabled(true);
             }
         });
 
@@ -577,6 +599,17 @@ public class menu extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // check if the request code is same as what is passed  here it is 2
+
+        if (requestCode == 1222) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    Global.showSimpleOKAlertDialog(oThis, "AVISO IMPORTANTE", "Correo enviado correctamente.");
+                    break;
+                case RESULT_CANCELED:
+                    Global.showSimpleOKAlertDialog(oThis, "AVISO IMPORTANTE", "ERROR AL TRATAR DE ENVIAR EL CORREO.");
+                    break;
+            }
+        }
 
         if (requestCode == Global.REQUEST_SEL_EMP) {
             //Valida la seleccion del cliente.
@@ -1064,6 +1097,36 @@ public class menu extends AppCompatActivity {
 
         btn_send.setEnabled(true);
         btn_send.setText("ENVIAR COLECTAS [" + cValue + "]");
+    }
+
+    //Method to email
+    private void sendEmail(String email, String fileName) {
+
+        File file = new File(fileName);
+        Uri path = Uri.fromFile(file);
+        Intent intent = new Intent(android.content.Intent.ACTION_SEND);
+        intent.setType("application/octet-stream");
+        intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Data de Colecta. Cliente:" + Global.cCte_De + " Dispositivo:" + Global.cid_device);
+        String to[] = {email};
+        intent.putExtra(Intent.EXTRA_EMAIL, to);
+        intent.putExtra(Intent.EXTRA_TEXT, "BATCH DE EJECUACION DE SUBIDA DE DATOS.");
+        intent.putExtra(Intent.EXTRA_STREAM, path);
+        startActivity(intent);
+    }
+
+    private void sendEmail2(String email, String fileName) {
+        String to[] = {email};
+        File file = new File(fileName);
+        Uri path = Uri.fromFile(file);
+        Intent i = new Intent(android.content.Intent.ACTION_SEND);
+        //i.setType("text/plain"); //use this line for testing in the emulator
+        i.setType("message/rfc822"); // use from live device
+        i.setClassName("com.google.android.gm", "com.google.android.gm.ComposeActivityGmail");//sending email via gmail
+        i.putExtra(Intent.EXTRA_EMAIL, to);
+        i.putExtra(Intent.EXTRA_SUBJECT, "Data de Colecta. Cliente:" + Global.cCte_De + " Dispositivo:" + Global.cid_device);
+        i.putExtra(Intent.EXTRA_TEXT, "BATCH DE EJECUACION DE SUBIDA DE DATOS.");
+        i.putExtra(Intent.EXTRA_STREAM, path);
+        startActivity(i);
     }
 
 }

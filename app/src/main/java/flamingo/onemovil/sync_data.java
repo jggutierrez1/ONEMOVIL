@@ -99,7 +99,7 @@ public class sync_data extends AppCompatActivity {
         }
 
         myurl = Global.SERVER_URL;
-        lurl.setText("CONECTADO A:[" + Global.SERVER_URL + "]");
+        lurl.setText("SERVIDOR CLOUD:[" + Global.SERVER_URL.toUpperCase() + "]");
 
         String databasePath = getDatabasePath("one2009.db").getPath();
         db2 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);

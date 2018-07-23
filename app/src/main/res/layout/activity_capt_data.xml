@@ -58,13 +58,6 @@
                     android:text="FOTO METROS" />
 
                 <Button
-                    android:id="@+id/obtn_metd_capt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="80dp"
-                    android:layout_weight="1"
-                    android:text="METROS EN $" />
-
-                <Button
                     android:id="@+id/obtn_save_capt"
                     android:layout_width="wrap_content"
                     android:layout_height="80dp"
@@ -158,15 +151,29 @@
 
             </LinearLayout>
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="#e6e6e6"
-                android:text="METROS DE ENTRADA"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="461dp"
+                    android:layout_height="wrap_content"
+                    android:background="#e6e6e6"
+                    android:text="METROS DE ENTRADA"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/obtn_metd_capte"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="METROS DE ENTRADA EN $" />
+            </LinearLayout>
+
 
             <!--  ACTUAL [A] -->
             <LinearLayout
@@ -189,9 +196,10 @@
                     android:layout_width="105dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@android:color/white"
                     android:ems="10"
                     android:enabled="true"
-                    android:inputType="textPersonName|number"
+                    android:inputType="number|numberSigned"
                     android:selectAllOnFocus="true"
                     android:text="0"
                     android:textSize="23dp"
@@ -223,7 +231,7 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:enabled="true"
-                    android:inputType="textPersonName|number"
+                    android:inputType="number|numberSigned"
                     android:selectAllOnFocus="true"
                     android:text="0"
                     android:textSize="23dp"
@@ -257,7 +265,7 @@
                     android:editable="false"
                     android:ems="10"
                     android:enabled="true"
-                    android:inputType="textPersonName|number"
+                    android:inputType="number|numberSigned"
                     android:text="0"
                     android:textColor="?attr/colorPrimaryDark"
                     android:textSize="23dp"
@@ -265,10 +273,6 @@
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
             </LinearLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
 
             <!--  ACTUAL [B] -->
             <LinearLayout
@@ -295,7 +299,7 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:enabled="true"
-                    android:inputType="textPersonName|number"
+                    android:inputType="number|numberSigned"
                     android:selectAllOnFocus="true"
                     android:text="0"
                     android:textSize="23dp"
@@ -328,7 +332,7 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:enabled="true"
-                    android:inputType="textPersonName|number"
+                    android:inputType="number|numberSigned"
                     android:selectAllOnFocus="true"
                     android:text="0"
                     android:textSize="23dp"
@@ -364,7 +368,7 @@
                     android:editable="false"
                     android:ems="10"
                     android:enabled="true"
-                    android:inputType="textPersonName|number"
+                    android:inputType="number|numberSigned"
                     android:text="0"
                     android:textColor="?attr/colorPrimaryDark"
                     android:textSize="23dp"
@@ -373,23 +377,31 @@
                     tools:layout_editor_absoluteY="147dp" />
             </LinearLayout>
 
-            <Space
-                android:id="@+id/oSpaceb_esep"
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <!--                             ETIQUETA SALIDA                                    -->
 
-            <TextView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:autoText="false"
-                android:background="#e6e6e6"
-                android:text="METROS DE SALIDA"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="461dp"
+                    android:layout_height="wrap_content"
+                    android:autoText="false"
+                    android:background="#e6e6e6"
+                    android:text="METROS DE SALIDA"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/obtn_metd_capts"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="METROS DE SALIDA EN $" />
+            </LinearLayout>
 
             <!--  ACTUAL [A] -->
             <LinearLayout
@@ -414,7 +426,7 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:enabled="true"
-                    android:inputType="textPersonName|number"
+                    android:inputType="number|numberSigned"
                     android:selectAllOnFocus="true"
                     android:text="0"
                     android:textSize="23dp"
@@ -448,7 +460,7 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:enabled="true"
-                    android:inputType="textPersonName|number"
+                    android:inputType="number|numberSigned"
                     android:selectAllOnFocus="true"
                     android:text="0"
                     android:textSize="23dp"
@@ -481,7 +493,7 @@
                     android:editable="false"
                     android:ems="10"
                     android:enabled="true"
-                    android:inputType="textPersonName|number"
+                    android:inputType="number|numberSigned"
                     android:text="0"
                     android:textColor="?attr/colorPrimaryDark"
                     android:textSize="23dp"
@@ -489,10 +501,6 @@
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
             </LinearLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="15dp" />
 
             <!--  ACTUAL [B] -->
             <LinearLayout
@@ -519,7 +527,7 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:enabled="true"
-                    android:inputType="textPersonName|number"
+                    android:inputType="number|numberSigned"
                     android:selectAllOnFocus="true"
                     android:text="0"
                     android:textSize="23dp"
@@ -552,7 +560,7 @@
                     android:layout_weight="1"
                     android:ems="10"
                     android:enabled="true"
-                    android:inputType="textPersonName|number"
+                    android:inputType="number|numberSigned"
                     android:selectAllOnFocus="true"
                     android:text="0"
                     android:textSize="23dp"
@@ -588,7 +596,7 @@
                     android:editable="false"
                     android:ems="10"
                     android:enabled="true"
-                    android:inputType="textPersonName|number"
+                    android:inputType="number|numberSigned"
                     android:text="0"
                     android:textColor="?attr/colorPrimaryDark"
                     android:textSize="23dp"
@@ -596,11 +604,6 @@
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
             </LinearLayout>
-
-            <Space
-                android:id="@+id/oSpaceb_ssep"
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
 
             <TextView
                 android:layout_width="match_parent"
@@ -624,12 +627,12 @@
                 <TextView
                     android:id="@+id/oltot_cole"
                     style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                    android:layout_width="133dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:enabled="true"
-                    android:text="COLECTADO $:"
-                    android:textColor="@android:color/holo_green_dark"
+                    android:text="COLECTA :$"
+                    android:textColor="#059e05"
                     android:textSize="23dp"
                     android:textStyle="bold" />
 
@@ -641,9 +644,61 @@
                     android:editable="false"
                     android:ems="10"
                     android:enabled="true"
-                    android:inputType="numberDecimal"
+                    android:inputType="numberSigned|numberDecimal"
                     android:text="0.00"
-                    android:textColor="@android:color/holo_green_dark"
+                    android:textColor="#059e05"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="FONDO :$"
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/otot_cole_mas"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:editable="true"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="numberSigned|numberDecimal"
+                    android:text="0.00"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="1dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="="
+                    android:textColor="#059e05"
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/otot_cole_sum"
+                    android:layout_width="105dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:editable="false"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="numberSigned|numberDecimal"
+                    android:text="0.00"
+                    android:textColor="#059e05"
                     android:textSize="23dp"
                     android:textStyle="bold"
                     tools:layout_editor_absoluteX="182dp"
@@ -660,12 +715,12 @@
                 <TextView
                     android:id="@+id/oltot_cred"
                     style="@style/Widget.AppCompat.TextView.SpinnerItem"
-                    android:layout_width="133dp"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:enabled="true"
-                    android:text="PREMIOS $:"
-                    android:textColor="@android:color/holo_green_dark"
+                    android:text="PREMIOS :$"
+                    android:textColor="@android:color/holo_red_dark"
                     android:textSize="23dp"
                     android:textStyle="bold" />
 
@@ -677,16 +732,66 @@
                     android:editable="false"
                     android:ems="10"
                     android:enabled="true"
-                    android:inputType="numberDecimal"
+                    android:inputType="numberSigned|numberDecimal"
                     android:text="0.00"
-                    android:textColor="@android:color/holo_green_dark"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="60dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="FONDO :$"
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/otot_cred_mas"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="numberSigned|numberDecimal"
+                    android:text="0.00"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+
+                <TextView
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="1dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:enabled="true"
+                    android:text="="
+                    android:textColor="@android:color/holo_red_dark"
+                    android:textSize="23dp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/otot_cred_sum"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:editable="false"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="numberSigned|numberDecimal"
+                    android:text="0.00"
+                    android:textColor="@android:color/holo_red_dark"
                     android:textSize="23dp"
                     android:textStyle="bold"
                     tools:layout_editor_absoluteX="182dp"
                     tools:layout_editor_absoluteY="147dp" />
 
             </LinearLayout>
-
 
             <Space
                 android:layout_width="match_parent"
@@ -714,12 +819,12 @@
                     android:layout_height="80dp"
                     android:layout_weight="1"
                     android:background="#fff586"
+                    android:digits=" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789."
                     android:ems="10"
                     android:enabled="true"
                     android:inputType="textMultiLine"
                     android:selectAllOnFocus="true"
-                    android:tooltipText="ESCRIBA EL DETALLE AQUI"
-                    android:digits=" abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789."/>
+                    android:tooltipText="ESCRIBA EL DETALLE AQUI" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

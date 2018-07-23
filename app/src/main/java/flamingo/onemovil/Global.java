@@ -40,6 +40,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 
@@ -47,6 +48,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -85,6 +87,8 @@ import javax.net.ssl.HttpsURLConnection;
 
 import static android.content.ContentValues.TAG;
 import static java.lang.System.exit;
+
+import android.support.v7.app.AppCompatActivity;
 
 /**
  * Created by Usuario on 01/01/2018.
@@ -154,6 +158,7 @@ public class Global {
     public static int REQUEST_PRINT = 9;
     public static int REQUEST_CAMERA = 1;
     public static int MR_Dialog_Resp = 0;
+    public static String cFileLogPathDest = "";
 
     public static boolean bAutoSelEmp = false,
             bAutoSelCte = false,
@@ -180,6 +185,8 @@ public class Global {
 
         cFileDbPathOrig = cApp_Data_Storage + "one2009.db";
         cFileDbPathDest = cApp_Folder_Storage + "/" + cid_device + "-one2009.db";
+        cFileLogPathDest = cStorageDirectory + "/" + Global.cid_device + "-logfile.txt";
+        Global.logLargeString(cFileLogPathDest);
     }
 
     /*
@@ -797,7 +804,7 @@ public class Global {
         } else {
             try {
                 FileInputStream fileInputStream = new FileInputStream(selectedFile);
-                URL url = new URL(SERVER_URL_FLES);
+                URL url = new URL(Global.SERVER_URL_FLES);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);//Allow Inputs
                 connection.setDoOutput(true);//Allow Outputs
@@ -962,6 +969,9 @@ public class Global {
             System.out.println("Post parameters : " + parameters.toString());
             System.out.println("Response Code : " + responseCode);
 
+            Global.appendLog(Global.cFileLogPathDest, Global.getNow() + " Sending 'POST' request to URL : \n" + url, false);
+            Global.appendLog(Global.cFileLogPathDest, Global.getNow() + " Post parameters : \n" + parameters.toString(), false);
+            Global.appendLog(Global.cFileLogPathDest, Global.getNow() + " Response Code : \n" + responseCode, false);
 
             String line = "";
             InputStreamReader isr = new InputStreamReader(connection.getInputStream(), "UTF-8");
@@ -973,17 +983,21 @@ public class Global {
             response = sb.toString().trim();
             // Response from server after login process will be stored in response variable.
             System.out.println("Response String : " + response);
+            Global.appendLog(Global.cFileLogPathDest, Global.getNow() + " Response String : \n" + response, false);
 
             // You can perform UI operations here
             //Toast.makeText(getApplicationContext(), "Message from Server: \n" + response, Toast.LENGTH_LONG).show();
             isr.close();
             reader.close();
+            Global.appendLog(Global.cFileLogPathDest, Global.getNow() + " ENVIO OK!!", false);
 
         } catch (UnsupportedEncodingException e) {
             // TODO Auto-generated catch block
+            Global.appendLog(Global.cFileLogPathDest, Global.getNow() + " ERROR EN EL ENVIO!  \n", false);
             e.printStackTrace();
         } catch (IOException e) {
             // TODO Auto-generated catch block
+            Global.appendLog(Global.cFileLogPathDest, Global.getNow() + " ERROR EN EL ENVIO!  \n", false);
             e.printStackTrace();
         }
 
@@ -1351,6 +1365,7 @@ public class Global {
         cSql_Ln += "u_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln += "maqtc_sem_jcj   INTEGER NULL DEFAULT '1',";
+        cSql_Ln += "maqtc_porc_conc NUMERIC(12,2) DEFAULT 0.00,";
         cSql_Ln += "CONSTRAINT maquinastc_PRIMARY PRIMARY KEY (maqtc_id))";
         Global.oGen_Db.execSQL(cSql_Ln);
 
@@ -1470,6 +1485,7 @@ public class Global {
         cSql_Ln += "op_s_pantalla   NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "op_cal_colect   NUMERIC(12, 2) NULL DEFAULT 0.00,";
         cSql_Ln += "op_tot_colect   NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_colect_m NUMERIC(12, 2) NULL DEFAULT 0.00,";
         cSql_Ln += "op_tot_impmunic  NUMERIC(12, 2) NULL DEFAULT 0.00,";
         cSql_Ln += "op_tot_impjcj   NUMERIC(12, 2) NULL DEFAULT 0.00,";
         cSql_Ln += "op_tot_timbres  NUMERIC(12, 2) NULL DEFAULT 0.00,";
@@ -1478,6 +1494,7 @@ public class Global {
         cSql_Ln += "op_tot_dev      NUMERIC(12, 2) NULL DEFAULT 0.00,";
         cSql_Ln += "op_tot_otros    NUMERIC(12, 2) NULL DEFAULT 0.00,";
         cSql_Ln += "op_tot_cred     NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_cred_m   NUMERIC(12, 2) NULL DEFAULT 0.00,";
         cSql_Ln += "op_cal_cred     NUMERIC(12, 2) NULL DEFAULT 0.00,";
         cSql_Ln += "op_tot_sub      NUMERIC(12, 2) NULL DEFAULT 0.00,";
         cSql_Ln += "op_tot_itbm     NUMERIC(12, 2) NULL DEFAULT 0.00,";
@@ -1775,6 +1792,9 @@ public class Global {
             if (Global.checkIfURLExists(cHost)) {
                 Global.SERVER_ITEM_LIST = i;
                 Global.SERVER_URL = cHost;
+                Global.SERVER_URL_FLES = Global.SERVER_URL + "/flam/UploadToServer.php";
+                Global.SERVER_DIR_IMGS = Global.SERVER_URL + "/flam/images/";
+
                 i = 3;
             } else {
                 Global.SERVER_ITEM_LIST = -1;
@@ -1786,4 +1806,32 @@ public class Global {
             return true;
     }
 
+    public static void appendLog(String cPathFileName, String text, boolean bDelete) {
+        File logFile = new File(cPathFileName);
+
+        if (bDelete == true) {
+            if (logFile.exists()) {
+                logFile.delete();
+            }
+        }
+
+        if (!logFile.exists()) {
+            try {
+                logFile.createNewFile();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        try {
+            //BufferedWriter for performance, true to set append to file flag
+            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+            buf.append(text);
+            buf.newLine();
+            buf.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
 }

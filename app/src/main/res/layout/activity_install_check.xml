@@ -80,6 +80,20 @@
 
         <Space
             android:layout_width="match_parent"
+            android:layout_height="25dp" />
+
+        <TextView
+            android:id="@+id/oinst_url"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            tools:text="192.168.0.1" />
+
+        <Space
+            android:layout_width="match_parent"
             android:layout_height="25dp"
             android:layout_weight="1" />
 

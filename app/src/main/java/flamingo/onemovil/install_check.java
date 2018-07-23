@@ -16,8 +16,9 @@ import android.widget.Toast;
 public class install_check extends AppCompatActivity {
     private Button obtn_check_ok, obtn_check_exit;
     private EditText ocheck_code;
-    private TextView InternetStatus, DeviceId;
+    private TextView InternetStatus, DeviceId, inst_url;
     private Context oThis= this;
+    private String myurl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class install_check extends AppCompatActivity {
         InternetStatus = (TextView) findViewById(R.id.check_InternetStatus);
         DeviceId = (TextView) findViewById(R.id.install_device);
         DeviceId.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
+        inst_url = (TextView) findViewById(R.id.oinst_url);
 
         //this.create_database();
         //Global.Create_Sql_Tables(true, true);
@@ -68,6 +70,8 @@ public class install_check extends AppCompatActivity {
             Global.showSimpleOKAlertDialog(oThis ,"FALLO DE CONEXION","SIN ACTIVIDAD DE INTERNET EN ESTE MOMENTO." );
             obtn_check_ok.setEnabled(false);
         }
+        myurl = Global.SERVER_URL;
+        inst_url.setText("SERVIDOR CLOUD:[" + Global.SERVER_URL.toUpperCase() + "]");
 
         obtn_check_ok.setOnClickListener(new View.OnClickListener() {
 
