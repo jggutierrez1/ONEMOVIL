@@ -60,7 +60,7 @@ public class login extends AppCompatActivity {
 
         if (Global.checkDataBase() == false) {
             this.create_database();
-            Global.Create_Sql_Tables(false, false);
+            Global.Create_Sql_Tables(true, false);
 
             Intent Check_Install_Screen = new Intent(getApplicationContext(), install_check.class);
             startActivityForResult(Check_Install_Screen, REQUEST_INSTALL_VALIED);

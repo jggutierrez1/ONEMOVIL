@@ -1360,6 +1360,10 @@ public class Global {
         cSql_Ln += "maqtc_m2s_ant   NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "maqtc_m1s_act   NUMERIC(12, 2) DEFAULT 0.00,";
         cSql_Ln += "maqtc_mfecha    DATETIME NULL ,";
+        cSql_Ln += "maqtc_mfecha_act    DATETIME NULL ,";
+        cSql_Ln += "maqtc_mfecha_ant    DATETIME NULL ,";
+        cSql_Ln += "maqtc_fact_act  CHAR(30) NULL DEFAULT '',";
+        cSql_Ln += "maqtc_fact_ant  CHAR(30) NULL DEFAULT '',";
         cSql_Ln += "maqtc_fecha_alta    DATETIME NULL ,";
         cSql_Ln += "maqtc_fecha_modif   DATETIME NULL ,";
         cSql_Ln += "u_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
@@ -1367,6 +1371,7 @@ public class Global {
         cSql_Ln += "maqtc_sem_jcj   INTEGER NULL DEFAULT '1',";
         cSql_Ln += "maqtc_porc_conc NUMERIC(12,2) DEFAULT 0.00,";
         cSql_Ln += "CONSTRAINT maquinastc_PRIMARY PRIMARY KEY (maqtc_id))";
+
         Global.oGen_Db.execSQL(cSql_Ln);
 
         cSql_Ln = "CREATE INDEX IF NOT EXISTS maqtc_cod ON maquinastc('maqtc_cod')";
