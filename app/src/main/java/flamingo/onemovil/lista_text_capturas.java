@@ -23,6 +23,7 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -38,8 +39,9 @@ public class lista_text_capturas extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_text_capturas);
 
-        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        //this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
@@ -164,17 +166,24 @@ public class lista_text_capturas extends AppCompatActivity {
 
         cSqlLn = "";
         cSqlLn += "SELECT ";
-        cSqlLn += " op.op_chapa, ";
-        cSqlLn += " op.op_modelo, ";
-        cSqlLn += " SUM(op.op_tot_colect) AS tot_cole, ";
-        cSqlLn += " SUM(op.op_tot_cred)   AS tot_cred, ";
-        cSqlLn += " (SUM(op.op_tot_colect)-SUM(op.op_tot_cred)) AS tot_dife ";
+        cSqlLn += " em.emp_abrev , ";
+        cSqlLn += " op.op_fecha  , ";
+        cSqlLn += " op.op_chapa  , ";
+        cSqlLn += " op.op_modelo , ";
+        cSqlLn += " op.op_semanas_imp, ";
+        cSqlLn += " op.op_tot_colect AS tot_cole, ";
+        cSqlLn += " op.op_tot_cred   AS tot_cred, ";
+        cSqlLn += " (op.op_tot_colect - op.op_tot_cred) AS tot_dife ";
+        //cSqlLn += " SUM(op.op_tot_colect) AS tot_cole, ";
+        //cSqlLn += " SUM(op.op_tot_cred)   AS tot_cred, ";
+        //cSqlLn += " (SUM(op.op_tot_colect)-SUM(op.op_tot_cred)) AS tot_dife ";
         cSqlLn += "FROM operacion op ";
+        cSqlLn += "LEFT JOIN empresas em ON op.op_emp_id = em.emp_id ";
         cSqlLn += "WHERE (op.id_device='" + Global.cid_device + "') ";
         cSqlLn += "AND   (op.op_emp_id='" + Global.cEmp_Id + "') ";
         cSqlLn += "AND   (op.cte_id   ='" + Global.cCte_Id + "') ";
-        cSqlLn += "GROUP BY op.op_emp_id,op.op_chapa ";
-        cSqlLn += "ORDER BY op.op_emp_id,op.op_chapa ";
+        //cSqlLn += "GROUP BY op.op_emp_id, op.cte_id, op.op_chapa ";
+        cSqlLn += "ORDER BY op.op_emp_id, op.cte_id, op.op_chapa ";
 
         Log.d("SQL", cSqlLn);
         data04 = db04.rawQuery(cSqlLn, null);
@@ -198,7 +207,7 @@ public class lista_text_capturas extends AppCompatActivity {
         cSqlLn += "WHERE (op.id_device='" + Global.cid_device + "') ";
         cSqlLn += "AND   (op.op_emp_id='" + Global.cEmp_Id + "') ";
         cSqlLn += "AND   (op.cte_id   ='" + Global.cCte_Id + "') ";
-        cSqlLn += "GROUP BY op.op_emp_id,id_device ";
+        cSqlLn += "GROUP BY op.op_emp_id, op.cte_id ";
         Log.d("SQL", cSqlLn);
         data04 = db04.rawQuery(cSqlLn, null);
 
@@ -211,33 +220,38 @@ public class lista_text_capturas extends AppCompatActivity {
     }
 
     private boolean Imprimir_Maquinas() {
-        String cMaq_Chap = "", cMaq_Mode = "", ctot_cole = "", ctot_cred = "", ctot_dife = "";
+        String cFec_Capt1, cFec_Capt, cNom_Empr, cSem_Impu, cMaq_Chap = "", cMaq_Mode = "", ctot_cole = "", ctot_cred = "", ctot_dife = "";
         String cMet_DlE = "", cMet_DlS = "", cMet_DlD = "";
         String cLine = "";
 
         if ((data04 == null) || (data04.getCount() == 0)) {
             return false;
         } else {
-            this.otext_lst_t.append(Global.center("***" + Global.cEmp_De.toUpperCase().trim() + "***", 75 - 3, ' ') + "\n");
-            this.otext_lst_t.append(Global.center("LISTADO PRELIMIANR DE MAQUINAS COLECTADAS", 75 - 3, ' ') + "\n");
-            this.otext_lst_t.append(Global.center("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]" + "\n", 75 - 3, ' ') + "\n");
-            this.otext_lst_t.append(Global.center("INFORMACION DE ->METROS/MONTOS<- CAPTURADOS\n", 75 - 3, ' ') + "\n");
-            this.otext_lst_t.append(Global.repeat('=', 75 - 3) + "\n");
+            this.otext_lst_t.append(Global.center("***" + Global.cEmp_De.toUpperCase().trim() + "***", 110, ' ') + "\n");
+            this.otext_lst_t.append(Global.center("LISTADO PRELIMIANR DE MAQUINAS COLECTADAS", 110, ' ') + "\n");
+            this.otext_lst_t.append(Global.center("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]" + "\n", 110, ' ') + "\n");
+            this.otext_lst_t.append(Global.center("INFORMACION DE ->METROS/MONTOS<- CAPTURADOS\n", 110, ' ') + "\n");
+            this.otext_lst_t.append(Global.repeat('=', 110) + "\n");
             data04.moveToFirst();
-            cLine = String.format("%8s %20s %12s %12s %12s", "CHAPA", "MODELO", "ENTRADAS", "SALIDAS", "DIFERENCIA");
+
+            cLine = String.format("%20s %4s %8s %20s %6s %12s %12s %12s", "FECHA-HORA", "EMP.", "CHAPA", "MODELO", "S.IMP.", "ENTRADAS", "SALIDAS", "DIFERENCIA");
             this.otext_lst_t.append(cLine + "\n");
-            this.otext_lst_t.append(Global.repeat('=', 75 - 3) + "\n");
+            this.otext_lst_t.append(Global.repeat('=', 110) + "\n");
 
             do {
+                cFec_Capt1 = data04.getString(data04.getColumnIndex("op_fecha")).trim();
+                cFec_Capt = String.format(Locale.US, "%20s", cFec_Capt1);
+                cNom_Empr = String.format(Locale.US, "%4s", data04.getString(data04.getColumnIndex("emp_abrev")).trim());
+                cSem_Impu = String.format(Locale.US, "%4s", data04.getString(data04.getColumnIndex("op_semanas_imp")).trim());
                 cMaq_Chap = String.format(Locale.US, "%8s", data04.getString(data04.getColumnIndex("op_chapa")).trim());
                 cMaq_Mode = String.format(Locale.US, "%20s", data04.getString(data04.getColumnIndex("op_modelo")).trim());
                 ctot_cole = String.format(Locale.US, "%12.2f", data04.getDouble(data04.getColumnIndex("tot_cole")));
                 ctot_cred = String.format(Locale.US, "%12.2f", data04.getDouble(data04.getColumnIndex("tot_cred")));
                 ctot_dife = String.format(Locale.US, "%12.2f", data04.getDouble(data04.getColumnIndex("tot_dife")));
-                cLine = String.format("%s %s %s %s %s", cMaq_Chap, cMaq_Mode, ctot_cole, ctot_cred, ctot_dife);
+                cLine = String.format("%s %s %s %s %s %s %s %s", cFec_Capt, cNom_Empr, cMaq_Chap, cMaq_Mode, "S["+cSem_Impu.trim() +"]", ctot_cole, ctot_cred, ctot_dife);
                 this.otext_lst_t.append(cLine + "\n");
             } while (data04.moveToNext());
-            this.otext_lst_t.append(Global.repeat('=', 75 - 3) + "\n");
+            this.otext_lst_t.append(Global.repeat('=', 110) + "\n");
             cLine = String.format("%s %6s", "TOTAL DE MAQUNAS:", data04.getCount());
             this.otext_lst_t.append(cLine + "\n");
 
@@ -264,7 +278,7 @@ public class lista_text_capturas extends AppCompatActivity {
                 cLine = String.format("%8s %20s %s %s %s", "", "", ctot_cole, ctot_cred, ctot_dife);
                 this.otext_lst_t.append(cLine + "\n");
             } while (data04.moveToNext());
-            this.otext_lst_t.append(Global.repeat('=', 75 - 3) + "\n");
+            this.otext_lst_t.append(Global.repeat('=', 110) + "\n");
 
             return true;
         }

@@ -121,8 +121,6 @@ public class sync_data extends AppCompatActivity {
                 memo.setText("");
 
                 Global.Create_Sql_Tables(ock_rene.isChecked(), ock_delc.isChecked());
-
-
                 //    0:'TODOS'
                 //    1:'empresas'
                 //    2:'clientes'
@@ -214,6 +212,10 @@ public class sync_data extends AppCompatActivity {
                     cSql_Ln += "('0','" + cRem_Clave_Metros + "','" + cRem_Clave_Montos + "','" + cRem_Db_Name + "','" + Global.cid_device + "')";
                     db2.execSQL(cSql_Ln);
 
+                    if (ock_delc.isChecked()==true) {
+                        db2.execSQL("DELETE FROM operacion");
+                        db2.execSQL("DELETE FROM operaciong");
+                    }
                     /*
                     String cActual_Corre = Global.Query_Result("SELECT IFNULL(corre_act,0) AS corre_act FROM dispositivos WHERE serial ='" + Global.cid_device + "'", "corre_act");
                     if (cActual_Corre == "") {

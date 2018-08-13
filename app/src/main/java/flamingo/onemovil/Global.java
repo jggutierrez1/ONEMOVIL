@@ -1,9 +1,12 @@
 package flamingo.onemovil;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.app.AlertDialog;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -79,6 +82,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.StringTokenizer;
@@ -646,6 +651,28 @@ public class Global {
             Log.d(TAG, e.getMessage());
         }
         return resultSet2.toString();
+    }
+
+    public static String getJsonResults2_V2(String cSql_Ln1, String cSql_Ln2, String cTableName1, String cTableName2) {
+        JSONArray resultSet01 = new JSONArray();
+        JSONArray resultSet02 = new JSONArray();
+        JSONObject resultSetFN = new JSONObject();
+
+        resultSet01 = getJsonResults(cSql_Ln1);
+        resultSet02 = getJsonResults(cSql_Ln2);
+
+        try {
+            resultSetFN.put(cTableName1, resultSet01);
+            resultSetFN.put(cTableName1+"_regs", resultSet01.length());
+
+            resultSetFN.put(cTableName2, resultSet02);
+            resultSetFN.put(cTableName2+"_regs", resultSet02.length());
+
+            Global.logLargeString(resultSetFN.toString());
+        } catch (Exception e) {
+            Log.d(TAG, e.getMessage());
+        }
+        return resultSetFN.toString();
     }
 
     public static void logLargeString(String str) {
@@ -1302,29 +1329,30 @@ public class Global {
         // ---------------------------------EMPRESA----------------------------------------------------------------//
         cSql_Ln = "";
         cSql_Ln += "CREATE TABLE IF NOT EXISTS empresas ( ";
-        cSql_Ln += "emp_id      INTEGER NOT NULL,";
+        cSql_Ln += "emp_id          INTEGER NOT NULL,";
         cSql_Ln += "emp_descripcion CHAR(85) NULL DEFAULT '',";
-        cSql_Ln += "emp_ruc CHAR(85) NULL DEFAULT '',";
-        cSql_Ln += "emp_dv CHAR(10) NULL DEFAULT '',";
+        cSql_Ln += "emp_ruc         CHAR(85) NULL DEFAULT '',";
+        cSql_Ln += "emp_dv          CHAR(10) NULL DEFAULT '',";
+        cSql_Ln += "emp_abrev       CHAR(4)  NULL DEFAULT '',";
         cSql_Ln += "emp_carpeta_reportes VARCHAR (120) NULL DEFAULT '',";
-        cSql_Ln += "emp_telefono1 CHAR(12) NULL DEFAULT '',";
-        cSql_Ln += "emp_telefono2 CHAR(12) NULL DEFAULT '',";
-        cSql_Ln += "emp_fax CHAR(12) NULL DEFAULT '',";
-        cSql_Ln += "emp_direccion TEXT NULL,";
-        cSql_Ln += "emp_apartado TEXT NULL,";
-        cSql_Ln += "emp_email CHAR(100) NULL DEFAULT '',";
-        cSql_Ln += "separa_mil CHAR(1) NULL DEFAULT ',',";
-        cSql_Ln += "separa_dec CHAR(1) NULL DEFAULT '.',";
-        cSql_Ln += "emp_imagen BLOB NULL,";
+        cSql_Ln += "emp_telefono1   CHAR(12) NULL DEFAULT '',";
+        cSql_Ln += "emp_telefono2   CHAR(12) NULL DEFAULT '',";
+        cSql_Ln += "emp_fax         CHAR(12) NULL DEFAULT '',";
+        cSql_Ln += "emp_direccion   TEXT     NULL,";
+        cSql_Ln += "emp_apartado    TEXT     NULL,";
+        cSql_Ln += "emp_email       CHAR(100) NULL DEFAULT '',";
+        cSql_Ln += "separa_mil      CHAR(1)  NULL DEFAULT ',',";
+        cSql_Ln += "separa_dec      CHAR(1)  NULL DEFAULT '.',";
+        cSql_Ln += "emp_imagen      BLOB     NULL,";
         cSql_Ln += "emp_imagen_path VARCHAR(120) NULL DEFAULT '',";
-        cSql_Ln += "emp_inactivo INTEGER NULL DEFAULT 0,";
-        cSql_Ln += "emp_cargo_jcj NUMERIC(12, 2) NULL DEFAULT 0,";
-        cSql_Ln += "emp_cargo_spac NUMERIC(12, 2) NULL DEFAULT 0,";
-        cSql_Ln += "emp_fecha_alta DATETIME NULL ,";
+        cSql_Ln += "emp_inactivo    INTEGER  NULL DEFAULT 0,";
+        cSql_Ln += "emp_cargo_jcj   NUMERIC(12, 2) NULL DEFAULT 0,";
+        cSql_Ln += "emp_cargo_spac  NUMERIC(12, 2) NULL DEFAULT 0,";
+        cSql_Ln += "emp_fecha_alta  DATETIME NULL ,";
         cSql_Ln += "emp_fecha_modif DATETIME NULL ,";
-        cSql_Ln += "emp_corre_ant INT(10) NULL DEFAULT '0',";
-        cSql_Ln += "emp_corre_act INT(10) NULL DEFAULT '0',";
-        cSql_Ln += "u_usuario_alta CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "emp_corre_ant   INT(10)  NULL DEFAULT '0',";
+        cSql_Ln += "emp_corre_act   INT(10)  NULL DEFAULT '0',";
+        cSql_Ln += "u_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln += "emp_clave_metros CHAR(30) NULL DEFAULT '112233',";
         cSql_Ln += "emp_clave_montos CHAR(30) NULL DEFAULT '332211',";
@@ -1838,5 +1866,28 @@ public class Global {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
+    }
+
+    public static String get_device_email(Context context) {
+        AccountManager manager = AccountManager.get(context);
+        Account[] accounts = manager.getAccountsByType("com.google");
+        List<String> possibleEmails = new LinkedList<String>();
+
+        for (Account account : accounts) {
+            // TODO: Check possibleEmail against an email regex or treat
+            // account.name as an email address only for certain account.type
+            // values.
+            possibleEmails.add(account.name);
+        }
+
+        if (!possibleEmails.isEmpty() && possibleEmails.get(0) != null) {
+            String email = possibleEmails.get(0);
+            String[] parts = email.split("@");
+            if (parts.length > 0 && parts[0] != null)
+                return email;
+            else
+                return null;
+        } else
+            return null;
     }
 }
