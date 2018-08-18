@@ -63,6 +63,12 @@ public class take_photo extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_take_photo);
 
+        Locale.setDefault(new Locale("en", "US"));
+
+        Global.oActual_Context = null;
+        Global.oActual_Context = this.getApplicationContext();
+        oContext = this.getApplicationContext();
+
         if (Global.cCte_Id == "") {
             Toast.makeText(getApplicationContext(), "Debe seleccionar un <CLIENTE>, PARA PODER TOMAR LAS FOTOS.", Toast.LENGTH_LONG).show();
             finish();
@@ -73,10 +79,6 @@ public class take_photo extends AppCompatActivity {
             finish();
             return;
         }
-
-        Global.oActual_Context = null;
-        Global.oActual_Context = this.getApplicationContext();
-        oContext = this.getApplicationContext();
 
         Global.callBroadCast();
 

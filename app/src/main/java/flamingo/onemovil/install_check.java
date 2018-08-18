@@ -13,6 +13,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 public class install_check extends AppCompatActivity {
     private Button obtn_check_ok, obtn_check_exit;
     private EditText ocheck_code;
@@ -29,6 +31,8 @@ public class install_check extends AppCompatActivity {
 
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
+
+        Locale.setDefault(new Locale("en", "US"));
 
         obtn_check_ok = (Button) findViewById(R.id.btn_check_ok);
         obtn_check_exit = (Button) findViewById(R.id.btn_check_exit);
@@ -123,6 +127,6 @@ public class install_check extends AppCompatActivity {
 
     private void create_database() {
         String myPath = Global.oActual_Context.getDatabasePath("one2009.db").getPath();
-        Global.oGen_Db = openOrCreateDatabase(myPath, Context.MODE_PRIVATE, null);
+        Global.oGen_Db =  io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(myPath, null, null);
     }
 }

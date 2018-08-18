@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 public class login extends AppCompatActivity {
     Button obtn_entar, obtn_cance;
     EditText oUser, oPass;
@@ -37,6 +39,8 @@ public class login extends AppCompatActivity {
 
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
+
+        Locale.setDefault(new Locale("en", "US"));
 
         Global.Init_Vars();
         Global.Chech_App_Folders();
@@ -170,6 +174,6 @@ public class login extends AppCompatActivity {
 
     private void create_database() {
         String myPath = Global.oActual_Context.getDatabasePath("one2009.db").getPath();
-        Global.oGen_Db = openOrCreateDatabase(myPath, Context.MODE_PRIVATE, null);
+        Global.oGen_Db = io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(myPath, null, null);
     }
 }

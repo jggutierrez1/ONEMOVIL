@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+
+import io.requery.android.database.sqlite.SQLiteDatabase;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.style.TtsSpan;
@@ -23,6 +25,11 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.w3c.dom.Text;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
@@ -33,6 +40,7 @@ public class lista_text_capturas extends AppCompatActivity {
     private SQLiteDatabase db04;
     private Cursor data04;
     private String cSqlLn;
+    String cText = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +65,17 @@ public class lista_text_capturas extends AppCompatActivity {
         this.Clear_Screen();
 
         String databasePath = getDatabasePath("one2009.db").getPath();
-        this.db04 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
+        this.db04 = io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(databasePath, null, null);
 
+        Global.save_in_textfile(Global.cFileRepPathDest, "", false);
+
+        this.Imprimir2_Titles();
         if (this.Listar_Maquinas() == true) {
             this.Imprimir_Maquinas();
 
             if (this.Listar_Montos() == true) {
             }
+            this.Mostrar_Listado();
         }
 
         this.obtn_print_lst_t.setOnClickListener(new View.OnClickListener() {
@@ -162,6 +174,36 @@ public class lista_text_capturas extends AppCompatActivity {
         this.otext_lst_t.setText("");
     }
 
+    private void Imprimir2_Titles() {
+        cText = Global.center("***" + Global.cEmp_De.toUpperCase().trim() + "***", 110, ' ') + "\n";
+        Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+        cText = Global.center("LISTADO PRELIMIANR DE MAQUINAS COLECTADAS", 110, ' ') + "\n";
+        Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+        cText = Global.center("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]", 110, ' ') + "\n";
+        Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+        cText = Global.center("INFORMACION DE ->METROS/MONTOS<- CAPTURADOS", 110, ' ') + "\n";
+        Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+        cText = Global.repeat('=', 110) + "\n";
+        Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+    }
+
+    private void Mostrar_Listado() {
+        String sline = "";
+        this.otext_lst_t.setText("");
+        try {
+            FileReader fReader = new FileReader(Global.cFileRepPathDest);
+            BufferedReader bReader = new BufferedReader(fReader);
+
+            while ((sline = bReader.readLine()) != null) {
+                otext_lst_t.append(sline + "\n");
+            }
+            fReader = null;
+            bReader = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     private boolean Listar_Maquinas() {
 
         cSqlLn = "";
@@ -227,16 +269,13 @@ public class lista_text_capturas extends AppCompatActivity {
         if ((data04 == null) || (data04.getCount() == 0)) {
             return false;
         } else {
-            this.otext_lst_t.append(Global.center("***" + Global.cEmp_De.toUpperCase().trim() + "***", 110, ' ') + "\n");
-            this.otext_lst_t.append(Global.center("LISTADO PRELIMIANR DE MAQUINAS COLECTADAS", 110, ' ') + "\n");
-            this.otext_lst_t.append(Global.center("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]" + "\n", 110, ' ') + "\n");
-            this.otext_lst_t.append(Global.center("INFORMACION DE ->METROS/MONTOS<- CAPTURADOS\n", 110, ' ') + "\n");
-            this.otext_lst_t.append(Global.repeat('=', 110) + "\n");
             data04.moveToFirst();
 
             cLine = String.format("%20s %4s %8s %20s %6s %12s %12s %12s", "FECHA-HORA", "EMP.", "CHAPA", "MODELO", "S.IMP.", "ENTRADAS", "SALIDAS", "DIFERENCIA");
-            this.otext_lst_t.append(cLine + "\n");
-            this.otext_lst_t.append(Global.repeat('=', 110) + "\n");
+            cText = cLine + "\n";
+            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+            cText = Global.repeat('=', 110) + "\n";
+            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
 
             do {
                 cFec_Capt1 = data04.getString(data04.getColumnIndex("op_fecha")).trim();
@@ -248,12 +287,15 @@ public class lista_text_capturas extends AppCompatActivity {
                 ctot_cole = String.format(Locale.US, "%12.2f", data04.getDouble(data04.getColumnIndex("tot_cole")));
                 ctot_cred = String.format(Locale.US, "%12.2f", data04.getDouble(data04.getColumnIndex("tot_cred")));
                 ctot_dife = String.format(Locale.US, "%12.2f", data04.getDouble(data04.getColumnIndex("tot_dife")));
-                cLine = String.format("%s %s %s %s %s %s %s %s", cFec_Capt, cNom_Empr, cMaq_Chap, cMaq_Mode, "S["+cSem_Impu.trim() +"]", ctot_cole, ctot_cred, ctot_dife);
-                this.otext_lst_t.append(cLine + "\n");
+                cLine = String.format("%s %s %s %s %s %s %s %s", cFec_Capt, cNom_Empr, cMaq_Chap, cMaq_Mode, "S[" + cSem_Impu.trim() + "]", ctot_cole, ctot_cred, ctot_dife);
+                cText = cLine + "\n";
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
             } while (data04.moveToNext());
-            this.otext_lst_t.append(Global.repeat('=', 110) + "\n");
+            cText = Global.repeat('=', 110) + "\n";
+            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
             cLine = String.format("%s %6s", "TOTAL DE MAQUNAS:", data04.getCount());
-            this.otext_lst_t.append(cLine + "\n");
+            cText = cLine + "\n";
+            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
 
             return true;
         }
@@ -276,9 +318,11 @@ public class lista_text_capturas extends AppCompatActivity {
                 //text_lst_t.append("Credito   : " + String.format(Locale.US, "%12.2f", data04.getDouble(1))+ "\n");
                 //text_lst_t.append("Diferencia: " + String.format(Locale.US,"%12.2f", data04.getDouble(2))+ "\n");
                 cLine = String.format("%8s %20s %s %s %s", "", "", ctot_cole, ctot_cred, ctot_dife);
-                this.otext_lst_t.append(cLine + "\n");
+                cText = cLine + "\n";
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
             } while (data04.moveToNext());
-            this.otext_lst_t.append(Global.repeat('=', 110) + "\n");
+            cText = Global.repeat('=', 110) + "\n";
+            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
 
             return true;
         }

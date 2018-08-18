@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import io.requery.android.database.sqlite.*;
 import android.graphics.Color;
 import android.provider.Settings;
 import android.support.annotation.WorkerThread;
@@ -78,10 +78,10 @@ public class print_data extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_print_data);
 
-        Locale.setDefault(new Locale("en", "US"));
-
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
+
+        Locale.setDefault(new Locale("en", "US"));
 
         getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffc2b3"));
 
@@ -101,7 +101,7 @@ public class print_data extends AppCompatActivity {
 
         this.cDatabasePath = getDatabasePath("one2009.db").getPath();
 
-        this.oDb6 = openOrCreateDatabase(cDatabasePath, Context.MODE_PRIVATE, null);
+        this.oDb6 = io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(cDatabasePath, null, null);
 
         try {
             disconnectBT();

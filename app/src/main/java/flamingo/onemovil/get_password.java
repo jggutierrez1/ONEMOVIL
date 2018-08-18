@@ -10,6 +10,8 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Locale;
+
 public class get_password extends AppCompatActivity {
     private Button obtn_acept, obtn_cancel;
     private EditText oPassw_value;
@@ -24,6 +26,8 @@ public class get_password extends AppCompatActivity {
 
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
+
+        Locale.setDefault(new Locale("en", "US"));
 
         this.opassw_title = (TextView) findViewById(R.id.passw_title);
         this.obtn_acept = (Button) findViewById(R.id.btn_acept);

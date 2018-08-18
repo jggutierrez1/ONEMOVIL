@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import io.requery.android.database.sqlite.*;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -17,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class select_emp extends AppCompatActivity {
 
@@ -40,6 +41,8 @@ public class select_emp extends AppCompatActivity {
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
 
+        Locale.setDefault(new Locale("en", "US"));
+
         this.btn_regr_emp = (Button) findViewById(R.id.obtn_regr_emp);
         this.btn_sele_emp = (Button) findViewById(R.id.obtn_sele_emp);
         this.lst_emp = (ListView) findViewById(R.id.olst_emp);
@@ -56,7 +59,7 @@ public class select_emp extends AppCompatActivity {
                 "ORDER BY UPPER(trim(emp_descripcion))";
 
         String databasePath = getDatabasePath("one2009.db").getPath();
-        db3 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
+        db3 = io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(databasePath, null, null);
         data = db3.rawQuery(cEmp_Sql                , null);
 
         if (data.getCount() == 0) {

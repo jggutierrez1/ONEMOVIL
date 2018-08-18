@@ -2,6 +2,7 @@ package flamingo.onemovil;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
@@ -22,6 +23,7 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Locale;
 
 public class uploadfiletoserver extends AppCompatActivity implements View.OnClickListener {
 
@@ -34,6 +36,7 @@ public class uploadfiletoserver extends AppCompatActivity implements View.OnClic
     TextView tvFileName;
     ProgressDialog dialog;
     String cFilename;
+    private static Context oContext;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +44,12 @@ public class uploadfiletoserver extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_uploadfiletoserver);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
+        Global.oActual_Context = null;
+        Global.oActual_Context = this.getApplicationContext();
+        oContext = this.getApplicationContext();
+
+        Locale.setDefault(new Locale("en", "US"));
 
         ivAttachment = (ImageView) findViewById(R.id.ivAttachment);
         bUpload = (Button) findViewById(R.id.b_upload);

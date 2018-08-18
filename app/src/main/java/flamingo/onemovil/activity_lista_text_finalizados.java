@@ -5,7 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+
+import io.requery.android.database.sqlite.*;
+import io.requery.android.database.DatabaseErrorHandler;
+import io.requery.android.database.DefaultDatabaseErrorHandler;
+
+import android.arch.persistence.db.SupportSQLiteDatabase;
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +24,9 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Locale;
 
 public class activity_lista_text_finalizados extends AppCompatActivity {
@@ -26,6 +35,7 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
     private SQLiteDatabase db05;
     private Cursor data05;
     private String cSqlLn;
+    String cText = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,13 +59,16 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
         this.Clear2_Screen();
 
         String databasePath = getDatabasePath("one2009.db").getPath();
-        this.db05 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
+        this.db05 = io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(databasePath, null, null);
 
-        if (this.Listar2_Montos() == true) {
-            this.Imprimir2_Montos();
-            if (this.Listar2_Maquinas() == true) {
-                this.Imprimir2_Maquinas();
+        Global.save_in_textfile(Global.cFileRepPathDest, "", false);
+        this.Imprimir2_Titles();
+        if (this.Listar2_Maquinas() == true) {
+            this.Imprimir2_Maquinas();
+            if (this.Listar2_Montos() == true) {
+                this.Imprimir2_Montos();
             }
+            this.Mostrar_Listado();
         }
 
         this.obtn_print_lst2_t.setOnClickListener(new View.OnClickListener() {
@@ -149,12 +162,27 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
 
     }
 
+    private void Mostrar_Listado() {
+        String sline = "";
+        this.otext_lst2_t.setText("");
+        try {
+            FileReader fReader = new FileReader(Global.cFileRepPathDest);
+            BufferedReader bReader = new BufferedReader(fReader);
+            while ((sline = bReader.readLine()) != null) {
+                this.otext_lst2_t.append(sline + "\n");
+            }
+            fReader = null;
+            bReader = null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     private void Clear2_Screen() {
         this.otext_lst2_t.setText("");
     }
 
-     private boolean Listar2_Montos() {
+    private boolean Listar2_Montos() {
         cSqlLn = "";
         cSqlLn += "SELECT ";
         cSqlLn += " SUM(op.op_tot_colect)   AS tot_cole         , ";
@@ -248,11 +276,21 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
         }
     }
 
+    private void Imprimir2_Titles() {
+        cText = Global.center("***" + Global.cEmp_De.toUpperCase().trim() + "***", 180, ' ') + "\n";
+        Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+        cText = Global.center("LISTADO DE MAQUINAS COLECTADAS", 180, ' ') + "\n";
+        Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+        cText = Global.center("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]", 180, ' ') + "\n";
+        Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+        cText = Global.repeat('=', 180) + "\n";
+        Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+    }
+
     private boolean Imprimir2_Maquinas() {
         String cMaq_Chap = "", cMaq_Mode = "";
         String ctot_cole, ctot_impu, ctot__jcj, ctot_timb, ctot_tecn, ctot_otos, ctot_cred, ctot_subt, ctot_itbm, ctot_tota, ctot_bloc, ctot_bemp, ctot_nloc, ctot_nemp, ctot_bajp;
         String cLine = "";
-
 
         if ((data05 == null) || (data05.getCount() == 0)) {
             return false;
@@ -261,8 +299,10 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
             cLine = String.format("%8s %18s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s %10s",
                     "CHAPA", "MODELO",
                     "COL", "MUN", "JCJ", "TIM", "TEC", "OTR", "CRED.", "SUBT", "IMP.", "TOT", "BLOC", "BEMP", "NLOC", "NEMP");
-            this.otext_lst2_t.append(cLine + "\n");
-            this.otext_lst2_t.append(Global.repeat('=', 180) + "\n");
+            cText = cLine + "\n";
+            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+            cText = Global.repeat('=', 180) + "\n";
+            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
 
             do {
                 cMaq_Chap = String.format("%8s", data05.getString(data05.getColumnIndex("op_chapa")).trim());
@@ -288,11 +328,14 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
                         ctot_cole, ctot_impu, ctot__jcj, ctot_timb, ctot_tecn, ctot_otos, ctot_cred,
                         ctot_subt, ctot_itbm, ctot_tota, ctot_bloc, ctot_bemp, ctot_nloc, ctot_nemp);
 
-                this.otext_lst2_t.append(cLine + "\n");
+                cText = cLine + "\n";
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
             } while (data05.moveToNext());
-            this.otext_lst2_t.append(Global.repeat('=', 180) + "\n");
+            cText = Global.repeat('=', 180) + "\n";
+            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
             cLine = String.format("%s %6s", "TOTAL DE MAQUNAS:", data05.getCount());
-            this.otext_lst2_t.append(cLine + "\n");
+            cText = cLine + "\n";
+            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
 
             return true;
         }
@@ -303,13 +346,14 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
         if ((data05 == null) || (data05.getCount() == 0)) {
             return false;
         } else {
-            data05.moveToFirst();
-            this.otext_lst2_t.append(Global.repeat('=', 180) + "\n");
-            this.otext_lst2_t.append(Global.center("***" + Global.cEmp_De.toUpperCase().trim() + "***", 180, ' ') + "\n");
-            this.otext_lst2_t.append(Global.center("LISTADO DE MAQUINAS COLECTADAS", 180, ' ') + "\n");
-            this.otext_lst2_t.append(Global.center("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]" + "\n", 180, ' ') + "\n");
-            this.otext_lst2_t.append(Global.repeat('=', 180) + "\n");
 
+            cText = "\n";
+            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+            cText = Global.repeat('=', 180) + "\n";
+            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+
+
+            data05.moveToFirst();
             Global.Genobj = new JSONObject();
 
             do {
@@ -335,23 +379,39 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                this.otext_lst2_t.append("COLECTADO :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("tot_cole"))));
-                this.otext_lst2_t.append("TIMBRES   :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_timbres"))));
-                this.otext_lst2_t.append("IMUESTOS  :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_impmunic"))));
-                this.otext_lst2_t.append("J.C.J     :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_impjcj"))));
-                this.otext_lst2_t.append("SERV. TEC.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_tec"))));
-                this.otext_lst2_t.append("TOT. DEVO.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_dev"))));
-                this.otext_lst2_t.append("TOT. OTRO :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_otros"))));
-                this.otext_lst2_t.append("TOT. CRED.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_cred"))));
-                this.otext_lst2_t.append("SUB-TOTAL :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_sub"))));
-                this.otext_lst2_t.append("TOT. IMP. :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_itbm"))));
-                this.otext_lst2_t.append("TOTAL     :" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_tot"))));
-                this.otext_lst2_t.append("BRUTO CTE.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_brutoloc"))));
-                this.otext_lst2_t.append("BRUTO EMP.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_brutoemp"))));
-                this.otext_lst2_t.append("NETO  CTE.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_netoloc"))));
-                this.otext_lst2_t.append("NETO  EMP.:" + String.format("%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_netoemp"))));
+                cText = "COLECTADO :" + String.format(Locale.US, "%10.2f%n", data05.getDouble(data05.getColumnIndex("tot_cole")));
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+                cText = "TIMBRES   :" + String.format(Locale.US, "%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_timbres")));
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+                cText = "IMUESTOS  :" + String.format(Locale.US, "%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_impmunic")));
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+                cText = "J.C.J     :" + String.format(Locale.US, "%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_impjcj")));
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+                cText = "SERV. TEC.:" + String.format(Locale.US, "%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_tec")));
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+                cText = "TOT. DEVO.:" + String.format(Locale.US, "%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_dev")));
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+                cText = "TOT. OTRO :" + String.format(Locale.US, "%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_otros")));
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+                cText = "TOT. CRED.:" + String.format(Locale.US, "%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_cred")));
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+                cText = "SUB-TOTAL :" + String.format(Locale.US, "%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_sub")));
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+                cText = "TOT. IMP. :" + String.format(Locale.US, "%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_itbm")));
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+                cText = "TOTAL     :" + String.format(Locale.US, "%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_tot")));
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+                cText = "BRUTO CTE.:" + String.format(Locale.US, "%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_brutoloc")));
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+                cText = "BRUTO EMP.:" + String.format(Locale.US, "%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_brutoemp")));
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+                cText = "NETO  CTE.:" + String.format(Locale.US, "%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_netoloc")));
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+                cText = "NETO  EMP.:" + String.format(Locale.US, "%10.2f%n", data05.getDouble(data05.getColumnIndex("op_tot_netoemp")));
+                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
             } while (data05.moveToNext());
-            this.otext_lst2_t.append(Global.repeat('=', 180) + "\n");
+            cText = Global.repeat('=', 180) + "\n";
+            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
 
             return true;
         }

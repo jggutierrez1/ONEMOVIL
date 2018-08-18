@@ -11,7 +11,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import io.requery.android.database.sqlite.*;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -205,7 +205,7 @@ public class capt_data extends AppCompatActivity {
         this.Clear_Screen();
 
         String databasePath = getDatabasePath("one2009.db").getPath();
-        this.db4 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
+        this.db4 = io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(databasePath, null, null);
 
         this.bFoundMach = this.Buscar_Maquina(Global.cEmp_Id, Global.cCte_Id, Global.cMaq_Id);
 

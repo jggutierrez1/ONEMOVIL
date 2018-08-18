@@ -12,7 +12,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+
+import io.requery.android.database.sqlite.*;
+
 import android.database.sqlite.SQLiteException;
 
 import android.graphics.Bitmap;
@@ -49,8 +51,8 @@ import java.io.DataOutputStream;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
@@ -61,8 +63,10 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
@@ -91,6 +95,7 @@ import java.util.StringTokenizer;
 import javax.net.ssl.HttpsURLConnection;
 
 import static android.content.ContentValues.TAG;
+import static android.content.Context.MODE_PRIVATE;
 import static java.lang.System.exit;
 
 import android.support.v7.app.AppCompatActivity;
@@ -164,6 +169,7 @@ public class Global {
     public static int REQUEST_CAMERA = 1;
     public static int MR_Dialog_Resp = 0;
     public static String cFileLogPathDest = "";
+    public static String cFileRepPathDest = "";
 
     public static boolean bAutoSelEmp = false,
             bAutoSelCte = false,
@@ -174,6 +180,8 @@ public class Global {
             bAutoSelList2 = false;
 
     public static void Init_Vars() {
+        Locale.setDefault(new Locale("en", "US"));
+
         PACKAGE_NAME = "flamingo.onemovil";
         cApp_Folder_Storage_0 = "/FLAMINGO_APP";
         cApp_Folder_Storage = "/FLAMINGO_APP/" + cid_device;
@@ -191,6 +199,8 @@ public class Global {
         cFileDbPathOrig = cApp_Data_Storage + "one2009.db";
         cFileDbPathDest = cApp_Folder_Storage + "/" + cid_device + "-one2009.db";
         cFileLogPathDest = cStorageDirectory + "/" + Global.cid_device + "-logfile.txt";
+        cFileRepPathDest = cStorageDirectory + "/filerep.txt";
+
         Global.logLargeString(cFileLogPathDest);
     }
 
@@ -203,6 +213,7 @@ public class Global {
 
      */
     public static void Get_Config() {
+        Locale.setDefault(new Locale("en", "US"));
 
         String cSql_Ln = "" +
                 "SELECT clave_metros, clave_montos, emp_id " +
@@ -223,7 +234,6 @@ public class Global {
             Global.PasswChgMeters = Global.GenerateRandomNumber(5);
         }
         Global.oGen_Cursor.close();
-        Locale.setDefault(new Locale("en", "US"));
     }
 
     public static void Chech_App_Folders() {
@@ -534,6 +544,9 @@ public class Global {
     }
 
     public static JSONArray cur2Json(Cursor cursor) {
+        Locale.setDefault(new Locale("en", "US"));
+
+        String cFloatValue = "0.00";
         JSONArray resultSet = new JSONArray();
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
@@ -549,7 +562,8 @@ public class Global {
                                 rowObject.put(colName, cursor.getBlob(i).toString());
                                 break;
                             case Cursor.FIELD_TYPE_FLOAT:
-                                rowObject.put(colName, cursor.getDouble(i));
+                                cFloatValue = String.format(Locale.US, "%12.2f", cursor.getDouble(i));
+                                rowObject.put(colName, cFloatValue);
                                 break;
                             case Cursor.FIELD_TYPE_INTEGER:
                                 rowObject.put(colName, cursor.getLong(i));
@@ -578,6 +592,8 @@ public class Global {
     }
 
     public static String cursorToString(Cursor crs) {
+        Locale.setDefault(new Locale("en", "US"));
+        String cFloatValue = "0.00";
         JSONArray arr = new JSONArray();
         crs.moveToFirst();
         while (!crs.isAfterLast()) {
@@ -593,7 +609,8 @@ public class Global {
                                 row.put(colName, crs.getBlob(i).toString());
                                 break;
                             case Cursor.FIELD_TYPE_FLOAT:
-                                row.put(colName, crs.getDouble(i));
+                                cFloatValue = String.format(Locale.US, "%12.2f", crs.getDouble(i));
+                                row.put(colName, cFloatValue);
                                 break;
                             case Cursor.FIELD_TYPE_INTEGER:
                                 row.put(colName, crs.getLong(i));
@@ -663,10 +680,10 @@ public class Global {
 
         try {
             resultSetFN.put(cTableName1, resultSet01);
-            resultSetFN.put(cTableName1+"_regs", resultSet01.length());
+            resultSetFN.put(cTableName1 + "_regs", resultSet01.length());
 
             resultSetFN.put(cTableName2, resultSet02);
-            resultSetFN.put(cTableName2+"_regs", resultSet02.length());
+            resultSetFN.put(cTableName2 + "_regs", resultSet02.length());
 
             Global.logLargeString(resultSetFN.toString());
         } catch (Exception e) {
@@ -1890,4 +1907,60 @@ public class Global {
         } else
             return null;
     }
+
+    public static String Sql_Lite_version() {
+
+        String query = "select sqlite_version() AS sqlite_version";
+        SQLiteDatabase db = SQLiteDatabase.openOrCreateDatabase(":memory:", null);
+        Cursor cursor = db.rawQuery(query, null);
+        String sqliteVersion = "";
+        if (cursor.moveToNext()) {
+            sqliteVersion = cursor.getString(0);
+        }
+        return sqliteVersion;
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        long factor = (long) Math.pow(10, places);
+        value = value * factor;
+        long tmp = Math.round(value);
+        return (double) tmp / factor;
+    }
+
+    public static double round2(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new java.math.BigDecimal(value);
+        bd = bd.setScale(places, java.math.RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    public static boolean save_in_textfile(String sPathFileName, String sText, boolean bAppend) {
+        File logFile = new File(sPathFileName);
+
+        if (!logFile.exists()) {
+            try {
+                logFile.createNewFile();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
+        try {
+            //BufferedWriter for performance, true to set append to file flag
+            BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, bAppend));
+            buf.append(sText);
+            //buf.newLine();
+            buf.close();
+            return true;
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return false;
+        }
+    }
+
 }

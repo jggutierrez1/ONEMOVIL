@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import io.requery.android.database.sqlite.*;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -29,6 +29,7 @@ import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.Locale;
 
 public class sync_data extends AppCompatActivity {
 
@@ -49,6 +50,8 @@ public class sync_data extends AppCompatActivity {
 
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
+
+        Locale.setDefault(new Locale("en", "US"));
 
         ock_rene = (CheckBox) findViewById(R.id.ock_renew);
         ock_delc = (CheckBox) findViewById(R.id.ock_del_capt);
@@ -102,7 +105,7 @@ public class sync_data extends AppCompatActivity {
         lurl.setText("SERVIDOR CLOUD:[" + Global.SERVER_URL.toUpperCase() + "]");
 
         String databasePath = getDatabasePath("one2009.db").getPath();
-        db2 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
+        db2 = io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(databasePath, null, null);
 
         btn_proc.setOnClickListener(new View.OnClickListener() {
 

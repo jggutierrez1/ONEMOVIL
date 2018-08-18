@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import io.requery.android.database.sqlite.*;
 import android.os.Environment;
 import android.provider.Settings;
 import android.support.v7.app.AlertDialog;
@@ -112,7 +112,7 @@ public class capt_fin extends AppCompatActivity {
         this.Clear_Screen();
 
         String databasePath = getDatabasePath("one2009.db").getPath();
-        this.oDb5 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
+        this.oDb5 =  io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(databasePath, null, null);
 
         this.Find_Values();
         this.Buscar_Cte(Global.cCte_Id);
@@ -1013,7 +1013,7 @@ public class capt_fin extends AppCompatActivity {
         SQLiteDatabase oDb8;
         Cursor oData8;
         String databasePath = getDatabasePath("one2009.db").getPath();
-        oDb8 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
+        oDb8 =  io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(databasePath, null, null);
 
         cSqlLn += "SELECT ";
         cSqlLn += "  clientes.cte_id, ";

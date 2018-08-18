@@ -19,7 +19,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import io.requery.android.database.sqlite.*;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -119,6 +119,7 @@ public class menu extends AppCompatActivity {
         lempresa = (TextView) findViewById(R.id.olempresa);
         lempresa.setText(Global.Query_Result("SELECT emp_descripcion FROM empresas WHERE emp_id='" + Global.cEmp_Id + "'", "emp_descripcion"));
 
+        String cVer= Global.Sql_Lite_version();
         createDatabase();
         Global.Create_Sql_Tables(false, false);
 
@@ -434,27 +435,27 @@ public class menu extends AppCompatActivity {
                                     "IFNULL(op_chapa       ,' ')  AS op_chapa      , " +
                                     "IFNULL(op_modelo      ,' ')  AS op_modelo     , " +
                                     "IFNULL(op_fecha       ,date('now')) AS op_fecha    , " +
-                                    "IFNULL(op_e_pantalla  ,0)    AS op_e_pantalla , " +
-                                    "IFNULL(op_ea_metroan  ,0)    AS op_ea_metroan , " +
-                                    "IFNULL(op_ea_metroac  ,0)    AS op_ea_metroac , " +
-                                    "IFNULL(op_ea_met      ,0)    AS op_ea_met     , " +
-                                    "IFNULL(op_sa_metroan  ,0)    AS op_sa_metroan , " +
-                                    "IFNULL(op_sa_metroac  ,0)    AS op_sa_metroac , " +
-                                    "IFNULL(op_sa_met      ,0)    AS op_sa_met     , " +
-                                    "IFNULL(op_eb_metroan  ,0)    AS op_eb_metroan , " +
-                                    "IFNULL(op_eb_metroac  ,0)    AS op_eb_metroac , " +
-                                    "IFNULL(op_eb_met      ,0)    AS op_eb_met     , " +
-                                    "IFNULL(op_sb_metroan  ,0)    AS op_sb_metroan , " +
-                                    "IFNULL(op_sb_metroac  ,0)    AS op_sb_metroac , " +
-                                    "IFNULL(op_sb_met      ,0)    AS op_sb_met     , " +
-                                    "IFNULL(op_s_pantalla  ,0)    AS op_s_pantalla , " +
+                                    "IFNULL(op_e_pantalla  ,0.00)    AS op_e_pantalla , " +
+                                    "IFNULL(op_ea_metroan  ,0.00)    AS op_ea_metroan , " +
+                                    "IFNULL(op_ea_metroac  ,0.00)    AS op_ea_metroac , " +
+                                    "IFNULL(op_ea_met      ,0.00)    AS op_ea_met     , " +
+                                    "IFNULL(op_sa_metroan  ,0.00)    AS op_sa_metroan , " +
+                                    "IFNULL(op_sa_metroac  ,0.00)    AS op_sa_metroac , " +
+                                    "IFNULL(op_sa_met      ,0.00)    AS op_sa_met     , " +
+                                    "IFNULL(op_eb_metroan  ,0.00)    AS op_eb_metroan , " +
+                                    "IFNULL(op_eb_metroac  ,0.00)    AS op_eb_metroac , " +
+                                    "IFNULL(op_eb_met      ,0.00)    AS op_eb_met     , " +
+                                    "IFNULL(op_sb_metroan  ,0.00)    AS op_sb_metroan , " +
+                                    "IFNULL(op_sb_metroac  ,0.00)    AS op_sb_metroac , " +
+                                    "IFNULL(op_sb_met      ,0.00)    AS op_sb_met     , " +
+                                    "IFNULL(op_s_pantalla  ,0.00)    AS op_s_pantalla , " +
                                     "IFNULL(op_cal_colect  ,0.00) AS op_cal_colect , " +
                                     "IFNULL(op_tot_colect  ,0.00) AS op_tot_colect , " +
                                     "IFNULL(op_tot_colect_m,0.00) AS op_tot_colect_m, " +
                                     "IFNULL(op_cal_cred    ,0.00) AS op_cal_cred   , " +
                                     "IFNULL(op_tot_cred    ,0.00) AS op_tot_cred   , " +
                                     "IFNULL(op_tot_cred_m  ,0.00) AS op_tot_cred_m , " +
-                                    "IFNULL(op_tot_brutoloc ,0.00) AS op_tot_brutoloc, " +
+                                    "IFNULL(op_tot_brutoloc,0.00) AS op_tot_brutoloc, " +
                                     "IFNULL(op_tot_brutoemp,0.00) AS op_tot_brutoemp, " +
                                     "IFNULL(op_tot_netoloc ,0.00) AS op_tot_netoloc, " +
                                     "IFNULL(op_tot_netoemp ,0.00) AS op_tot_netoemp, " +
@@ -501,12 +502,12 @@ public class menu extends AppCompatActivity {
                                     "IFNULL(op_tot_colect  ,0.00) AS op_tot_colect , " +
                                     "IFNULL(op_cal_cred    ,0.00) AS op_cal_cred   , " +
                                     "IFNULL(op_tot_cred    ,0.00) AS op_tot_cred   , " +
-                                    "IFNULL(op_tot_brutoloc ,0.00) AS op_tot_brutoloc, " +
+                                    "IFNULL(op_tot_brutoloc,0.00) AS op_tot_brutoloc, " +
                                     "IFNULL(op_tot_brutoemp,0.00) AS op_tot_brutoemp, " +
                                     "IFNULL(op_tot_netoloc ,0.00) AS op_tot_netoloc, " +
                                     "IFNULL(op_tot_netoemp ,0.00) AS op_tot_netoemp, " +
                                     "IFNULL(op_tot_timbres ,0.00) AS op_tot_timbres, " +
-                                    "IFNULL(op_tot_spac ,0.00) AS op_tot_spac, " +
+                                    "IFNULL(op_tot_spac    ,0.00) AS op_tot_spac, " +
                                     "IFNULL(op_tot_impmunic,0.00) AS op_tot_impmunic, " +
                                     "IFNULL(op_tot_impjcj  ,0.00) AS op_tot_impjcj , " +
                                     "IFNULL(op_tot_tec     ,0.00) AS op_tot_tec    , " +
@@ -550,6 +551,22 @@ public class menu extends AppCompatActivity {
                                 //Global.showSimpleOKAlertDialog(oThis, "AVISO IMPORTANTE[1]", "LAS FACTURAS POR MAQUINAS SE ENVIARON CORRECTAMENTE.");
                                 Toast.makeText(getApplicationContext(), cStringDet + " {ENVIADO CORRECTAMENTE].", Toast.LENGTH_SHORT).show();
 
+                                Sql_Ln = "" +
+                                        "UPDATE operaciong SET op_usermodify='0' " +
+                                        "WHERE id_device   ='" + Global.cid_device + "' " +
+                                        "AND  op_emp_id    ='" + cSuc__id + "' " +
+                                        "AND  cte_id       ='" + cCte__id + "' " +
+                                        "AND  op_usermodify='1' ";
+                                db.execSQL(Sql_Ln);
+
+                                Sql_Ln = "" +
+                                        "UPDATE operacion SET op_usermodify='0' " +
+                                        "WHERE id_device   ='" + Global.cid_device + "' " +
+                                        "AND  op_emp_id    ='" + cSuc__id + "' " +
+                                        "AND  cte_id       ='" + cCte__id + "' " +
+                                        "AND  op_usermodify='1' ";
+                                db.execSQL(Sql_Ln);
+
                             } else {
                                 Global.showSimpleOKAlertDialog(oThis, "AVISO IMPORTANTE[1]", "NO SE PUDIERON SUBIR LOS DATOS CORRECTAMENTE DE LAS FACTURAS POR MAQUINAS.");
                                 //Toast.makeText(getApplicationContext(), "NO SE PUDIERON SUBIR LOS DATOS CORRECTAMENTE.", Toast.LENGTH_SHORT).show();
@@ -566,12 +583,12 @@ public class menu extends AppCompatActivity {
 
                 Sql_Ln = "DELETE FROM operaciong " +
                         "WHERE (id_device ='" + Global.cid_device + "') " +
-                        "AND   (op_fecha<=(DATE()-6)) ";
+                        "AND   (op_fecha<=(DATE()-5)) ";
                 db.execSQL(Sql_Ln);
 
                 Sql_Ln = "DELETE FROM operacion " +
                         "WHERE (id_device ='" + Global.cid_device + "') " +
-                        "AND   (op_fecha<=(DATE()-6)) ";
+                        "AND   (op_fecha<=(DATE()-5)) ";
                 db.execSQL(Sql_Ln);
 
                 btn_send.setEnabled(true);
@@ -909,7 +926,7 @@ public class menu extends AppCompatActivity {
     protected void createDatabase() {
 
         String databasePath = getDatabasePath("one2009.db").getPath();
-        db = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
+        db = io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(databasePath, null, null);
     }
 
     private void myFunction(int result) {

@@ -6,7 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import io.requery.android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class select_maq extends AppCompatActivity {
 
@@ -41,6 +42,8 @@ public class select_maq extends AppCompatActivity {
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
 
+        Locale.setDefault(new Locale("en", "US"));
+
         getWindow().getDecorView().getRootView().setBackgroundColor(Color.rgb(204, 255, 204));
 
         btn_regr_maq = (Button) findViewById(R.id.obtn_regr_maq);
@@ -54,7 +57,7 @@ public class select_maq extends AppCompatActivity {
         this.olab_cte02.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
 
         String databasePath = getDatabasePath("one2009.db").getPath();
-        db4 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
+        db4 = io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(databasePath, null, null);
 
         //populate an ArrayList<String> from the database and then view it
         ArrayList<String> theList = new ArrayList<>();

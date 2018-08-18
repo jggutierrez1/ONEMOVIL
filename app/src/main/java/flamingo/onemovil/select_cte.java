@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
+import io.requery.android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class select_cte extends AppCompatActivity {
 
@@ -40,6 +41,8 @@ public class select_cte extends AppCompatActivity {
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
 
+        Locale.setDefault(new Locale("en", "US"));
+
         this.btn_regr_cte = (Button) findViewById(R.id.obtn_regr_cte);
         this.btn_sele_cte = (Button) findViewById(R.id.obtn_sele_cte);
         //btn_clear_cte = (Button) findViewById(R.id.obtn_clear);
@@ -49,7 +52,7 @@ public class select_cte extends AppCompatActivity {
         this.olst_cte2.setClickable(true);
 
         String databasePath = getDatabasePath("one2009.db").getPath();
-        db3 = openOrCreateDatabase(databasePath, Context.MODE_PRIVATE, null);
+        db3 = io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(databasePath, null, null);
 
         //populate an ArrayList<String> from the database and then view it
         ArrayList<String> theList = new ArrayList<>();
