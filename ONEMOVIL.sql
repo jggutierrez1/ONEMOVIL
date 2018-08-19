@@ -2,7 +2,7 @@
 -- Host:                         186.75.183.220
 -- Versión del servidor:         10.0.34-MariaDB-0ubuntu0.16.04.1 - Ubuntu 16.04
 -- SO del servidor:              debian-linux-gnu
--- HeidiSQL Versión:             9.5.0.5280
+-- HeidiSQL Versión:             9.5.0.5286
 -- --------------------------------------------------------
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -11,6 +11,31 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+
+-- Volcando estructura de base de datos para device_db
+CREATE DATABASE IF NOT EXISTS `device_db` /*!40100 DEFAULT CHARACTER SET utf8 */;
+USE `device_db`;
+
+-- Volcando estructura para tabla device_db.dispositivos
+DROP TABLE IF EXISTS `dispositivos`;
+CREATE TABLE IF NOT EXISTS `dispositivos` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `serial` varchar(50) DEFAULT NULL,
+  `clave_install` varchar(30) DEFAULT '123',
+  `fecha_pacceso` datetime DEFAULT NULL,
+  `fecha_uacceso` datetime DEFAULT NULL,
+  `dbname` varchar(30) DEFAULT 'one2009_1',
+  `corre_ant` int(10) DEFAULT '0',
+  `corre_act` int(10) DEFAULT '0',
+  `clave_metros` varchar(30) DEFAULT 'FLAM222218',
+  `clave_montos` varchar(30) DEFAULT 'FLAM333318',
+  `emp_id` int(3) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `serial` (`serial`),
+  KEY `clave_install` (`clave_install`)
+) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8;
+
+-- La exportación de datos fue deseleccionada.
 
 -- Volcando estructura de base de datos para one2009_1
 CREATE DATABASE IF NOT EXISTS `one2009_1` /*!40100 DEFAULT CHARACTER SET utf8 */;
@@ -167,6 +192,7 @@ CREATE TABLE IF NOT EXISTS `empresas` (
   `emp_descripcion` char(85) NOT NULL DEFAULT '',
   `emp_ruc` char(85) NOT NULL DEFAULT '',
   `emp_dv` char(10) NOT NULL DEFAULT '',
+  `emp_abrev` char(4) NOT NULL DEFAULT '',
   `emp_carpeta_reportes` varchar(120) NOT NULL DEFAULT '',
   `emp_telefono1` char(12) NOT NULL DEFAULT '',
   `emp_telefono2` char(12) NOT NULL DEFAULT '',
@@ -195,6 +221,28 @@ CREATE TABLE IF NOT EXISTS `empresas` (
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT;
 
 -- La exportación de datos fue deseleccionada.
+-- Volcando estructura para tabla one2009_1.history_send
+DROP TABLE IF EXISTS `history_send`;
+CREATE TABLE IF NOT EXISTS `history_send` (
+  `autoin` int(11) NOT NULL AUTO_INCREMENT,
+  `fecha` date DEFAULT NULL,
+  `id_device` varchar(30) DEFAULT 'MANUAL',
+  `id_emp` int(4) DEFAULT NULL,
+  `id_cte` int(4) DEFAULT NULL,
+  `nom_cte` varchar(50) DEFAULT NULL,
+  `json_data` text,
+  `sql_data` text,
+  `no_error` int(1) DEFAULT '0',
+  `last_modif` datetime DEFAULT NULL,
+  PRIMARY KEY (`autoin`),
+  UNIQUE KEY `master` (`fecha`,`id_emp`,`id_cte`,`id_device`,`no_error`),
+  KEY `id_emp` (`id_emp`),
+  KEY `id_device` (`id_device`),
+  KEY `fecha` (`fecha`),
+  KEY `id_cte` (`id_cte`)
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
+
+-- La exportación de datos fue deseleccionada.
 -- Volcando estructura para tabla one2009_1.maquinastc
 DROP TABLE IF EXISTS `maquinastc`;
 CREATE TABLE IF NOT EXISTS `maquinastc` (
@@ -217,11 +265,16 @@ CREATE TABLE IF NOT EXISTS `maquinastc` (
   `maqtc_m2s_act` decimal(12,2) NOT NULL DEFAULT '0.00',
   `maqtc_m2s_ant` decimal(12,2) NOT NULL DEFAULT '0.00',
   `maqtc_mfecha` datetime DEFAULT NULL,
+  `maqtc_mfecha_act` datetime DEFAULT NULL,
+  `maqtc_mfecha_ant` datetime DEFAULT NULL,
+  `maqtc_fact_act` varchar(30) DEFAULT NULL,
+  `maqtc_fact_ant` varchar(30) DEFAULT NULL,
   `maqtc_fecha_alta` datetime NOT NULL DEFAULT '2010-01-01 00:00:00',
   `maqtc_fecha_modif` datetime NOT NULL DEFAULT '2010-01-01 00:00:00',
   `maqtc_sem_jcj` int(2) NOT NULL DEFAULT '1',
   `u_usuario_alta` char(20) NOT NULL DEFAULT 'ANONIMO',
   `u_usuario_modif` char(20) NOT NULL DEFAULT 'ANONIMO',
+  `maqtc_porc_conc` decimal(12,2) NOT NULL DEFAULT '0.00',
   PRIMARY KEY (`maqtc_id`),
   KEY `maqtc_cod` (`maqtc_cod`),
   KEY `maqtc_chapa` (`maqtc_chapa`),
@@ -244,7 +297,7 @@ CREATE TABLE IF NOT EXISTS `maquinas_lnk` (
   KEY `cte_id` (`cte_id`),
   KEY `maqtc_id` (`maqtc_id`),
   KEY `emp_id` (`emp_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7229 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7332 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 -- Volcando estructura para tabla one2009_1.municipios
@@ -305,6 +358,7 @@ CREATE TABLE IF NOT EXISTS `operacion` (
   `op_s_pantalla` decimal(12,2) DEFAULT '0.00',
   `op_cal_colect` decimal(12,2) DEFAULT '0.00',
   `op_tot_colect` decimal(12,2) DEFAULT '0.00',
+  `op_tot_colect_m` decimal(12,2) DEFAULT '0.00',
   `op_tot_impmunic` decimal(12,2) DEFAULT '0.00',
   `op_tot_impjcj` decimal(12,2) DEFAULT '0.00',
   `op_tot_timbres` decimal(12,2) DEFAULT '0.00',
@@ -313,6 +367,7 @@ CREATE TABLE IF NOT EXISTS `operacion` (
   `op_tot_dev` decimal(12,2) DEFAULT '0.00',
   `op_tot_otros` decimal(12,2) DEFAULT '0.00',
   `op_tot_cred` decimal(12,2) DEFAULT '0.00',
+  `op_tot_cred_m` decimal(12,2) DEFAULT '0.00',
   `op_cal_cred` decimal(12,2) DEFAULT '0.00',
   `op_tot_sub` decimal(12,2) DEFAULT '0.00',
   `op_tot_itbm` decimal(12,2) DEFAULT '0.00',
@@ -337,7 +392,7 @@ CREATE TABLE IF NOT EXISTS `operacion` (
   `op_image_name` varchar(80) DEFAULT NULL,
   `op_usermodify` int(1) DEFAULT '0',
   PRIMARY KEY (`id_op`),
-  UNIQUE KEY `master_key` (`op_emp_id`,`id_device`,`id_group`,`cte_id`,`op_chapa`,`op_fecha`,`op_nodoc`),
+  UNIQUE KEY `master_key` (`op_emp_id`,`cte_id`,`op_chapa`,`op_fecha`,`op_nodoc`),
   KEY `MaqLnk_Id` (`MaqLnk_Id`),
   KEY `op_modelo` (`op_modelo`),
   KEY `op_fecha` (`op_fecha`),
@@ -354,7 +409,7 @@ CREATE TABLE IF NOT EXISTS `operacion` (
   KEY `id_device` (`id_device`),
   KEY `op_usermodify` (`op_usermodify`),
   KEY `id_group` (`id_group`)
-) ENGINE=InnoDB AUTO_INCREMENT=95929 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=98120 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 -- Volcando estructura para tabla one2009_1.operaciong
@@ -364,6 +419,7 @@ CREATE TABLE IF NOT EXISTS `operaciong` (
   `cte_id` int(4) unsigned DEFAULT '0',
   `cte_nombre_loc` char(60) DEFAULT '',
   `cte_nombre_com` char(60) DEFAULT '',
+  `op_fecha` datetime DEFAULT '2009-01-01 00:00:00',
   `op_cal_colect` decimal(12,2) DEFAULT '0.00',
   `op_tot_colect` decimal(12,2) DEFAULT '0.00',
   `op_tot_impmunic` decimal(12,2) DEFAULT '0.00',
@@ -387,18 +443,21 @@ CREATE TABLE IF NOT EXISTS `operaciong` (
   `op_emp_id` int(1) DEFAULT '0',
   `id_device` varchar(30) DEFAULT 'MANUAL',
   `id_group` bigint(20) DEFAULT NULL,
+  `op_usermodify` int(1) DEFAULT '0',
   `op_fecha_alta` datetime DEFAULT '2009-01-01 00:00:00',
   `op_fecha_modif` datetime DEFAULT '2009-01-01 00:00:00',
-  `op_usermodify` int(1) DEFAULT '0',
+  `op_usuario_alta` char(20) DEFAULT 'ANONIMO',
+  `op_usuario_modif` char(20) DEFAULT 'ANONIMO',
   PRIMARY KEY (`id_autoin`),
-  UNIQUE KEY `master_key` (`op_emp_id`,`cte_id`,`id_device`,`id_group`),
+  UNIQUE KEY `master_key` (`op_emp_id`,`cte_id`,`op_fecha`,`op_fact_global`),
   KEY `cte_id` (`cte_id`),
   KEY `op_emp_id` (`op_emp_id`),
   KEY `id_device` (`id_device`),
   KEY `op_usermodify` (`op_usermodify`),
   KEY `id_group` (`id_group`),
-  KEY `op_fact_global` (`op_fact_global`)
-) ENGINE=InnoDB AUTO_INCREMENT=49 DEFAULT CHARSET=utf8;
+  KEY `op_fact_global` (`op_fact_global`),
+  KEY `op_fecha` (`op_fecha`)
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 -- Volcando estructura para tabla one2009_1.operaciong_trans
@@ -408,6 +467,7 @@ CREATE TABLE IF NOT EXISTS `operaciong_trans` (
   `cte_id` int(4) unsigned DEFAULT '0',
   `cte_nombre_loc` char(60) DEFAULT '',
   `cte_nombre_com` char(60) DEFAULT '',
+  `op_fecha` datetime DEFAULT '2009-01-01 00:00:00',
   `op_cal_colect` decimal(12,2) DEFAULT '0.00',
   `op_tot_colect` decimal(12,2) DEFAULT '0.00',
   `op_tot_impmunic` decimal(12,2) DEFAULT '0.00',
@@ -431,9 +491,11 @@ CREATE TABLE IF NOT EXISTS `operaciong_trans` (
   `op_emp_id` int(1) DEFAULT '0',
   `id_device` varchar(30) DEFAULT 'MANUAL',
   `id_group` bigint(20) DEFAULT NULL,
+  `op_usermodify` int(1) DEFAULT '0',
   `op_fecha_alta` datetime DEFAULT '2009-01-01 00:00:00',
   `op_fecha_modif` datetime DEFAULT '2009-01-01 00:00:00',
-  `op_usermodify` int(1) DEFAULT '0',
+  `op_usuario_alta` char(20) DEFAULT 'ANONIMO',
+  `op_usuario_modif` char(20) DEFAULT 'ANONIMO',
   PRIMARY KEY (`id_autoin`),
   UNIQUE KEY `master_key` (`op_emp_id`,`cte_id`,`id_device`,`id_group`),
   KEY `cte_id` (`cte_id`),
@@ -441,8 +503,9 @@ CREATE TABLE IF NOT EXISTS `operaciong_trans` (
   KEY `id_device` (`id_device`),
   KEY `op_usermodify` (`op_usermodify`),
   KEY `id_group` (`id_group`),
-  KEY `op_fact_global` (`op_fact_global`)
-) ENGINE=InnoDB AUTO_INCREMENT=260 DEFAULT CHARSET=utf8;
+  KEY `op_fact_global` (`op_fact_global`),
+  KEY `op_fecha` (`op_fecha`)
+) ENGINE=InnoDB AUTO_INCREMENT=574 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 -- Volcando estructura para tabla one2009_1.operacion_trans
@@ -485,6 +548,7 @@ CREATE TABLE IF NOT EXISTS `operacion_trans` (
   `op_s_pantalla` decimal(12,2) DEFAULT '0.00',
   `op_cal_colect` decimal(12,2) DEFAULT '0.00',
   `op_tot_colect` decimal(12,2) DEFAULT '0.00',
+  `op_tot_colect_m` decimal(12,2) DEFAULT '0.00',
   `op_tot_impmunic` decimal(12,2) DEFAULT '0.00',
   `op_tot_impjcj` decimal(12,2) DEFAULT '0.00',
   `op_tot_timbres` decimal(12,2) DEFAULT '0.00',
@@ -493,6 +557,7 @@ CREATE TABLE IF NOT EXISTS `operacion_trans` (
   `op_tot_dev` decimal(12,2) DEFAULT '0.00',
   `op_tot_otros` decimal(12,2) DEFAULT '0.00',
   `op_tot_cred` decimal(12,2) DEFAULT '0.00',
+  `op_tot_cred_m` decimal(12,2) DEFAULT '0.00',
   `op_cal_cred` decimal(12,2) DEFAULT '0.00',
   `op_tot_sub` decimal(12,2) DEFAULT '0.00',
   `op_tot_itbm` decimal(12,2) DEFAULT '0.00',
@@ -534,7 +599,7 @@ CREATE TABLE IF NOT EXISTS `operacion_trans` (
   KEY `id_device` (`id_device`),
   KEY `op_usermodify` (`op_usermodify`),
   KEY `id_group` (`id_group`)
-) ENGINE=InnoDB AUTO_INCREMENT=2226 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5262 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 -- Volcando estructura para tabla one2009_1.pais
@@ -687,7 +752,7 @@ CREATE TABLE IF NOT EXISTS `rutas` (
   PRIMARY KEY (`rut_id`),
   KEY `rut_inactivo` (`rut_inactivo`),
   KEY `rut_nombre` (`rut_nombre`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
 
 -- La exportación de datos fue deseleccionada.
 -- Volcando estructura para tabla one2009_1.usuarios
@@ -713,7 +778,7 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   KEY `u_usuario` (`u_usuario`),
   KEY `u_clave` (`u_clave`),
   KEY `u_activo` (`u_activo`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC;
 
 -- La exportación de datos fue deseleccionada.
 -- Volcando estructura para procedimiento one2009_1.actualiza_corre
@@ -790,14 +855,27 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `actualiza_maquinas`(
 
 
 
+
+
+
+
+
 )
 BEGIN
 
+/*-------------------------actualiza correlativos de máquinas--------------------             */
+/*
 SET @corre=(SELECT IFNULL(emp_corre_act,0) AS emp_corre_act FROM empresas WHERE emp_id=pCod_Emp);
+
+UPDATE operacion SET 
+	op_nodoc = CONCAT( LPAD(op_emp_id,2,'0'),'-',LPAD(@corre:=@corre+1,7,'0') )
+WHERE op_emp_id=pCod_Emp
+AND   op_usermodify=1 ;
+*/
 
 /*-------------------------RECALCULA PORCENTAJES ---------------------------------             */
 UPDATE operacion op
-JOIN clientes ct ON op.cte_id = ct.cte_id SET 
+LEFT JOIN clientes ct ON op.cte_id = ct.cte_id SET 
 	op.op_tot_brutoloc = IF(ct.cte_poc_ret=100,000000000000.00, (op.op_tot_tot * (ct.cte_poc_ret/100)) )
 WHERE (op.op_emp_id 	= pCod_Emp)
 AND 	(op.id_device 	= pCod_Dev)
@@ -806,10 +884,10 @@ AND   (op.id_group   = pCod_Grp)
 AND   (op.op_usermodify=1) ;
 
 UPDATE operacion op
-JOIN clientes ct ON op.cte_id = ct.cte_id SET 
+LEFT JOIN clientes ct ON op.cte_id = ct.cte_id SET 
  	op.op_tot_brutoemp = IF(ct.cte_poc_ret=100, op.op_tot_tot , (op.op_tot_tot - op.op_tot_brutoloc)   ),
- 	op.op_tot_netoloc	 = (op.op_tot_dev + op.op_tot_otros + op.op_tot_cred + op.op_tot_brutoloc),
- 	op.op_tot_netoemp	 = (op.op_tot_timbres + op.op_tot_impmunic + op.op_tot_impjcj + op.op_tot_tec + op.op_tot_brutoemp)
+ 	op.op_tot_netoemp	 = (op.op_tot_timbres + op.op_tot_impmunic + op.op_tot_impjcj + op.op_tot_tec + op.op_tot_brutoemp),
+ 	op.op_tot_netoloc	 = (op.op_tot_dev + op.op_tot_otros + op.op_tot_cred + op.op_tot_brutoloc)
 WHERE (op.op_emp_id 	= pCod_Emp)
 AND 	(op.id_device 	= pCod_Dev)
 AND 	(op.cte_id    	= pCod_Cte)
@@ -818,6 +896,8 @@ AND   (op.op_usermodify=1) ;
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------------------actualiza baja produccion------------------------------             */
+
+/*
 UPDATE operacion SET 
 	op_nodoc = CONCAT( LPAD(op_emp_id,2,'0'),'-',LPAD(@corre:=@corre+1,7,'0') )
 WHERE (op_emp_id 	= pCod_Emp)
@@ -825,6 +905,7 @@ AND 	(id_device 	= pCod_Dev)
 AND 	(cte_id    	= pCod_Cte)
 AND   (id_group   = pCod_Grp)
 AND   (op_usermodify=1) ;
+*/
 
 UPDATE operacion SET 
 	op_usermodify=0
@@ -834,15 +915,18 @@ AND 	(cte_id    	= pCod_Cte)
 AND   (id_group   = pCod_Grp)
 AND   (op_usermodify=1);
 
+/*
 UPDATE empresas SET
 	emp_corre_ant=emp_corre_act,
 	emp_corre_act=@corre 
 WHERE emp_id=pCod_Emp;
+*/
+
 /*----------------------------------------------------------------------------------------------*/
 
 /*-------------------------actualiza baja produccion-------------------------------------------*/
 UPDATE maquinastc maq 
-JOIN operacion_trans opt ON (opt.op_chapa = maq.maqtc_chapa)  and (opt.op_emp_id=maq.emp_id)
+LEFT JOIN operacion_trans opt ON (opt.op_chapa = maq.maqtc_chapa)  and (opt.op_emp_id=maq.emp_id)
 	SET maq.maqtc_sem_jcj = maq.maqtc_sem_jcj - 1
 WHERE (opt.op_emp_id 	= pCod_Emp)
 AND 	(opt.id_device 	= pCod_Dev)
@@ -856,7 +940,7 @@ SET maq.maqtc_sem_jcj=0
 WHERE (maq.maqtc_sem_jcj<0);
 
 UPDATE maquinastc maq 
-JOIN operacion_trans opt ON (opt.op_chapa = maq.maqtc_chapa)  and (opt.op_emp_id=maq.emp_id)
+LEFT JOIN operacion_trans opt ON (opt.op_chapa = maq.maqtc_chapa)  and (opt.op_emp_id=maq.emp_id)
 	SET maq.maqtc_sem_jcj = maq.maqtc_sem_jcj+1
 WHERE (opt.op_emp_id 	= pCod_Emp)
 AND 	(opt.id_device 	= pCod_Dev)
@@ -868,7 +952,7 @@ AND   (opt.op_baja_prod =1);
 
 /*--------------- ACTUALIZA LAS DENOMINACIONES EN EFECTIVO ENTRADA Y SALIDA---------------------*/
 UPDATE maquinastc maq 
-JOIN operacion_trans opt ON (opt.op_chapa = maq.maqtc_chapa)  and (opt.op_emp_id=maq.emp_id)
+LEFT JOIN operacion_trans opt ON (opt.op_chapa = maq.maqtc_chapa)  and (opt.op_emp_id=maq.emp_id)
 	SET 
 	maq.maqtc_denom_e = opt.maqtc_denom_e
 WHERE (opt.op_emp_id 	= pCod_Emp)
@@ -879,7 +963,7 @@ AND   (opt.op_usermodify=1)
 AND   (opt.maqtc_denom_e=1);
 
 UPDATE maquinastc maq 
-JOIN operacion_trans opt ON (opt.op_chapa = maq.maqtc_chapa)  and (opt.op_emp_id=maq.emp_id)
+LEFT JOIN operacion_trans opt ON (opt.op_chapa = maq.maqtc_chapa)  and (opt.op_emp_id=maq.emp_id)
 	SET 
 	maq.maqtc_denom_s = opt.maqtc_denom_s
 WHERE (opt.op_emp_id 	= pCod_Emp)
@@ -892,13 +976,14 @@ AND   (opt.maqtc_denom_s=1);
 
 /* ---------------RESPALDA LOS DATOS DE LOS METROS ACTUALES COMO ANTERIORES---------------------*/
 UPDATE maquinastc maq 
-JOIN operacion_trans opt ON (opt.op_chapa = maq.maqtc_chapa)  AND (opt.op_emp_id=maq.emp_id)
+LEFT JOIN operacion_trans opt ON (opt.op_chapa = maq.maqtc_chapa)  AND (opt.op_emp_id=maq.emp_id)
 	SET 
-	maq.maqtc_m1e_ant = maq.maqtc_m1e_act,
-	maq.maqtc_m1s_ant = maq.maqtc_m1s_act,
-	maq.maqtc_m2e_ant = maq.maqtc_m2e_act,
-	maq.maqtc_m2s_ant = maq.maqtc_m2s_act,
-	maq.maqtc_mfecha  = NOW()
+	maq.maqtc_m1e_ant    = maq.maqtc_m1e_act,
+	maq.maqtc_m2e_ant    = maq.maqtc_m2e_act, 
+	maq.maqtc_m1s_ant    = maq.maqtc_m1s_act,
+	maq.maqtc_m2s_ant    = maq.maqtc_m2s_act,
+	maq.maqtc_mfecha_ant = maq.maqtc_mfecha_act,
+	maq.maqtc_fact_ant   = maq.maqtc_fact_act
 WHERE (opt.op_emp_id 	 = pCod_Emp)
 AND 	(opt.id_device 	 = pCod_Dev)
 AND 	(opt.cte_id    	 = pCod_Cte)
@@ -909,13 +994,15 @@ AND   (opt.op_baja_prod  =0);
 
 /* --------------ACTUALIZA LOS DATOS DE LOS METROS ACTUALES COMO ANTERIORES---------------------*/
 UPDATE maquinastc maq 
-JOIN operacion_trans opt ON (opt.op_chapa = maq.maqtc_chapa)  and (opt.op_emp_id=maq.emp_id)
+LEFT JOIN operacion_trans  opt  ON (opt.op_chapa  = maq.maqtc_chapa)  AND (opt.op_emp_id = maq.emp_id)
+LEFT JOIN operaciong_trans optg ON (optg.op_emp_id = opt.op_emp_id  )  AND (optg.cte_id    = opt.cte_id) AND (optg.id_device = opt.id_device) AND (optg.id_group = opt.id_group)
 	SET 
 	maq.maqtc_m1e_act = opt.op_ea_metroac,
-	maq.maqtc_m1s_act = opt.op_sa_metroac,
 	maq.maqtc_m2e_act = opt.op_eb_metroac,
+	maq.maqtc_m1s_act = opt.op_sa_metroac,
 	maq.maqtc_m2s_act = opt.op_sb_metroac,
-	maq.maqtc_mfecha  = NOW()
+	maq.maqtc_mfecha_act = opt.op_fecha,
+	maq.maqtc_fact_act   = optg.op_fact_global
 WHERE (opt.op_emp_id     = pCod_Emp)
 AND 	(opt.id_device     = pCod_Dev)
 AND 	(opt.cte_id        = pCod_Cte)
@@ -940,6 +1027,10 @@ AND 	(id_device 	   = pCod_Dev)
 AND 	(cte_id    	   = pCod_Cte)
 AND   (id_group      = pCod_Grp)
 AND   (op_usermodify = 1);
+
+/*----------------------------------------------------------------------------------------------*/
+/*Creacion    : 2018-06-20
+/*Modificasion: 2018-07-23
 /*----------------------------------------------------------------------------------------------*/
 END//
 DELIMITER ;
