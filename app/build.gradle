@@ -11,6 +11,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -19,7 +20,7 @@ android {
         }
     }
     packagingOptions {
-        exclude 'lib/arm64-v8a/libsqlite3x.so'
+         exclude 'lib/arm64-v8a/libsqlite3x.so'
         exclude 'lib/x86/libsqlite3x.so'
         exclude 'lib/x86_64/libsqlite3x.so'
         exclude 'lib/mips/libsqlite3x.so'
@@ -33,5 +34,11 @@ dependencies {
     implementation 'io.requery:sqlite-android:3.24.0'
     implementation "android.arch.persistence.room:testing:1.0.0-beta2"
     implementation files('libs/ini4j-0.5.4.jar')
+    implementation 'com.sun.mail:android-mail:1.6.0'
+    implementation 'com.sun.mail:android-activation:1.6.0'
+    implementation 'com.google.api-client:google-api-client:1.20.0'
+    implementation 'com.google.api-client:google-api-client-android:1.20.0'
+    implementation 'com.google.api-client:google-api-client-gson:1.20.0'
+    implementation 'com.google.apis:google-api-services-gmail:v1-rev29-1.20.0'
     runtimeOnly files('libs/ini4j-0.5.4.jar')
 }

@@ -8,6 +8,7 @@ import android.bluetooth.BluetoothSocket;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -19,7 +20,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
+
 import io.requery.android.database.sqlite.*;
+
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -42,6 +45,20 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 public class menu extends AppCompatActivity {
 
@@ -119,10 +136,9 @@ public class menu extends AppCompatActivity {
         lempresa = (TextView) findViewById(R.id.olempresa);
         lempresa.setText(Global.Query_Result("SELECT emp_descripcion FROM empresas WHERE emp_id='" + Global.cEmp_Id + "'", "emp_descripcion"));
 
-        String cVer= Global.Sql_Lite_version();
+        String cVer = Global.Sql_Lite_version();
         createDatabase();
         Global.Create_Sql_Tables(false, false);
-
         Global.cEmp_Id = "";
         //Create_Sql_Tables();
         this.Color_Sig_Paso(0);
@@ -398,7 +414,7 @@ public class menu extends AppCompatActivity {
                             "ORDER BY op.op_emp_id, op.cte_id; ";
                     Cursor oCur_snd = db.rawQuery(cSql_Ln, null);
                     iReg_Cnt = 0;
-
+                    String cSendDet = "";
                     if ((oCur_snd != null) || (oCur_snd.getCount() != 0)) {
                         oCur_snd.moveToFirst();
                         do {
@@ -409,10 +425,7 @@ public class menu extends AppCompatActivity {
                             cCte__id = oCur_snd.getString(oCur_snd.getColumnIndex("cte_id"));
                             cCte__Nam = oCur_snd.getString(oCur_snd.getColumnIndex("cte_nombre_loc"));
 
-                            cStringDet = "Procesando: Empresa->:[" + cSuc__id + "/" + cSuc__Nam + "], Cliente->:[" + cCte__id + "/" + cCte__Nam + "]";
                             Log.d("PROCESANDO REGISTRO:[" + Integer.toString(iReg_Cnt) + "]", cStringDet);
-
-                            Global.logLargeString(cStringDet);
                             //-------------------------------RECOPILA REGISTRO DE CABECERA OPERACION----------------------------------------------//
                             Sql_LnOp = "" +
                                     "SELECT " +
@@ -532,6 +545,9 @@ public class menu extends AppCompatActivity {
                                     "AND  op_usermodify='1' ";
 
                             cJsonResult = Global.getJsonResults2_V2(Sql_LnOp, Sql_LnPo, "operacion", "operaciong");
+                            cStringDet = "Procesando: Empresa->:[" + cSuc__id + "/" + cSuc__Nam + "], Cliente->:[" + cCte__id + "/" + cCte__Nam + "], Máquinas [" + String.valueOf(Global.tot_maq_envio2) + "]";
+                            Global.logLargeString(cStringDet);
+
                             Global.logLargeString(cJsonResult);
                             Global.appendLog(Global.cFileLogPathDest, Global.getNow() + " JSON operacion: \n" + cJsonResult + "\n", false);
 
@@ -571,10 +587,12 @@ public class menu extends AppCompatActivity {
                                 Global.showSimpleOKAlertDialog(oThis, "AVISO IMPORTANTE[1]", "NO SE PUDIERON SUBIR LOS DATOS CORRECTAMENTE DE LAS FACTURAS POR MAQUINAS.");
                                 //Toast.makeText(getApplicationContext(), "NO SE PUDIERON SUBIR LOS DATOS CORRECTAMENTE.", Toast.LENGTH_SHORT).show();
                             }
-
-                            // SendEmail_v2("johnn.movil@gmail.com", Global.cFileLogPathDest);
-
+                            cSendDet = cSendDet + cStringDet;
                         } while (oCur_snd.moveToNext());
+
+                        // SendEmail_v2("johnn.movil@gmail.com", Global.cFileLogPathDest);
+                        Global.Gmail_SendEmail(oThis, "johnn.movil@gmail.com;mcentenario12@gmail.com", "Envío de colecta desde tablet[" + Global.cid_device + "]", cSendDet, "");
+                        cSendDet = "";
                         Global.showSimpleOKAlertDialog(oThis, "AVISO IMPORTANTE[1]", "PROCESO DE ENVIO FINALIZADO. [" + iReg_Cnt + "] PROCESDOS");
                     }
                 } else {
@@ -1143,4 +1161,6 @@ public class menu extends AppCompatActivity {
         intent.putExtra(Intent.EXTRA_STREAM, path);
         startActivity(intent);
     }
+
+
 }

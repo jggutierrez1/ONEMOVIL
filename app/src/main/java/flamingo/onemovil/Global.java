@@ -89,9 +89,23 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.Random;
 import java.util.StringTokenizer;
 
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.net.ssl.HttpsURLConnection;
 
 import static android.content.ContentValues.TAG;
@@ -170,6 +184,8 @@ public class Global {
     public static int MR_Dialog_Resp = 0;
     public static String cFileLogPathDest = "";
     public static String cFileRepPathDest = "";
+    public static int tot_maq_envio1 = 0;
+    public static int tot_maq_envio2 = 0;
 
     public static boolean bAutoSelEmp = false,
             bAutoSelCte = false,
@@ -681,9 +697,10 @@ public class Global {
         try {
             resultSetFN.put(cTableName1, resultSet01);
             resultSetFN.put(cTableName1 + "_regs", resultSet01.length());
-
+            Global.tot_maq_envio1 = resultSet01.length();
             resultSetFN.put(cTableName2, resultSet02);
             resultSetFN.put(cTableName2 + "_regs", resultSet02.length());
+            Global.tot_maq_envio2 = resultSet02.length();
 
             Global.logLargeString(resultSetFN.toString());
         } catch (Exception e) {
@@ -1963,4 +1980,67 @@ public class Global {
         }
     }
 
+    public static void Gmail_SendEmail(Context othis, String sTo, String sSubject, String sBody, String cFileName) {
+
+        final String username = Global.get_device_email(othis);
+        //final String username = "johnn.movil@gmail.com";
+
+        final String password = "centenario*";
+
+        Properties props = new Properties();
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.host", "smtp.gmail.com");
+        props.put("mail.smtp.port", "587");
+
+        Session session = Session.getInstance(props,
+                new javax.mail.Authenticator() {
+                    protected PasswordAuthentication getPasswordAuthentication() {
+                        return new PasswordAuthentication(username, password);
+                    }
+                });
+        try {
+            Message message = new MimeMessage(session);
+            String sEmailSender;
+            sEmailSender = Global.get_device_email(othis);
+            message.setFrom(new InternetAddress(sEmailSender));
+
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(sTo));
+            message.setSubject(sSubject);
+            message.setText(sBody);
+            if (cFileName != "") {
+
+                File oFile = new File(cFileName);
+                String file = cFileName;
+                String fileName = oFile.getName();
+                oFile = null;
+
+                MimeBodyPart messageBodyPart = new MimeBodyPart();
+
+                Multipart multipart = new MimeMultipart();
+
+                messageBodyPart = new MimeBodyPart();
+                DataSource source = new FileDataSource(file);
+                messageBodyPart.setDataHandler(new DataHandler(source));
+                messageBodyPart.setFileName(cFileName);
+                multipart.addBodyPart(messageBodyPart);
+
+                message.setContent(multipart);
+            }
+
+            Transport.send(message);
+
+            System.out.println("Done");
+
+        } catch (MessagingException e) {
+            System.out.println(e.toString());
+        }
+    }
+
+    private static String getFileExtension(File file) {
+        String fileName = file.getName();
+        if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
+            return fileName.substring(fileName.lastIndexOf(".") + 1);
+        else return "";
+    }
 }
