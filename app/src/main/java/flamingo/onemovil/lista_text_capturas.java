@@ -67,7 +67,7 @@ public class lista_text_capturas extends AppCompatActivity {
         String databasePath = getDatabasePath("one2009.db").getPath();
         this.db04 = io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(databasePath, null, null);
 
-        Global.save_in_textfile(Global.cFileRepPathDest, "", false);
+        Global.save_in_textfile(Global.cFileRepPathDestC, "", false);
 
         this.Imprimir2_Titles();
         if (this.Listar_Maquinas() == true) {
@@ -176,22 +176,22 @@ public class lista_text_capturas extends AppCompatActivity {
 
     private void Imprimir2_Titles() {
         cText = Global.center("***" + Global.cEmp_De.toUpperCase().trim() + "***", 110, ' ') + "\n";
-        Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+        Global.save_in_textfile(Global.cFileRepPathDestC, cText, true);
         cText = Global.center("LISTADO PRELIMIANR DE MAQUINAS COLECTADAS", 110, ' ') + "\n";
-        Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+        Global.save_in_textfile(Global.cFileRepPathDestC, cText, true);
         cText = Global.center("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]", 110, ' ') + "\n";
-        Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+        Global.save_in_textfile(Global.cFileRepPathDestC, cText, true);
         cText = Global.center("INFORMACION DE ->METROS/MONTOS<- CAPTURADOS", 110, ' ') + "\n";
-        Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+        Global.save_in_textfile(Global.cFileRepPathDestC, cText, true);
         cText = Global.repeat('=', 110) + "\n";
-        Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+        Global.save_in_textfile(Global.cFileRepPathDestC, cText, true);
     }
 
     private void Mostrar_Listado() {
         String sline = "";
         this.otext_lst_t.setText("");
         try {
-            FileReader fReader = new FileReader(Global.cFileRepPathDest);
+            FileReader fReader = new FileReader(Global.cFileRepPathDestC);
             BufferedReader bReader = new BufferedReader(fReader);
 
             while ((sline = bReader.readLine()) != null) {
@@ -273,9 +273,9 @@ public class lista_text_capturas extends AppCompatActivity {
 
             cLine = String.format("%20s %4s %8s %20s %6s %12s %12s %12s", "FECHA-HORA", "EMP.", "CHAPA", "MODELO", "S.IMP.", "ENTRADAS", "SALIDAS", "DIFERENCIA");
             cText = cLine + "\n";
-            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+            Global.save_in_textfile(Global.cFileRepPathDestC, cText, true);
             cText = Global.repeat('=', 110) + "\n";
-            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+            Global.save_in_textfile(Global.cFileRepPathDestC, cText, true);
 
             do {
                 cFec_Capt1 = data04.getString(data04.getColumnIndex("op_fecha")).trim();
@@ -289,13 +289,13 @@ public class lista_text_capturas extends AppCompatActivity {
                 ctot_dife = String.format(Locale.US, "%12.2f", data04.getDouble(data04.getColumnIndex("tot_dife")));
                 cLine = String.format("%s %s %s %s %s %s %s %s", cFec_Capt, cNom_Empr, cMaq_Chap, cMaq_Mode, "S[" + cSem_Impu.trim() + "]", ctot_cole, ctot_cred, ctot_dife);
                 cText = cLine + "\n";
-                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+                Global.save_in_textfile(Global.cFileRepPathDestC, cText, true);
             } while (data04.moveToNext());
             cText = Global.repeat('=', 110) + "\n";
-            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+            Global.save_in_textfile(Global.cFileRepPathDestC, cText, true);
             cLine = String.format("%s %6s", "TOTAL DE MAQUNAS:", data04.getCount());
             cText = cLine + "\n";
-            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+            Global.save_in_textfile(Global.cFileRepPathDestC, cText, true);
 
             return true;
         }
@@ -319,10 +319,10 @@ public class lista_text_capturas extends AppCompatActivity {
                 //text_lst_t.append("Diferencia: " + String.format(Locale.US,"%12.2f", data04.getDouble(2))+ "\n");
                 cLine = String.format("%8s %20s %s %s %s", "", "", ctot_cole, ctot_cred, ctot_dife);
                 cText = cLine + "\n";
-                Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+                Global.save_in_textfile(Global.cFileRepPathDestC, cText, true);
             } while (data04.moveToNext());
             cText = Global.repeat('=', 110) + "\n";
-            Global.save_in_textfile(Global.cFileRepPathDest, cText, true);
+            Global.save_in_textfile(Global.cFileRepPathDestC, cText, true);
 
             return true;
         }

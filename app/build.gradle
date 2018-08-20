@@ -36,9 +36,9 @@ dependencies {
     implementation files('libs/ini4j-0.5.4.jar')
     implementation 'com.sun.mail:android-mail:1.6.0'
     implementation 'com.sun.mail:android-activation:1.6.0'
-    implementation 'com.google.api-client:google-api-client:1.20.0'
-    implementation 'com.google.api-client:google-api-client-android:1.20.0'
-    implementation 'com.google.api-client:google-api-client-gson:1.20.0'
-    implementation 'com.google.apis:google-api-services-gmail:v1-rev29-1.20.0'
+    //implementation 'com.google.api-client:google-api-client:1.20.0'
+    //implementation 'com.google.api-client:google-api-client-android:1.20.0'
+    //implementation 'com.google.api-client:google-api-client-gson:1.20.0'
+    //implementation 'com.google.apis:google-api-services-gmail:v1-rev29-1.20.0'
     runtimeOnly files('libs/ini4j-0.5.4.jar')
 }

@@ -41,6 +41,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.Toast;
 
+import org.ini4j.Wini;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -183,7 +184,8 @@ public class Global {
     public static int REQUEST_CAMERA = 1;
     public static int MR_Dialog_Resp = 0;
     public static String cFileLogPathDest = "";
-    public static String cFileRepPathDest = "";
+    public static String cFileRepPathDestC = "";
+    public static String cFileRepPathDestF = "";
     public static int tot_maq_envio1 = 0;
     public static int tot_maq_envio2 = 0;
 
@@ -215,7 +217,8 @@ public class Global {
         cFileDbPathOrig = cApp_Data_Storage + "one2009.db";
         cFileDbPathDest = cApp_Folder_Storage + "/" + cid_device + "-one2009.db";
         cFileLogPathDest = cStorageDirectory + "/" + Global.cid_device + "-logfile.txt";
-        cFileRepPathDest = cStorageDirectory + "/filerep.txt";
+        cFileRepPathDestC = cStorageDirectory + "/filerep.txt";
+        cFileRepPathDestF = cStorageDirectory + "/filerep.txt";
 
         Global.logLargeString(cFileLogPathDest);
     }
@@ -2043,4 +2046,83 @@ public class Global {
             return fileName.substring(fileName.lastIndexOf(".") + 1);
         else return "";
     }
+
+    public static boolean write_ini(String cFilename, String cSeccion, String cKey, String cValue) throws IOException {
+        if (cFilename == null || cFilename.isEmpty()) {
+            return false;
+        }
+        File f = new File(cFilename);
+        if (f.exists() && f.isFile()) {
+
+            if (cSeccion == null || cSeccion.isEmpty()) {
+                return false;
+            }
+
+            if (cKey == null || cKey.isEmpty()) {
+                return false;
+            }
+
+            if (cValue == null || cValue.isEmpty()) {
+                return false;
+            }
+
+            Wini oini = new Wini(new File(cFilename));
+
+            oini.put(cSeccion, cKey, cValue);
+            oini.store();
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
+    public static String read_ini(String cFilename, String cSeccion, String cKey, String cDefault) throws IOException {
+
+        if (cFilename == null || cFilename.isEmpty()) {
+            return "-1";
+        }
+        File f = new File(cFilename);
+        if (f.exists() && f.isFile()) {
+            if (cSeccion == null || cSeccion.isEmpty()) {
+                return "-1";
+            }
+
+            if (cKey == null || cKey.isEmpty()) {
+                return "-1";
+            }
+            try {
+                Wini oini = new Wini(new File(cFilename));
+                String cResult = oini.get(cSeccion, cKey, String.class);
+                if (cResult == "") {
+                    return cDefault;
+                } else {
+                    return cResult;
+                }
+            } catch (Exception e) {
+                System.out.println("Error reading moddesc.ini:" + e.toString());
+                return "-1";
+            }
+        } else {
+            return "-1";
+        }
+    }
+
+    public static String rightPad(String input, int length, String fill) {
+        String pad = input.trim() + String.format("%" + length + "s", "").replace(" ", fill);
+        return pad.substring(0, length);
+    }
+
+    public static String leftPad(String input, int length, String fill) {
+        String pad = String.format("%" + length + "s", "").replace(" ", fill) + input.trim();
+        return pad.substring(pad.length() - length, pad.length());
+    }
+
+    public static String decimalformat(double fValue, int iEnteros, int iDecimales) {
+
+        String cValue1 = String.format(Locale.US, "%,." + String.valueOf(iDecimales).toString().trim() + "f", fValue) + "\n";
+        String cValue2 = Global.leftPad(cValue1, iEnteros, " ");
+        return cValue2;
+    }
+
 }

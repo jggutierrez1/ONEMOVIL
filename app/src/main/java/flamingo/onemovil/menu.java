@@ -332,22 +332,19 @@ public class menu extends AppCompatActivity {
                         Intent Int_CteScreen = new Intent(getApplicationContext(), select_cte.class);
                         startActivityForResult(Int_CteScreen, Global.REQUEST_SEL_CTE);
                     } else {
-                        if ((Global.cMaq_Id == "") || (Global.cMaq_Id == "0")) {
-                            Intent Int_MaqScreen = new Intent(getApplicationContext(), select_maq.class);
-                            startActivityForResult(Int_MaqScreen, Global.REQUEST_SEL_MAQ);
-                        } else {
-                            Global.iObj_Select = 0;
-                            Intent Capf_MaqScreen = new Intent(getApplicationContext(), capt_fin.class);
-                            startActivityForResult(Capf_MaqScreen, Global.REQUEST_END_CAP);
-                            Toast.makeText(getApplicationContext(), "FINALIZO.", Toast.LENGTH_SHORT).show();
-                        }
+                        Global.iObj_Select = 0;
+                        Intent Capf_MaqScreen = new Intent(getApplicationContext(), capt_fin.class);
+                        startActivityForResult(Capf_MaqScreen, Global.REQUEST_END_CAP);
+                        Toast.makeText(getApplicationContext(), "FINALIZO.", Toast.LENGTH_SHORT).show();
                     }
                 }
-
             }
+
         });
 
-        btn_ccol.setOnClickListener(new View.OnClickListener() {
+        btn_ccol.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
 
@@ -366,7 +363,9 @@ public class menu extends AppCompatActivity {
             }
         });
 
-        btn_send.setOnClickListener(new View.OnClickListener() {
+        btn_send.setOnClickListener(new View.OnClickListener()
+
+        {
             @Override
             public void onClick(View v) {
                 btn_send.setEnabled(false);
