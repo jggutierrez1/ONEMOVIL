@@ -18,8 +18,51 @@
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="8dp">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/prn3_btn_conn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Conectar" />
+
+                <Button
+                    android:id="@+id/prn3_btn_disc"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Desconectar" />
+
+                <Button
+                    android:id="@+id/prn3_btn_ctes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="SEL. CLIENTE" />
+
+                <Button
+                    android:id="@+id/prn3_btn_prin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Imprimir" />
+
+                <Button
+                    android:id="@+id/prn3_btn_exit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/Coral"
+                    android:text="REGRESAR" />
+
+            </LinearLayout>
+
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/prn3_Lab_Titl"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="LISTADO DE MAQUINAS COLECTADAS DEL CLIENTE"
@@ -32,7 +75,7 @@
                 android:layout_height="10dp" />
 
             <TextView
-                android:id="@+id/lab_cte3"
+                android:id="@+id/prn3_lab_ctes"
                 style="@style/Widget.AppCompat.TextView.SpinnerItem"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -46,7 +89,7 @@
                 android:layout_height="10dp" />
 
             <TextView
-                android:id="@+id/lblPrinterName"
+                android:id="@+id/prn3_lab_prin"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="5dp"
@@ -61,53 +104,19 @@
 
 
             <ListView
-                android:id="@+id/oListMaq"
+                android:id="@+id/prn3_Lst_Maq"
                 android:layout_width="match_parent"
                 android:layout_height="475dp"
                 android:layout_weight="3"
                 android:scrollbars="vertical"
-                tools:ignore="ExtraText"></ListView>
+                tools:ignore="ExtraText" />
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:id="@+id/empty"
+                android:text=""/>
 
-                <Button
-                    android:id="@+id/btnConnect"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:layout_weight="1"
-                    android:background="@color/Chartreuse"
-                    android:padding="5dp"
-                    android:text="Conectar impresora" />
-
-                <Button
-                    android:id="@+id/btnDisconnect"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:layout_weight="1"
-                    android:padding="5dp"
-                    android:text="Desconectar Impresora" />
-
-                <Button
-                    android:id="@+id/btnPrint"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:layout_weight="1"
-                    android:padding="5dp"
-                    android:text="Imprimir Listado" />
-
-                <Button
-                    android:id="@+id/btnRegr"
-                    android:layout_width="match_parent"
-                    android:layout_height="80dp"
-                    android:layout_weight="1"
-                    android:background="@color/Coral"
-                    android:padding="5dp"
-                    android:text="REGRESAR" />
-
-            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

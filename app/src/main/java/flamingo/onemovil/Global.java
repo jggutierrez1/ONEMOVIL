@@ -181,6 +181,7 @@ public class Global {
     public static int REQUEST_SEL_LIS = 7;
     public static int REQUEST_SEL_LIS2 = 8;
     public static int REQUEST_PRINT = 9;
+    public static int REQUEST_PRN_CAP = 10;
     public static int REQUEST_CAMERA = 1;
     public static int MR_Dialog_Resp = 0;
     public static String cFileLogPathDest = "";

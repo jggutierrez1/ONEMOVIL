@@ -64,21 +64,17 @@ public class print_data extends AppCompatActivity {
     int readBufferPosition;
     volatile boolean stopWorker;
 
-    TextView lblPrinterName;
-    ListView ListMaq;
-    TextView textBox;
-    TextView olab_cte;
     private SQLiteDatabase oDb6;
-    private Cursor oData6, oData2;
+    private Cursor oData6;
     private String cSqlLn = "";
     private String cDatabasePath = "";
     private ArrayList<String> theList = new ArrayList<>();
-    private static final int iLineNo = 69;
-    private String cLineSing = String.format("%0" + iLineNo + "d", 0).replace("0", "-");
-    private String cLineDoub = String.format("%0" + iLineNo + "d", 0).replace("0", "=");
     private Context oThis = this;
     private String cText = "";
     private int iTotChars = 65;
+    private ListView oprn3_Lst_Maq;
+    private Button oprn3_btn_conn, oprn3_btn_disc, oprn3_btn_prin, oprn3_btn_exit, oprn3_btn_ctes;
+    private TextView oprn3_lab_pri, oprn3_lab_cte;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,18 +89,19 @@ public class print_data extends AppCompatActivity {
         getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffc2b3"));
 
         // Create object of controls
-        Button btnConnect = (Button) findViewById(R.id.btnConnect);
-        Button btnDisconnect = (Button) findViewById(R.id.btnDisconnect);
-        Button btnPrint = (Button) findViewById(R.id.btnPrint);
-        Button btnRegr = (Button) findViewById(R.id.btnRegr);
+        this.oprn3_btn_conn = (Button) findViewById(R.id.prn3_btn_conn);
+        this.oprn3_btn_disc = (Button) findViewById(R.id.prn3_btn_disc);
+        this.oprn3_btn_prin = (Button) findViewById(R.id.prn3_btn_prin);
+        this.oprn3_btn_exit = (Button) findViewById(R.id.prn3_btn_exit);
+        this.oprn3_btn_ctes = (Button) findViewById(R.id.prn3_btn_ctes);
 
-        this.lblPrinterName = (TextView) findViewById(R.id.lblPrinterName);
-        this.olab_cte = (TextView) findViewById(R.id.lab_cte3);
+        this.oprn3_lab_pri = (TextView) findViewById(R.id.prn3_lab_prin);
+        this.oprn3_lab_cte = (TextView) findViewById(R.id.prn3_lab_ctes);
 
-        this.ListMaq = (ListView) findViewById(R.id.oListMaq);
-        this.ListMaq.setClickable(true);
+        this.oprn3_Lst_Maq = (ListView) findViewById(R.id.prn3_Lst_Maq);
+        this.oprn3_Lst_Maq.setClickable(true);
 
-        this.olab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
+        this.oprn3_lab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
 
         this.cDatabasePath = getDatabasePath("one2009.db").getPath();
 
@@ -118,28 +115,24 @@ public class print_data extends AppCompatActivity {
             ex.printStackTrace();
         }
 
-        Global.save_in_textfile(Global.cFileRepPathDestF, "", false);
-        this.prn_titles();
-        this.qry_lst_maq();
-        this.list_maq_fact();
-        /*
-        switch (Global.iPrn_Data) {
-            case 1: {
-                Listar_Montos();
+        if ((Global.cEmp_Id == "") || (Global.cEmp_Id == "0")) {
+            Intent Int_EmpScreen = new Intent(getApplicationContext(), select_emp.class);
+            startActivityForResult(Int_EmpScreen, Global.REQUEST_SEL_EMP);
+        } else {
+            if ((Global.cCte_Id == "") || (Global.cCte_Id == "0")) {
+                Intent Int_CteScreen = new Intent(getApplicationContext(), select_cte.class);
+                startActivityForResult(Int_CteScreen, Global.REQUEST_SEL_CTE);
+            } else {
+                Global.bAutoSelCte = true;
+                Global.save_in_textfile(Global.cFileRepPathDestF, "", false);
+                oprn3_lab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
+                prn_titles();
+                qry_lst_maq();
+                list_maq_fact();
             }
-            break;
-            case 2: {
-                Listar_Montos();
-            }
-            break;
-            default: {
-            }
-            ;
-
         }
-           */
 
-        btnConnect.setOnClickListener(new View.OnClickListener() {
+        oprn3_btn_conn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -151,7 +144,7 @@ public class print_data extends AppCompatActivity {
                 }
             }
         });
-        btnDisconnect.setOnClickListener(new View.OnClickListener() {
+        oprn3_btn_disc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 try {
@@ -161,21 +154,46 @@ public class print_data extends AppCompatActivity {
                 }
             }
         });
-        btnPrint.setOnClickListener(new View.OnClickListener() {
+        oprn3_btn_prin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 prn_maq_fact();
-                /*
-                    Imprimir_Maquinas();
-                    if (Global.iPrn_Data == 1)
-                        Imprimir_Montos();
-                    if (Global.iPrn_Data == 2)
-                        Imprimir_Montos2();
-                */
             }
         });
 
-        btnRegr.setOnClickListener(new View.OnClickListener() {
+        oprn3_btn_ctes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Global.bAutoSelEmp = true;
+                Global.bAutoSelCte = true;
+                Global.bAutoSelMaq = false;
+                Global.bAutoSelCapM = false;
+                Global.bAutoSelCapF = false;
+                Global.bAutoSelList = false;
+                Global.bAutoSelList2 = false;
+                Global.cEmp_Id = "";
+                Global.cCte_Id = "";
+
+                if ((Global.cEmp_Id == "") || (Global.cEmp_Id == "0")) {
+                    Intent Int_EmpScreen = new Intent(getApplicationContext(), select_emp.class);
+                    startActivityForResult(Int_EmpScreen, Global.REQUEST_SEL_EMP);
+                } else {
+                    if ((Global.cCte_Id == "") || (Global.cCte_Id == "0")) {
+                        Intent Int_CteScreen = new Intent(getApplicationContext(), select_cte.class);
+                        startActivityForResult(Int_CteScreen, Global.REQUEST_SEL_CTE);
+                    } else {
+                        Global.save_in_textfile(Global.cFileRepPathDestF, "", false);
+                        oprn3_lab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
+                        prn_titles();
+                        qry_lst_maq();
+                        list_maq_fact();
+                    }
+                }
+            }
+        });
+
+        oprn3_btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -194,13 +212,53 @@ public class print_data extends AppCompatActivity {
 
     }
 
-    void FindBluetoothDevice() {
+     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        // check if the request code is same as what is passed  here it is 2
 
+        if (requestCode == Global.REQUEST_SEL_EMP) {
+            switch (resultCode) {
+                case RESULT_OK:
+                    //Toast.makeText(this, "Aceptó la empresa:[" + Global.cEmp_Id.trim() + "]/" + Global.cEmp_De.trim(), Toast.LENGTH_SHORT).show();
+                    if (Global.bAutoSelCte == true) {
+                        Intent Int_CteScreen = new Intent(getApplicationContext(), select_cte.class);
+                        startActivityForResult(Int_CteScreen, Global.REQUEST_SEL_CTE);
+                        Global.bAutoSelCte = false;
+                    }
+                    break;
+                case RESULT_CANCELED:
+                    Global.cEmp_Id = "";
+                    Global.cEmp_De = "";
+                    break;
+            }
+        }
+
+        if (requestCode == Global.REQUEST_SEL_CTE) {
+            //Valida la seleccion del cliente.
+            switch (resultCode) {
+                case RESULT_OK:
+                    //Toast.makeText(this, "Aceptó el cliente:[" + Global.cCte_Id.trim() + "]/" + Global.cCte_De.trim(), Toast.LENGTH_SHORT).show();
+                    Global.save_in_textfile(Global.cFileRepPathDestF, "", false);
+                    oprn3_lab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
+                    prn_titles();
+                    qry_lst_maq();
+                    list_maq_fact();
+                    break;
+                case RESULT_CANCELED:
+                    Global.cCte_Id = "";
+                    Global.cCte_De = "";
+                    break;
+            }
+        }
+    }
+
+    void FindBluetoothDevice() {
         try {
 
             bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
             if (bluetoothAdapter == null) {
-                lblPrinterName.setText("NO SE ENCONTRO DISPOSITIBO BLUETOOTH");
+                this.oprn3_lab_pri.setText("NO SE ENCONTRO DISPOSITIBO BLUETOOTH");
                 getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffc2b3"));
             }
             if (bluetoothAdapter.isEnabled()) {
@@ -210,17 +268,22 @@ public class print_data extends AppCompatActivity {
 
             Set<BluetoothDevice> pairedDevice = bluetoothAdapter.getBondedDevices();
 
-            lblPrinterName.setText("CONECTADO A: [SIN IMPRESORA]");
-            lblPrinterName.setTextColor(Color.parseColor("#ff0000"));
+            this.oprn3_lab_pri.setText("CONECTADO A: [SIN IMPRESORA]");
+            this.oprn3_lab_pri.setTextColor(Color.parseColor("#ff0000"));
 
             if (pairedDevice.size() > 0) {
                 for (BluetoothDevice pairedDev : pairedDevice) {
                     // My Bluetoth printer name is BTP_F09F1A
-                    String sPrinterName = pairedDev.getName().toUpperCase();
-                    if (sPrinterName.equals("BlueTooth Printer") || sPrinterName.equals("AB-341M_ZX1606")) {
+                    String sPrinterFullName = pairedDev.getName().toUpperCase();
+                    String sPrinterName = sPrinterFullName.substring(0, 7);
+
+                    System.out.println(sPrinterFullName);
+                    System.out.println(sPrinterName);
+
+                    if (sPrinterFullName.equals("BlueTooth Printer") || sPrinterName.equals("AB-341M")) {
                         bluetoothDevice = pairedDev;
-                        lblPrinterName.setText("CONECTADO A: [" + pairedDev.getName() + "]");
-                        lblPrinterName.setTextColor(Color.parseColor("#009900"));
+                        this.oprn3_lab_pri.setText("CONECTADO A: [" + pairedDev.getName() + "]");
+                        this.oprn3_lab_pri.setTextColor(Color.parseColor("#009900"));
                         getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffffff"));
                         break;
                     }
@@ -229,15 +292,14 @@ public class print_data extends AppCompatActivity {
 
         } catch (Exception ex) {
             ex.printStackTrace();
-            lblPrinterName.setText("[ERROR AL TRATAR DE DETECTAR LA IMPRESORA]");
-            lblPrinterName.setTextColor(Color.parseColor("#ff0000"));
+            this.oprn3_lab_pri.setText("[ERROR AL TRATAR DE DETECTAR LA IMPRESORA]");
+            this.oprn3_lab_pri.setTextColor(Color.parseColor("#ff0000"));
             getWindow().getDecorView().getRootView().setBackgroundColor(Color.parseColor("#ffc2b3"));
         }
 
     }
 
     // Open Bluetooth Printer
-
     void openBluetoothPrinter() throws IOException {
         try {
 
@@ -289,7 +351,7 @@ public class print_data extends AppCompatActivity {
                                         handler.post(new Runnable() {
                                             @Override
                                             public void run() {
-                                                lblPrinterName.setText(data);
+                                                oprn3_lab_pri.setText(data);
                                             }
                                         });
                                     } else {
@@ -339,19 +401,6 @@ public class print_data extends AppCompatActivity {
         Global.save_in_textfile(Global.cFileRepPathDestF, cText, true);
     }
 
-    // Printing Text to Bluetooth Printer //
-    void printData() throws IOException {
-    /*       try {
-            String msg = textBox.getText().toString();
-            msg += "\n";
-            outputStream.write(msg.getBytes());
-            lblPrinterName.setText("IMPRIMIENDO TEXTO...");
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        }
-      */
-    }
-
     void printString(String msg) {
         try {
             msg += "\n";
@@ -368,7 +417,7 @@ public class print_data extends AppCompatActivity {
             outputStream.close();
             inputStream.close();
             bluetoothSocket.close();
-            lblPrinterName.setText("IMPRESORA DESCONECTADA.");
+            this.oprn3_lab_pri.setText("IMPRESORA DESCONECTADA.");
         } catch (Exception ex) {
             ex.printStackTrace();
         }
@@ -437,6 +486,8 @@ public class print_data extends AppCompatActivity {
         String cPrnLn, cPrnLn1, cPrnLn2, cLstLn = "";
         String cValue = "";
         Double fValue, fValue1, fValue2 = 0.00;
+        theList.clear();
+        this.oprn3_Lst_Maq.setEmptyView(findViewById(android.R.id.empty));
         if ((this.oData6 == null) || (this.oData6.getCount() == 0)) {
             return false;
         } else {
@@ -562,7 +613,7 @@ public class print_data extends AppCompatActivity {
 
                 theList.add(cLstLn);
                 ListAdapter listAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, theList);
-                ListMaq.setAdapter(listAdapter);
+                this.oprn3_Lst_Maq.setAdapter(listAdapter);
 
             } while (oData6.moveToNext());
             cPrnLn = " \n";
@@ -592,114 +643,4 @@ public class print_data extends AppCompatActivity {
         }
     }
 
-    private boolean Listar_Montos() {
-
-        cSqlLn = "";
-        cSqlLn += "SELECT ";
-        cSqlLn += " SUM(op.op_tot_colect) AS tot_cole, ";
-        cSqlLn += " SUM(op.op_tot_cred)   AS tot_cred, ";
-        cSqlLn += " (SUM(op.op_tot_colect)-SUM(op.op_tot_cred)) AS tot_dife ";
-        cSqlLn += "FROM operacion op ";
-        cSqlLn += "WHERE op.id_device='" + Global.cid_device + "' ";
-        cSqlLn += "AND   op.op_emp_id='" + Global.cEmp_Id + "' ";
-        cSqlLn += "AND   op.cte_id   ='" + Global.cCte_Id + "' ";
-        cSqlLn += "GROUP BY op.op_emp_id,id_device ";
-        Log.d("SQL", cSqlLn);
-        oData2 = oDb6.rawQuery(cSqlLn, null);
-
-        if ((oData2 == null) || (oData2.getCount() == 0)) {
-            return false;
-        } else {
-            oData2.moveToFirst();
-            return true;
-        }
-    }
-
-    private boolean Imprimir_Maquinas() {
-        String cPrnLn = "";
-        if ((oData6 == null) || (oData6.getCount() == 0)) {
-            return false;
-        } else {
-            printString("");
-            printString(Global.center(Global.cEmp_De.toUpperCase(), iLineNo, ' '));
-            printString(Global.center("LISTADO DE MAQUINAS COLECTADAS", iLineNo, ' '));
-            printString(Global.center("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]", iLineNo, ' '));
-            cPrnLn = String.format("%-8s %-20s %12s %12s %12s", "CHAPA", "JUEGO", "ENTARDA", "SALIDA", "DIF.");
-            printString(cPrnLn);
-            printString(cLineSing);
-            oData6.moveToFirst();
-            do {
-                cPrnLn = String.format(Locale.US, "%-8s %-20s %12.2f %12.2f %12.2f",
-                        oData6.getString(1).trim(),
-                        oData6.getString(2).trim(),
-                        oData6.getDouble(3),
-                        oData6.getDouble(4),
-                        oData6.getDouble(5)
-                );
-                printString(cPrnLn);
-            } while (oData6.moveToNext());
-            return true;
-        }
-    }
-
-    private boolean Imprimir_Montos() {
-        String cPrnLn = "";
-        if ((oData2 == null) || (oData2.getCount() == 0)) {
-            return false;
-        } else {
-            //printString("");
-            oData2.moveToFirst();
-            printString(cLineDoub);
-            do {
-                cPrnLn = String.format(Locale.US, "%-8s %-20s %12.2f %12.2f %12.2f",
-                        "TOTALES", "",
-                        oData2.getDouble(0),
-                        oData2.getDouble(1),
-                        oData2.getDouble(2));
-                printString(cPrnLn);
-                /*
-                printString("Colectado : " + String.format("%12.2f", oData2.getDouble(0)).trim());
-                printString("Credito   : " + String.format("%12.2f", oData2.getDouble(1)).trim());
-                printString("Diferencia: " + String.format("%12.2f", oData2.getDouble(2)).trim());
-                 */
-            } while (oData2.moveToNext());
-            printString(cLineDoub);
-
-            printString("");
-            printString("");
-            printString("");
-            return true;
-        }
-    }
-
-    private boolean Imprimir_Montos2() {
-        if (Global.iPrn_Data == 2) {
-            try {
-                printString(cLineDoub);
-                printString("COLECTADO :" + String.format("%10.2f", Global.Genobj.getDouble("tot_cole")));
-                printString("TIMBRES   :" + String.format("%10.2f", Global.Genobj.getDouble("tot_timb")));
-                printString("IMUESTOS  :" + String.format("%10.2f", Global.Genobj.getDouble("tot_impm")));
-                printString("J.C.J     :" + String.format("%10.2f", Global.Genobj.getDouble("dot__jcj")));
-                printString("SERV. TEC.:" + String.format("%10.2f", Global.Genobj.getDouble("tot_tecn")));
-                printString("TOT. DEVO.:" + String.format("%10.2f", Global.Genobj.getDouble("tot_devo")));
-                printString("TOT. OTRO :" + String.format("%10.2f", Global.Genobj.getDouble("tot_otro")));
-                printString("TOT. CRED.:" + String.format("%10.2f", Global.Genobj.getDouble("tot_cred")));
-                printString("SUB-TOTAL :" + String.format("%10.2f", Global.Genobj.getDouble("Sub_tota")));
-                printString("TOT. IMP. :" + String.format("%10.2f", Global.Genobj.getDouble("tot_impu")));
-                printString("TOTAL     :" + String.format("%10.2f", Global.Genobj.getDouble("tot_tota")));
-                printString("BRUTO CTE.:" + String.format("%10.2f", Global.Genobj.getDouble("tot_bloc")));
-                printString("BRUTO EMP.:" + String.format("%10.2f", Global.Genobj.getDouble("tot_bemp")));
-                printString("NETO  CTE.:" + String.format("%10.2f", Global.Genobj.getDouble("tot_nloc")));
-                printString("NETO  EMP.:" + String.format("%10.2f", Global.Genobj.getDouble("tot_nemp")));
-                printString(cLineDoub);
-
-                printString("");
-                printString("");
-                printString("");
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-        return true;
-    }
 }

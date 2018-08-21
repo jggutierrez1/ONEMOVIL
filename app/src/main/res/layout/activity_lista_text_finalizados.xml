@@ -14,32 +14,34 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/obtn_hide_lst2_t"
+            android:id="@+id/Prn2_btn_hide"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:text="QUITAR TECLADO" />
+            android:text="QUITAR TECLADO"
+            android:visibility="gone" />
 
         <Button
-            android:id="@+id/btn_print_lst2_t"
+            android:id="@+id/Prn2_btn_prin"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:text="Imprimir" />
+            android:text="IMPRIMIR"
+            android:visibility="gone" />
 
         <Button
-            android:id="@+id/obtn_do_lst2_t"
+            android:id="@+id/Prn2_btn_ctes"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_weight="1"
             android:background="@color/Chartreuse"
-            android:text="SEL. CLIENTE Y LISTAR" />
+            android:text="CAMBIAR CLIENTE" />
 
         <Button
-            android:id="@+id/obtn_cancel_lst2_t"
+            android:id="@+id/Prn2_btn_canc"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
@@ -56,15 +58,22 @@
         android:paddingTop="80dp">
 
         <EditText
-            android:id="@+id/otext_lst2_t"
+            android:id="@+id/Prn2_text_any"
             android:layout_width="fill_parent"
             android:layout_height="match_parent"
+            android:focusableInTouchMode="false"
             android:fontFamily="monospace"
-            android:textSize="12dip"
             android:inputType="textMultiLine"
             android:scrollbars="horizontal"
-            android:focusableInTouchMode="false"
-            android:text="." />
+            android:text="."
+            android:textSize="12dip" />
+
+        <TextView
+            android:id="@android:id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

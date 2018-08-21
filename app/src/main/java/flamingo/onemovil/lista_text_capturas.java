@@ -35,8 +35,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class lista_text_capturas extends AppCompatActivity {
-    private Button obtn_hide_lst_t, obtn_do_lst_t, obtn_cancel_lst_t, obtn_print_lst_t;
-    private TextView otext_lst_t;
+    private Button oPrn1_btn_hide,oPrn1_btn_ctes, oPrn1_btn_canc, oPrn1_btn_prin;
+    private TextView oPrn1_text_any;
     private SQLiteDatabase db04;
     private Cursor data04;
     private String cSqlLn;
@@ -56,11 +56,12 @@ public class lista_text_capturas extends AppCompatActivity {
 
         Locale.setDefault(new Locale("en", "US"));
 
-        this.obtn_hide_lst_t = (Button) findViewById(R.id.obtn_hide_lst_t);
-        this.obtn_do_lst_t = (Button) findViewById(R.id.obtn_do_lst_t);
-        this.obtn_cancel_lst_t = (Button) findViewById(R.id.obtn_cancel_lst_t);
-        this.otext_lst_t = (TextView) findViewById(R.id.otext_lst_t);
-        this.obtn_print_lst_t = (Button) findViewById(R.id.btn_print_lst_t);
+        this.oPrn1_btn_hide = (Button) findViewById(R.id.Prn1_btn_hide);
+        this.oPrn1_btn_canc = (Button) findViewById(R.id.Prn1_btn_canc);
+        this.oPrn1_btn_ctes = (Button) findViewById(R.id.Prn1_btn_ctes);
+        this.oPrn1_btn_prin = (Button) findViewById(R.id.Prn1_btn_prin);
+
+        this.oPrn1_text_any = (TextView) findViewById(R.id.Prn1_text_any);
 
         this.Clear_Screen();
 
@@ -68,17 +69,16 @@ public class lista_text_capturas extends AppCompatActivity {
         this.db04 = io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(databasePath, null, null);
 
         Global.save_in_textfile(Global.cFileRepPathDestC, "", false);
+        this.prn1_list_titl();
+        if (this.prn1_qry_lst_maq() == true) {
+            this.prn1_list_maq();
 
-        this.Imprimir2_Titles();
-        if (this.Listar_Maquinas() == true) {
-            this.Imprimir_Maquinas();
-
-            if (this.Listar_Montos() == true) {
+            if (this.prn1_qry_lst_mont() == true) {
             }
             this.Mostrar_Listado();
         }
 
-        this.obtn_print_lst_t.setOnClickListener(new View.OnClickListener() {
+        this.oPrn1_btn_prin.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -89,17 +89,7 @@ public class lista_text_capturas extends AppCompatActivity {
             }
         });
 
-        this.obtn_do_lst_t.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                Intent Int_CteScreen = new Intent(getApplicationContext(), select_cte.class);
-                startActivityForResult(Int_CteScreen, Global.REQUEST_SEL_CTE);
-            }
-
-        });
-
-        this.obtn_hide_lst_t.setOnClickListener(new View.OnClickListener() {
+        this.oPrn1_btn_hide.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -108,7 +98,48 @@ public class lista_text_capturas extends AppCompatActivity {
             }
         });
 
-        this.obtn_cancel_lst_t.setOnClickListener(new View.OnClickListener() {
+        this.oPrn1_btn_ctes.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+
+                Global.bAutoSelEmp = true;
+                Global.bAutoSelCte = true;
+                Global.bAutoSelMaq = false;
+                Global.bAutoSelCapM = false;
+                Global.bAutoSelCapF = false;
+                Global.bAutoSelList = false;
+                Global.bAutoSelList2 = false;
+                Global.cEmp_Id = "";
+                Global.cCte_Id = "";
+
+                if ((Global.cEmp_Id == "") || (Global.cEmp_Id == "0")) {
+                    Intent Int_EmpScreen = new Intent(getApplicationContext(), select_emp.class);
+                    startActivityForResult(Int_EmpScreen, Global.REQUEST_SEL_EMP);
+                } else {
+                    if ((Global.cCte_Id == "") || (Global.cCte_Id == "0")) {
+                        Intent Int_CteScreen = new Intent(getApplicationContext(), select_cte.class);
+                        startActivityForResult(Int_CteScreen, Global.REQUEST_SEL_CTE);
+                    } else {
+                        Global.save_in_textfile(Global.cFileRepPathDestF, "", false);
+                        oPrn1_text_any.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
+
+                        Global.save_in_textfile(Global.cFileRepPathDestC, "", false);
+                        prn1_list_titl();
+                        if (prn1_qry_lst_maq() == true) {
+                            prn1_list_maq();
+
+                            if (prn1_qry_lst_mont() == true) {
+                            }
+                            Mostrar_Listado();
+                        }
+                    }
+                }
+            }
+
+        });
+
+        this.oPrn1_btn_canc.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -131,15 +162,17 @@ public class lista_text_capturas extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // check if the request code is same as what is passed  here it is 2
 
         if (requestCode == Global.REQUEST_SEL_EMP) {
             switch (resultCode) {
                 case RESULT_OK:
-                    if ((Global.cCte_Id != "") || (Global.cCte_Id == "0")) {
+                    //Toast.makeText(this, "Aceptó la empresa:[" + Global.cEmp_Id.trim() + "]/" + Global.cEmp_De.trim(), Toast.LENGTH_SHORT).show();
+                    if (Global.bAutoSelCte == true) {
                         Intent Int_CteScreen = new Intent(getApplicationContext(), select_cte.class);
                         startActivityForResult(Int_CteScreen, Global.REQUEST_SEL_CTE);
+                        Global.bAutoSelCte = false;
                     }
-
                     break;
                 case RESULT_CANCELED:
                     Global.cEmp_Id = "";
@@ -152,14 +185,18 @@ public class lista_text_capturas extends AppCompatActivity {
             //Valida la seleccion del cliente.
             switch (resultCode) {
                 case RESULT_OK:
-                    Clear_Screen();
+                    //Toast.makeText(this, "Aceptó el cliente:[" + Global.cCte_Id.trim() + "]/" + Global.cCte_De.trim(), Toast.LENGTH_SHORT).show();
 
-                    if (this.Listar_Maquinas() == true) {
-                        this.Imprimir_Maquinas();
+                    Global.save_in_textfile(Global.cFileRepPathDestF, "", false);
+                    this.oPrn1_text_any.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
+                    Global.save_in_textfile(Global.cFileRepPathDestC, "", false);
+                    prn1_list_titl();
+                    if (prn1_qry_lst_maq() == true) {
+                        prn1_list_maq();
 
-                        if (this.Listar_Montos() == true) {
-                            //this.Imprimir_Montos();
+                        if (prn1_qry_lst_mont() == true) {
                         }
+                        Mostrar_Listado();
                     }
                     break;
                 case RESULT_CANCELED:
@@ -171,10 +208,10 @@ public class lista_text_capturas extends AppCompatActivity {
     }
 
     private void Clear_Screen() {
-        this.otext_lst_t.setText("");
+        this.oPrn1_text_any.setText("");
     }
 
-    private void Imprimir2_Titles() {
+    private void prn1_list_titl() {
         cText = Global.center("***" + Global.cEmp_De.toUpperCase().trim() + "***", 110, ' ') + "\n";
         Global.save_in_textfile(Global.cFileRepPathDestC, cText, true);
         cText = Global.center("LISTADO PRELIMIANR DE MAQUINAS COLECTADAS", 110, ' ') + "\n";
@@ -189,13 +226,13 @@ public class lista_text_capturas extends AppCompatActivity {
 
     private void Mostrar_Listado() {
         String sline = "";
-        this.otext_lst_t.setText("");
+        this.oPrn1_text_any.setText("");
         try {
             FileReader fReader = new FileReader(Global.cFileRepPathDestC);
             BufferedReader bReader = new BufferedReader(fReader);
 
             while ((sline = bReader.readLine()) != null) {
-                otext_lst_t.append(sline + "\n");
+                this.oPrn1_text_any.append(sline + "\n");
             }
             fReader = null;
             bReader = null;
@@ -204,7 +241,7 @@ public class lista_text_capturas extends AppCompatActivity {
         }
     }
 
-    private boolean Listar_Maquinas() {
+    private boolean prn1_qry_lst_maq() {
 
         cSqlLn = "";
         cSqlLn += "SELECT ";
@@ -216,15 +253,11 @@ public class lista_text_capturas extends AppCompatActivity {
         cSqlLn += " op.op_tot_colect AS tot_cole, ";
         cSqlLn += " op.op_tot_cred   AS tot_cred, ";
         cSqlLn += " (op.op_tot_colect - op.op_tot_cred) AS tot_dife ";
-        //cSqlLn += " SUM(op.op_tot_colect) AS tot_cole, ";
-        //cSqlLn += " SUM(op.op_tot_cred)   AS tot_cred, ";
-        //cSqlLn += " (SUM(op.op_tot_colect)-SUM(op.op_tot_cred)) AS tot_dife ";
         cSqlLn += "FROM operacion op ";
         cSqlLn += "LEFT JOIN empresas em ON op.op_emp_id = em.emp_id ";
         cSqlLn += "WHERE (op.id_device='" + Global.cid_device + "') ";
         cSqlLn += "AND   (op.op_emp_id='" + Global.cEmp_Id + "') ";
         cSqlLn += "AND   (op.cte_id   ='" + Global.cCte_Id + "') ";
-        //cSqlLn += "GROUP BY op.op_emp_id, op.cte_id, op.op_chapa ";
         cSqlLn += "ORDER BY op.op_emp_id, op.cte_id, op.op_chapa ";
 
         Log.d("SQL", cSqlLn);
@@ -238,8 +271,7 @@ public class lista_text_capturas extends AppCompatActivity {
         }
     }
 
-    private boolean Listar_Montos() {
-
+    private boolean prn1_qry_lst_mont() {
         cSqlLn = "";
         cSqlLn += "SELECT ";
         cSqlLn += " SUM(op.op_tot_colect) AS tot_cole, ";
@@ -261,7 +293,7 @@ public class lista_text_capturas extends AppCompatActivity {
         }
     }
 
-    private boolean Imprimir_Maquinas() {
+    private boolean prn1_list_maq() {
         String cFec_Capt1, cFec_Capt, cNom_Empr, cSem_Impu, cMaq_Chap = "", cMaq_Mode = "", ctot_cole = "", ctot_cred = "", ctot_dife = "";
         String cMet_DlE = "", cMet_DlS = "", cMet_DlD = "";
         String cLine = "";
@@ -301,7 +333,7 @@ public class lista_text_capturas extends AppCompatActivity {
         }
     }
 
-    private boolean Imprimir_Montos() {
+    private boolean prn1_list_mont() {
         String ctot_cole = "", ctot_cred = "", ctot_dife = "";
         String cLine = "";
 
@@ -313,10 +345,6 @@ public class lista_text_capturas extends AppCompatActivity {
                 ctot_cole = String.format(Locale.US, "%12.2f", data04.getDouble(data04.getColumnIndex("tot_cole")));
                 ctot_cred = String.format(Locale.US, "%12.2f", data04.getDouble(data04.getColumnIndex("tot_cred")));
                 ctot_dife = String.format(Locale.US, "%12.2f", data04.getDouble(data04.getColumnIndex("tot_dife")));
-
-                //text_lst_t.append("Colectado : " + String.format(Locale.US, "%12.2f", data04.getDouble(0))+ "\n");
-                //text_lst_t.append("Credito   : " + String.format(Locale.US, "%12.2f", data04.getDouble(1))+ "\n");
-                //text_lst_t.append("Diferencia: " + String.format(Locale.US,"%12.2f", data04.getDouble(2))+ "\n");
                 cLine = String.format("%8s %20s %s %s %s", "", "", ctot_cole, ctot_cred, ctot_dife);
                 cText = cLine + "\n";
                 Global.save_in_textfile(Global.cFileRepPathDestC, cText, true);

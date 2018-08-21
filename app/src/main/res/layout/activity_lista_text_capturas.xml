@@ -12,32 +12,34 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/obtn_hide_lst_t"
+            android:id="@+id/Prn1_btn_hide"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:text="QUITAR TECLADO" />
+            android:text="QUITAR TECLADO"
+            android:visibility="gone" />
 
         <Button
+            android:id="@+id/Prn1_btn_prin"
             style="@style/Widget.AppCompat.Button"
-            android:id="@+id/btn_print_lst_t"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_weight="1"
-            android:text="Imprimir" />
+            android:text="IMPRIMIR"
+            android:visibility="gone" />
 
         <Button
-            android:id="@+id/obtn_do_lst_t"
+            android:id="@+id/Prn1_btn_ctes"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
             android:layout_weight="1"
             android:background="@color/Chartreuse"
-            android:text="SEL. CLIENTE Y LISTAR" />
+            android:text="CAMBIAR CLIENTE" />
 
         <Button
-            android:id="@+id/obtn_cancel_lst_t"
+            android:id="@+id/Prn1_btn_canc"
             style="@style/Widget.AppCompat.Button"
             android:layout_width="wrap_content"
             android:layout_height="80dp"
@@ -51,16 +53,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="80dp">
+        android:paddingTop="80dp"
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp">
 
         <EditText
-            android:id="@+id/otext_lst_t"
+            android:id="@+id/Prn1_text_any"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
+            android:focusableInTouchMode="false"
             android:fontFamily="monospace"
             android:inputType="textMultiLine"
-            android:focusableInTouchMode="false"
             android:text="." />
+
+        <TextView
+            android:id="@android:id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="" />
+
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

@@ -25,7 +25,7 @@
                 android:text="MENU PRINCIPAL."
                 android:textAlignment="center"
                 android:textAllCaps="true"
-                android:textSize="35sp"
+                android:textSize="25sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -35,7 +35,7 @@
                 android:text="EMPRESA:"
                 android:textAlignment="center"
                 android:textAllCaps="true"
-                android:textSize="30sp"
+                android:textSize="25sp"
                 android:textStyle="bold|italic" />
 
             <TextView
@@ -55,10 +55,10 @@
                 android:id="@+id/oEntry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:ems="10"
                 android:enabled="false"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
-                android:ems="10"
                 android:inputType="textPersonName"
                 android:text="Name" />
 
@@ -69,7 +69,7 @@
             <Button
                 android:id="@+id/obtn_upd"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="70dp"
                 android:background="@color/Chartreuse"
                 android:fontFamily="sans-serif"
                 android:text="ACTUALIZAR DATOS Y MAQUINAS (BAJAR DE LA NUBE CON WIFI)"
@@ -84,7 +84,7 @@
             <Button
                 android:id="@+id/obtn_emp"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="70dp"
                 android:fontFamily="sans-serif"
                 android:text="SELECCIONAR EMPRESA"
                 android:textSize="18sp" />
@@ -96,7 +96,7 @@
             <Button
                 android:id="@+id/obtn_cte"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="70dp"
                 android:enabled="false"
                 android:fontFamily="sans-serif"
                 android:singleLine="false"
@@ -110,7 +110,7 @@
             <Button
                 android:id="@+id/obtn_maq"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="70dp"
                 android:enabled="false"
                 android:fontFamily="sans-serif"
                 android:text="SELECCIONAR MAQUINA"
@@ -123,7 +123,7 @@
             <Button
                 android:id="@+id/obtn_capt"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="70dp"
                 android:background="@color/AliceBlue"
                 android:enabled="false"
                 android:fontFamily="sans-serif"
@@ -137,12 +137,12 @@
                 android:layout_height="7dp" />
 
             <Button
-                android:id="@+id/obtn_list_colec"
+                android:id="@+id/btn_list_prn1"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="70dp"
                 android:background="@color/AliceBlue"
                 android:fontFamily="sans-serif"
-                android:text="LISTAR METROS (MAQUINAS)"
+                android:text="LISTADO DE MAQUINAS CAPTURADAS CON METROS"
                 android:textColor="@color/DarkBlue"
                 android:textSize="18sp" />
 
@@ -153,7 +153,7 @@
             <Button
                 android:id="@+id/obtn_canc_colec"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="70dp"
                 android:background="@color/Red"
                 android:enabled="true"
                 android:fontFamily="sans-serif"
@@ -168,7 +168,7 @@
             <Button
                 android:id="@+id/obtn_fin_colec"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="70dp"
                 android:background="@color/DarkGreen"
                 android:enabled="false"
                 android:fontFamily="sans-serif"
@@ -182,12 +182,12 @@
                 android:layout_height="7dp" />
 
             <Button
-                android:id="@+id/obtn_list2_colec"
+                android:id="@+id/btn_list_prn2"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="70dp"
                 android:background="@color/DarkGreen"
                 android:fontFamily="sans-serif"
-                android:text="LISTAR DATOS (FACTURA GLOBAL)"
+                android:text="LISTADO DE MAQUINAS COLECTADAS"
                 android:textColor="@android:color/white"
                 android:textSize="18sp" />
 
@@ -198,13 +198,25 @@
             <Button
                 android:id="@+id/obtn_send"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="70dp"
                 android:background="@color/Chartreuse"
                 android:enabled="false"
                 android:fontFamily="sans-serif"
                 android:text="ENVIAR COLECTAS (SUBIR A LA NUBE CON WIFI)"
                 android:textSize="18sp"
                 android:textStyle="bold" />
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="7dp" />
+
+            <Button
+                android:id="@+id/btn_list_prn3"
+                android:layout_width="match_parent"
+                android:layout_height="70dp"
+                android:fontFamily="sans-serif"
+                android:text="REPORTE DE COLECTAS POR MAQUINA (CLIENTES FINALIZADOS)"
+                android:textColor="@android:color/black"
+                android:textSize="18sp" />
 
             <Space
                 android:layout_width="match_parent"
@@ -213,7 +225,7 @@
             <Button
                 android:id="@+id/obtn_exit"
                 android:layout_width="match_parent"
-                android:layout_height="80dp"
+                android:layout_height="70dp"
                 android:background="@color/Coral"
                 android:fontFamily="sans-serif"
                 android:text="SALIR"

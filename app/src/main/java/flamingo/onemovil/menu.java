@@ -62,7 +62,7 @@ import javax.mail.internet.MimeMultipart;
 
 public class menu extends AppCompatActivity {
 
-    private Button btn_upd, btn_emp, btn_cte, btn_maq, btn_capt, btn_send, btn_exit, btn_ccol, btn_fcol, btn_list, btn_list2;
+    private Button obtn_list_prn1,obtn_list_prn2,obtn_list_prn3, btn_upd, btn_emp, btn_cte, btn_maq, btn_capt, btn_send, btn_exit, btn_ccol, btn_fcol;
     private ImageView mImageView;
     private TextView DeviceId, lempresa;
 
@@ -123,10 +123,13 @@ public class menu extends AppCompatActivity {
         btn_send = (Button) findViewById(R.id.obtn_send);
 
         btn_ccol = (Button) findViewById(R.id.obtn_canc_colec);
-        btn_list = (Button) findViewById(R.id.obtn_list_colec);
-        btn_list2 = (Button) findViewById(R.id.obtn_list2_colec);
 
         btn_fcol = (Button) findViewById(R.id.obtn_fin_colec);
+
+        obtn_list_prn1 = (Button) findViewById(R.id.btn_list_prn1);
+        obtn_list_prn2 = (Button) findViewById(R.id.btn_list_prn2);
+        obtn_list_prn3 = (Button) findViewById(R.id.btn_list_prn3);
+
         btn_exit = (Button) findViewById(R.id.obtn_exit);
 
         DeviceId = (TextView) findViewById(R.id.oDeviceId);
@@ -259,7 +262,7 @@ public class menu extends AppCompatActivity {
             }
         });
 
-        btn_list.setOnClickListener(new View.OnClickListener() {
+        obtn_list_prn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Global.bAutoSelEmp = true;
@@ -278,15 +281,15 @@ public class menu extends AppCompatActivity {
                         Intent Int_CteScreen = new Intent(getApplicationContext(), select_cte.class);
                         startActivityForResult(Int_CteScreen, Global.REQUEST_SEL_CTE);
                     } else {
-                        Intent Int_ListCapt = new Intent(getApplicationContext(), lista_text_capturas.class);
-                        startActivity(Int_ListCapt);
+                        Intent Int_prn1 = new Intent(getApplicationContext(), lista_text_capturas.class);
+                        startActivity(Int_prn1);
                     }
                 }
 
             }
         });
 
-        btn_list2.setOnClickListener(new View.OnClickListener() {
+        obtn_list_prn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Global.bAutoSelEmp = true;
@@ -305,8 +308,35 @@ public class menu extends AppCompatActivity {
                         Intent Int_CteScreen = new Intent(getApplicationContext(), select_cte.class);
                         startActivityForResult(Int_CteScreen, Global.REQUEST_SEL_CTE);
                     } else {
-                        Intent Int_ListCapt = new Intent(getApplicationContext(), activity_lista_text_finalizados.class);
-                        startActivity(Int_ListCapt);
+                        Intent Int_prn2 = new Intent(getApplicationContext(), activity_lista_text_finalizados.class);
+                        startActivity(Int_prn2);
+                    }
+                }
+
+            }
+        });
+
+        obtn_list_prn3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Global.bAutoSelEmp = true;
+                Global.bAutoSelCte = true;
+                Global.bAutoSelMaq = false;
+                Global.bAutoSelCapM = false;
+                Global.bAutoSelCapF = false;
+                Global.bAutoSelList = false;
+                Global.bAutoSelList2 = true;
+
+                if ((Global.cEmp_Id == "") || (Global.cEmp_Id == "0")) {
+                    Intent Int_EmpScreen = new Intent(getApplicationContext(), select_emp.class);
+                    startActivityForResult(Int_EmpScreen, Global.REQUEST_SEL_EMP);
+                } else {
+                    if ((Global.cCte_Id == "") || (Global.cCte_Id == "0")) {
+                        Intent Int_CteScreen = new Intent(getApplicationContext(), select_cte.class);
+                        startActivityForResult(Int_CteScreen, Global.REQUEST_SEL_CTE);
+                    } else {
+                        Intent Int_prn3 = new Intent(getApplicationContext(), print_data.class);
+                        startActivity(Int_prn3);
                     }
                 }
 
@@ -340,6 +370,27 @@ public class menu extends AppCompatActivity {
                 }
             }
 
+        });
+
+        btn_ccol.setOnClickListener(new View.OnClickListener()
+
+        {
+            @Override
+            public void onClick(View v) {
+
+                Global.bAutoSelEmp = false;
+                Global.bAutoSelCte = false;
+                Global.bAutoSelMaq = false;
+                Global.bAutoSelCapM = false;
+                Global.bAutoSelCapF = false;
+                Global.bAutoSelList = false;
+                Global.bAutoSelList2 = false;
+
+                Global.iObj_Select = 0;
+                Global.DialogConfirmText = "ESTA SEGURO QUE DESEA BORRA LOS DATOS DE TODAS LAS COLECTAS REALIZADAS?";
+                Intent BorrarColectScreen = new Intent(getApplicationContext(), borrar_colectas.class);
+                startActivityForResult(BorrarColectScreen, Global.REQUEST_DEL_CAP);
+            }
         });
 
         btn_ccol.setOnClickListener(new View.OnClickListener()
@@ -852,6 +903,26 @@ public class menu extends AppCompatActivity {
                     Global.DialogConfirmText = "";
 
                     Toast.makeText(this, "OPCION CANCELADA POR EL USUARIO.", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+        if (requestCode == Global.REQUEST_PRN_CAP) {
+            //Se procesa la devolución
+            switch (resultCode) {
+                case RESULT_OK:
+                    //Toast.makeText(this, "Aceptó las condiciones [" + cId_Maq + "]", Toast.LENGTH_SHORT).show();
+                    this.btn_emp.setEnabled(true);
+                    this.btn_maq.setEnabled(true);
+
+                    this.Color_Sig_Paso(2);
+
+                    break;
+                case RESULT_CANCELED:
+                    this.btn_emp.setEnabled(true);
+                    this.btn_maq.setEnabled(true);
+                    //Toast.makeText(this, "Rechazó las condiciones", Toast.LENGTH_SHORT).show();
+
+                    this.Color_Sig_Paso(2);
                     break;
             }
         }

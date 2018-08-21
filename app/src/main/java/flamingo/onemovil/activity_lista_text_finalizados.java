@@ -30,8 +30,8 @@ import java.io.IOException;
 import java.util.Locale;
 
 public class activity_lista_text_finalizados extends AppCompatActivity {
-    private Button obtn_hide_lst2_t, obtn_do_lst2_t, obtn_cancel_lst2_t, obtn_print_lst2_t;
-    private TextView otext_lst2_t;
+    private Button oPrn2_btn_hide, oPrn2_btn_ctes, oPrn2_btn_canc, oPrn2_btn_prin;
+    private TextView oPrn2_text_any;
     private SQLiteDatabase db05;
     private Cursor data05;
     private String cSqlLn;
@@ -43,18 +43,18 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
         setContentView(R.layout.activity_lista_text_finalizados);
 
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        //this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
         Global.oActual_Context = null;
         Global.oActual_Context = this.getApplicationContext();
 
         Locale.setDefault(new Locale("en", "US"));
 
-        this.obtn_hide_lst2_t = (Button) findViewById(R.id.obtn_hide_lst2_t);
-        this.obtn_do_lst2_t = (Button) findViewById(R.id.obtn_do_lst2_t);
-        this.obtn_cancel_lst2_t = (Button) findViewById(R.id.obtn_cancel_lst2_t);
-        this.otext_lst2_t = (TextView) findViewById(R.id.otext_lst2_t);
-        this.obtn_print_lst2_t = (Button) findViewById(R.id.btn_print_lst2_t);
+        this.oPrn2_btn_hide = (Button) findViewById(R.id.Prn2_btn_hide);
+        this.oPrn2_btn_ctes = (Button) findViewById(R.id.Prn2_btn_ctes);
+        this.oPrn2_btn_canc = (Button) findViewById(R.id.Prn2_btn_canc);
+        this.oPrn2_btn_prin = (Button) findViewById(R.id.Prn2_btn_prin);
+
+        this.oPrn2_text_any = (TextView) findViewById(R.id.Prn2_text_any);
 
         this.Clear2_Screen();
 
@@ -62,16 +62,16 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
         this.db05 = io.requery.android.database.sqlite.SQLiteDatabase.openOrCreateDatabase(databasePath, null, null);
 
         Global.save_in_textfile(Global.cFileRepPathDestC, "", false);
-        this.Imprimir2_Titles();
-        if (this.Listar2_Maquinas() == true) {
-            this.Imprimir2_Maquinas();
-            if (this.Listar2_Montos() == true) {
-                this.Imprimir2_Montos();
+        this.prn2_list_titl();
+        if (this.prn2_qry_lst_maq() == true) {
+            this.prn2_list_maq();
+            if (this.prn2_qry_lst_mont() == true) {
+                this.prn2_list_mont();
             }
             this.Mostrar_Listado();
         }
 
-        this.obtn_print_lst2_t.setOnClickListener(new View.OnClickListener() {
+        this.oPrn2_btn_prin.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -82,17 +82,47 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
             }
         });
 
-        this.obtn_do_lst2_t.setOnClickListener(new View.OnClickListener() {
+        this.oPrn2_btn_ctes.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
-                Intent Int_CteScreen = new Intent(getApplicationContext(), select_cte.class);
-                startActivityForResult(Int_CteScreen, Global.REQUEST_SEL_CTE);
+                Global.bAutoSelEmp = true;
+                Global.bAutoSelCte = true;
+                Global.bAutoSelMaq = false;
+                Global.bAutoSelCapM = false;
+                Global.bAutoSelCapF = false;
+                Global.bAutoSelList = false;
+                Global.bAutoSelList2 = false;
+                Global.cEmp_Id = "";
+                Global.cCte_Id = "";
+
+                if ((Global.cEmp_Id == "") || (Global.cEmp_Id == "0")) {
+                    Intent Int_EmpScreen = new Intent(getApplicationContext(), select_emp.class);
+                    startActivityForResult(Int_EmpScreen, Global.REQUEST_SEL_EMP);
+                } else {
+                    if ((Global.cCte_Id == "") || (Global.cCte_Id == "0")) {
+                        Intent Int_CteScreen = new Intent(getApplicationContext(), select_cte.class);
+                        startActivityForResult(Int_CteScreen, Global.REQUEST_SEL_CTE);
+                    } else {
+                        Global.save_in_textfile(Global.cFileRepPathDestF, "", false);
+                        oPrn2_text_any.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
+
+                        Global.save_in_textfile(Global.cFileRepPathDestC, "", false);
+                        prn2_list_titl();
+                        if (prn2_qry_lst_maq() == true) {
+                            prn2_list_maq();
+                            if (prn2_qry_lst_mont() == true) {
+                                prn2_list_mont();
+                            }
+                            Mostrar_Listado();
+                        }
+                    }
+                }
             }
 
         });
 
-        this.obtn_hide_lst2_t.setOnClickListener(new View.OnClickListener() {
+        this.oPrn2_btn_hide.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -101,7 +131,7 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
             }
         });
 
-        this.obtn_cancel_lst2_t.setOnClickListener(new View.OnClickListener() {
+        this.oPrn2_btn_canc.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -122,15 +152,17 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        // check if the request code is same as what is passed  here it is 2
 
         if (requestCode == Global.REQUEST_SEL_EMP) {
             switch (resultCode) {
                 case RESULT_OK:
-                    if ((Global.cCte_Id != "") || (Global.cCte_Id == "0")) {
+                    //Toast.makeText(this, "Aceptó la empresa:[" + Global.cEmp_Id.trim() + "]/" + Global.cEmp_De.trim(), Toast.LENGTH_SHORT).show();
+                    if (Global.bAutoSelCte == true) {
                         Intent Int_CteScreen = new Intent(getApplicationContext(), select_cte.class);
                         startActivityForResult(Int_CteScreen, Global.REQUEST_SEL_CTE);
+                        Global.bAutoSelCte = false;
                     }
-
                     break;
                 case RESULT_CANCELED:
                     Global.cEmp_Id = "";
@@ -143,15 +175,19 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
             //Valida la seleccion del cliente.
             switch (resultCode) {
                 case RESULT_OK:
-                    Clear2_Screen();
+                    //Toast.makeText(this, "Aceptó el cliente:[" + Global.cCte_Id.trim() + "]/" + Global.cCte_De.trim(), Toast.LENGTH_SHORT).show();
+                    Global.save_in_textfile(Global.cFileRepPathDestF, "", false);
+                    oPrn2_text_any.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
 
-                    if (this.Listar2_Montos() == true) {
-                        this.Imprimir2_Montos();
-                        if (this.Listar2_Maquinas() == true) {
-                            this.Imprimir2_Maquinas();
+                    Global.save_in_textfile(Global.cFileRepPathDestC, "", false);
+                    this.prn2_list_titl();
+                    if (this.prn2_qry_lst_maq() == true) {
+                        this.prn2_list_maq();
+                        if (this.prn2_qry_lst_mont() == true) {
+                            this.prn2_list_mont();
                         }
+                        this.Mostrar_Listado();
                     }
-
                     break;
                 case RESULT_CANCELED:
                     Global.cCte_Id = "";
@@ -159,17 +195,16 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
                     break;
             }
         }
-
     }
 
     private void Mostrar_Listado() {
         String sline = "";
-        this.otext_lst2_t.setText("");
+        this.oPrn2_text_any.setText("");
         try {
             FileReader fReader = new FileReader(Global.cFileRepPathDestC);
             BufferedReader bReader = new BufferedReader(fReader);
             while ((sline = bReader.readLine()) != null) {
-                this.otext_lst2_t.append(sline + "\n");
+                this.oPrn2_text_any.append(sline + "\n");
             }
             fReader = null;
             bReader = null;
@@ -179,10 +214,10 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
     }
 
     private void Clear2_Screen() {
-        this.otext_lst2_t.setText("");
+        this.oPrn2_text_any.setText("");
     }
 
-    private boolean Listar2_Montos() {
+    private boolean prn2_qry_lst_mont() {
         cSqlLn = "";
         cSqlLn += "SELECT ";
         cSqlLn += " SUM(op.op_tot_colect)   AS tot_cole         , ";
@@ -217,8 +252,7 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
         }
     }
 
-    private boolean Listar2_Maquinas() {
-
+    private boolean prn2_qry_lst_maq() {
         cSqlLn = "";
         cSqlLn += "SELECT ";
         cSqlLn += " em.emp_abrev , ";
@@ -241,22 +275,6 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
         cSqlLn += " op.op_tot_netoloc  AS op_tot_netoloc   , ";
         cSqlLn += " op.op_tot_netoemp  AS op_tot_netoemp   , ";
         cSqlLn += " op.op_baja_prod    AS op_baja_prod       ";
-        //cSqlLn += " SUM(op.op_tot_colect)   AS tot_cole         , ";
-        //cSqlLn += " SUM(op.op_tot_impmunic) AS op_tot_impmunic  , ";
-        //cSqlLn += " SUM(op.op_tot_impjcj)   AS op_tot_impjcj    , ";
-        //cSqlLn += " SUM(op.op_tot_timbres)  AS op_tot_timbres   , ";
-        //cSqlLn += " SUM(op.op_tot_tec)      AS op_tot_tec       , ";
-        //cSqlLn += " SUM(op.op_tot_dev)      AS op_tot_dev       , ";
-        //cSqlLn += " SUM(op.op_tot_otros)    AS op_tot_otros     , ";
-        //cSqlLn += " SUM(op.op_tot_cred)     AS op_tot_cred      , ";
-        //cSqlLn += " SUM(op.op_tot_sub)      AS op_tot_sub       , ";
-        //cSqlLn += " SUM(op.op_tot_itbm)     AS op_tot_itbm      , ";
-        //cSqlLn += " SUM(op.op_tot_tot)      AS op_tot_tot       , ";
-        //cSqlLn += " SUM(op.op_tot_brutoloc) AS op_tot_brutoloc  , ";
-        //cSqlLn += " SUM(op.op_tot_brutoemp) AS op_tot_brutoemp  , ";
-        //cSqlLn += " SUM(op.op_tot_netoloc)  AS op_tot_netoloc   , ";
-        //cSqlLn += " SUM(op.op_tot_netoemp)  AS op_tot_netoemp   , ";
-        //cSqlLn += " SUM(op.op_baja_prod)    AS op_baja_prod       ";
         cSqlLn += "FROM operacion op ";
         cSqlLn += "LEFT JOIN empresas em ON op.op_emp_id = em.emp_id ";
         cSqlLn += "WHERE (op.id_device='" + Global.cid_device + "') ";
@@ -276,7 +294,7 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
         }
     }
 
-    private void Imprimir2_Titles() {
+    private void prn2_list_titl() {
         cText = Global.center("***" + Global.cEmp_De.toUpperCase().trim() + "***", 180, ' ') + "\n";
         Global.save_in_textfile(Global.cFileRepPathDestC, cText, true);
         cText = Global.center("LISTADO DE MAQUINAS COLECTADAS", 180, ' ') + "\n";
@@ -287,7 +305,7 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
         Global.save_in_textfile(Global.cFileRepPathDestC, cText, true);
     }
 
-    private boolean Imprimir2_Maquinas() {
+    private boolean prn2_list_maq() {
         String cMaq_Chap = "", cMaq_Mode = "";
         String ctot_cole, ctot_impu, ctot__jcj, ctot_timb, ctot_tecn, ctot_otos, ctot_cred, ctot_subt, ctot_itbm, ctot_tota, ctot_bloc, ctot_bemp, ctot_nloc, ctot_nemp, ctot_bajp;
         String cLine = "";
@@ -341,7 +359,7 @@ public class activity_lista_text_finalizados extends AppCompatActivity {
         }
     }
 
-    private boolean Imprimir2_Montos() {
+    private boolean prn2_list_mont() {
 
         if ((data05 == null) || (data05.getCount() == 0)) {
             return false;
