@@ -613,12 +613,8 @@ public class capt_fin extends AppCompatActivity {
                     oDb5.execSQL(cSql_Ln);
 
                     cSql_Ln = ""+
-                            "UPDATE operacion " +
-                            "   SET op_tot_brutoloc = ROUND(" +
-                            "       (CASE WHEN  (SELECT IFNULL(clientes.cte_poc_ret,0) FROM clientes WHERE clientes.cte_id = cte_id)==100 " +
-                            "       THEN 000000000000.00 " +
-                            "       ELSE (op_tot_tot * ((SELECT IFNULL(clientes.cte_poc_ret,0) FROM clientes WHERE clientes.cte_id = cte_id)/100)) " +
-                            "       END),2) " +
+                            "UPDATE operacion SET " +
+                            "    op_tot_brutoloc = ROUND( (CASE WHEN (op_cporc_Loc==100) THEN 000000000000.00 ELSE (op_tot_tot * (op_cporc_Loc/100)) END),2) " +
                             "WHERE (op_emp_id = '" + Global.cEmp_Id + "') " +
                             "AND   (id_device = '" + Global.cid_device + "') " +
                             "AND   (cte_id    = '" + Global.cCte_Id + "') " +
@@ -628,11 +624,7 @@ public class capt_fin extends AppCompatActivity {
 
                     cSql_Ln = "" +
                             "UPDATE operacion SET " +
-                            "op_tot_brutoemp = ROUND(" +
-                            "   (CASE WHEN  (SELECT IFNULL(clientes.cte_poc_ret,0) FROM clientes WHERE clientes.cte_id = cte_id)==100 " +
-                            "    THEN (op_tot_tot) " +
-                            "    ELSE (op_tot_tot - op_tot_brutoloc) " +
-                            "    END),2) " +
+                            "   op_tot_brutoemp = ROUND( (CASE WHEN  (op_cporc_Loc==100) THEN (op_tot_tot) ELSE (op_tot_tot - op_tot_brutoloc) END),2) " +
                             "WHERE (op_emp_id = '" + Global.cEmp_Id + "') " +
                             "AND   (id_device = '" + Global.cid_device + "') " +
                             "AND   (cte_id    = '" + Global.cCte_Id + "') " +
