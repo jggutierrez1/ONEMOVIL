@@ -11,6 +11,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 
 import android.database.Cursor;
+
 import io.requery.android.database.sqlite.*;
 
 import android.graphics.Bitmap;
@@ -653,7 +654,7 @@ public class capt_data extends AppCompatActivity {
                     maqtc_denom_e = "1";
                     den_valors = 0.00;
                 }
-                ;
+                Global.qry_cte_info(Global.cCte_Id);
 
                 cSql_Ln = "";
                 cSql_Ln += "INSERT INTO operacion ( ";
@@ -681,7 +682,7 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "'" + Global.cCte_Id + "',";
                 cSql_Ln += "'" + cte_nombre_loc + "',";
                 cSql_Ln += "'" + cte_nombre_com + "',";
-                cSql_Ln += "'" + op_cporc_Loc + "',";
+                cSql_Ln += "'" + Global.decimalformat(Global.fCte_Por, 5, 2).trim() + "',";
                 cSql_Ln += "'" + cte_pag_jcj + "',";
                 cSql_Ln += "'" + cte_pag_spac + "',";
                 cSql_Ln += "'" + cte_pag_impm + "',";
@@ -1368,8 +1369,10 @@ public class capt_data extends AppCompatActivity {
 
         //this.lab_cte.setText("CLIENTE: " + data4.getString(data.getColumnIndex("cte_nombre_loc")));
         //this.lab_cha.setText("CHAPA  : " + data4.getString(data.getColumnIndex("maqtc_chapa")));
+        Global.qry_cte_info(Global.cCte_Id);
+        String cPorc = Global.decimalformat(Global.fCte_Por, 5, 2).trim();
 
-        this.lab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
+        this.lab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]/[" + cPorc + "]");
         this.lab_cha.setText("CHAPA  : [" + Global.cMaq_Id + "]/[" + Global.cMaq_De + "]");
 
         op_chapa = data4.getString(data4.getColumnIndex("maqtc_chapa"));

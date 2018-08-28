@@ -108,7 +108,10 @@ public class capt_fin extends AppCompatActivity {
         this.ototfin_notas = (EditText) findViewById(R.id.totfin_notas);
         this.oOp_fact_global = (EditText) findViewById(R.id.op_fact_global);
 
-        this.olab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]");
+        Global.qry_cte_info(Global.cCte_Id);
+        String cPorc = Global.decimalformat(Global.fCte_Por, 5, 2).trim();
+
+        this.olab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]/[" + cPorc + "]");
         this.oapf_device.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
 
         this.Clear_Screen();
@@ -612,9 +615,13 @@ public class capt_fin extends AppCompatActivity {
                     Global.logLargeString(cSql_Ln);
                     oDb5.execSQL(cSql_Ln);
 
-                    cSql_Ln = ""+
+                    Global.qry_cte_info(Global.cCte_Id);
+                    String cpCte_Porc = Global.decimalformat(Global.fCte_Por, 5, 2).trim();
+
+                    cSql_Ln = "" +
                             "UPDATE operacion SET " +
-                            "    op_tot_brutoloc = ROUND( (CASE WHEN (op_cporc_Loc==100) THEN 000000000000.00 ELSE (op_tot_tot * (op_cporc_Loc/100)) END),2) " +
+                            "    op_tot_brutoloc = ROUND( (CASE WHEN (" + cpCte_Porc + "<100) THEN (op_tot_tot * (op_cporc_Loc/100)) ELSE 000000000000.00 END),2) " +
+                            //"    op_tot_brutoloc = ROUND( (CASE WHEN (" + cCte_Porc + "==100.00) THEN 000000000000.00 ELSE (op_tot_tot * (op_cporc_Loc/100)) END),2) " +
                             "WHERE (op_emp_id = '" + Global.cEmp_Id + "') " +
                             "AND   (id_device = '" + Global.cid_device + "') " +
                             "AND   (cte_id    = '" + Global.cCte_Id + "') " +
@@ -624,7 +631,8 @@ public class capt_fin extends AppCompatActivity {
 
                     cSql_Ln = "" +
                             "UPDATE operacion SET " +
-                            "   op_tot_brutoemp = ROUND( (CASE WHEN  (op_cporc_Loc==100) THEN (op_tot_tot) ELSE (op_tot_tot - op_tot_brutoloc) END),2) " +
+                            "   op_tot_brutoemp = ROUND( (CASE WHEN  (" + cpCte_Porc + "<100) THEN (op_tot_tot - op_tot_brutoloc) ELSE (op_tot_tot) END),2) " +
+                            //"   op_tot_brutoemp = ROUND( (CASE WHEN  (" + cCte_Porc + "==100.00) THEN (op_tot_tot) ELSE (op_tot_tot - op_tot_brutoloc) END),2) " +
                             "WHERE (op_emp_id = '" + Global.cEmp_Id + "') " +
                             "AND   (id_device = '" + Global.cid_device + "') " +
                             "AND   (cte_id    = '" + Global.cCte_Id + "') " +
@@ -634,7 +642,16 @@ public class capt_fin extends AppCompatActivity {
 
                     cSql_Ln = "" +
                             "UPDATE operacion SET " +
-                            "   op_tot_netoloc	 = ROUND(op_tot_dev + op_tot_otros + op_tot_cred + op_tot_brutoloc,2), " +
+                            "   op_tot_netoloc	 = ROUND(op_tot_dev + op_tot_otros + op_tot_cred + op_tot_brutoloc,2) " +
+                            "WHERE (op_emp_id = '" + Global.cEmp_Id + "') " +
+                            "AND   (id_device = '" + Global.cid_device + "') " +
+                            "AND   (cte_id    = '" + Global.cCte_Id + "') " +
+                            "AND   (IFNULL(op_baja_prod,0)=0);";
+                    Global.logLargeString(cSql_Ln);
+                    oDb5.execSQL(cSql_Ln);
+
+                    cSql_Ln = "" +
+                            "UPDATE operacion SET " +
                             "   op_tot_netoemp	 = ROUND(op_tot_timbres + op_tot_impmunic + op_tot_impjcj + op_tot_tec + op_tot_brutoemp,2) " +
                             "WHERE (op_emp_id = '" + Global.cEmp_Id + "') " +
                             "AND   (id_device = '" + Global.cid_device + "') " +

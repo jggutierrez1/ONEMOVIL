@@ -11,6 +11,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 
 import io.requery.android.database.sqlite.*;
@@ -130,6 +131,7 @@ public class Global {
 
     public static String cCte_Id = "";
     public static String cCte_De = "";
+    public static double fCte_Por = 0.00;
 
     public static String cMaq_Id = "";
     public static String cMaq_De = "";
@@ -197,6 +199,7 @@ public class Global {
             bAutoSelCapF = false,
             bAutoSelList = false,
             bAutoSelList2 = false;
+
 
     public static void Init_Vars() {
         Locale.setDefault(new Locale("en", "US"));
@@ -2124,6 +2127,44 @@ public class Global {
         String cValue1 = String.format(Locale.US, "%,." + String.valueOf(iDecimales).toString().trim() + "f", fValue) + "\n";
         String cValue2 = Global.leftPad(cValue1, iEnteros, " ");
         return cValue2;
+    }
+
+    public static String getAppVersion(Context context) {
+        PackageManager localPackageManager = context.getPackageManager();
+        try {
+            String str = localPackageManager.getPackageInfo(context.getPackageName(), 0).versionName;
+            return str;
+        } catch (PackageManager.NameNotFoundException e) {
+            System.out.println("getAppVersion error" + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return "";
+    }
+
+    public static void qry_cte_info(String cCte_Id) {
+        String cSqlLn;
+        cSqlLn = "";
+        cSqlLn += "SELECT ";
+        cSqlLn += " cte_id, ";
+        cSqlLn += " IFNULL(cte_nombre_loc,'') AS cte_nombre_loc, ";
+        cSqlLn += " IFNULL(cte_poc_ret   ,0 ) AS cte_poc_ret ";
+        cSqlLn += "FROM clientes ";
+        cSqlLn += "WHERE  (cte_id ='" + cCte_Id + "') ";
+        Log.d("SQL", cSqlLn);
+        oGen_Cursor = oGen_Db.rawQuery(cSqlLn, null);
+
+        if ((oGen_Cursor == null) || (oGen_Cursor.getCount() == 0)) {
+            return;
+        } else {
+            oGen_Cursor.moveToFirst();
+            do {
+                Global.fCte_Por = oGen_Cursor.getDouble(oGen_Cursor.getColumnIndex("cte_poc_ret"));
+                Global.cCte_Id = oGen_Cursor.getString(oGen_Cursor.getColumnIndex("cte_id")).trim();
+                Global.cCte_De = oGen_Cursor.getString(oGen_Cursor.getColumnIndex("cte_nombre_loc")).trim();
+            } while (oGen_Cursor.moveToNext());
+            oGen_Cursor.close();
+        }
     }
 
 }

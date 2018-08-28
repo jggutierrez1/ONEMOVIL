@@ -65,7 +65,7 @@ public class print_data extends AppCompatActivity {
     volatile boolean stopWorker;
 
     private SQLiteDatabase oDb6;
-    private Cursor oData6;
+    private Cursor oData6, oData7;
     private String cSqlLn = "";
     private String cDatabasePath = "";
     private ArrayList<String> theList = new ArrayList<>();
@@ -212,7 +212,7 @@ public class print_data extends AppCompatActivity {
 
     }
 
-     @Override
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         // check if the request code is same as what is passed  here it is 2
@@ -378,6 +378,7 @@ public class print_data extends AppCompatActivity {
         Date d = new Date();
         SimpleDateFormat simpleDate2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String cDateMysql = simpleDate2.format(d);
+        Global.qry_cte_info(Global.cCte_Id);
 
         cText = Global.center("***" + Global.cEmp_De.toUpperCase().trim() + "***", iTotChars, ' ') + "\n";
         Global.save_in_textfile(Global.cFileRepPathDestF, cText, true);
@@ -388,7 +389,7 @@ public class print_data extends AppCompatActivity {
         cText = Global.center("LISTADO DE MAQUINAS COLECTADAS", iTotChars, ' ') + "\n";
         Global.save_in_textfile(Global.cFileRepPathDestF, cText, true);
 
-        cText = Global.center("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De.toUpperCase().trim() + "]", iTotChars, ' ') + "\n";
+        cText = Global.center("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De.toUpperCase().trim() + "]", iTotChars, ' ') + '/' + Global.decimalformat(Global.fCte_Por, 5, 2) + "\n";
         Global.save_in_textfile(Global.cFileRepPathDestF, cText, true);
 
         cText = "FECHA :" + cDateMysql + "\n";
@@ -430,6 +431,7 @@ public class print_data extends AppCompatActivity {
         cSqlLn += " trim(op.op_modelo) || SUBSTR('                   ', 1, 20-length(trim(op.op_modelo))) AS expr1, ";
         cSqlLn += " em.emp_abrev , ";
         cSqlLn += " ct.cte_nombre_loc , ";
+        cSqlLn += " ct.cte_poc_ret , ";
         cSqlLn += " ma.maqtc_modelo , ";
         cSqlLn += " op.op_fecha  , ";
         cSqlLn += " op.op_chapa, ";
@@ -642,5 +644,6 @@ public class print_data extends AppCompatActivity {
             e.printStackTrace();
         }
     }
+
 
 }

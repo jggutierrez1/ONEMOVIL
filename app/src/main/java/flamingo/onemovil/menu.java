@@ -64,7 +64,7 @@ public class menu extends AppCompatActivity {
 
     private Button obtn_list_prn1,obtn_list_prn2,obtn_list_prn3, btn_upd, btn_emp, btn_cte, btn_maq, btn_capt, btn_send, btn_exit, btn_ccol, btn_fcol;
     private ImageView mImageView;
-    private TextView DeviceId, lempresa;
+    private TextView DeviceId, lempresa, omenu_title;
 
     private SQLiteDatabase db;
     private String cSql_Ln;
@@ -138,12 +138,15 @@ public class menu extends AppCompatActivity {
         myTextbox = (EditText) findViewById(R.id.oEntry);
         lempresa = (TextView) findViewById(R.id.olempresa);
         lempresa.setText(Global.Query_Result("SELECT emp_descripcion FROM empresas WHERE emp_id='" + Global.cEmp_Id + "'", "emp_descripcion"));
+        omenu_title = (TextView) findViewById(R.id.menu_title);
 
         String cVer = Global.Sql_Lite_version();
         createDatabase();
         Global.Create_Sql_Tables(false, false);
         Global.cEmp_Id = "";
         //Create_Sql_Tables();
+        String cApp_Ver=Global.getAppVersion(oThis);
+        omenu_title.setText("MENU PRINCIPAL V."+cApp_Ver);
         this.Color_Sig_Paso(0);
 
         this.btn_emp.setEnabled(true);
