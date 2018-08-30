@@ -389,7 +389,7 @@ public class print_data extends AppCompatActivity {
         cText = Global.center("LISTADO DE MAQUINAS COLECTADAS", iTotChars, ' ') + "\n";
         Global.save_in_textfile(Global.cFileRepPathDestF, cText, true);
 
-        cText = Global.center("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De.toUpperCase().trim() + "]", iTotChars, ' ') + '/' + Global.decimalformat(Global.fCte_Por, 5, 2) + "\n";
+        cText = Global.center("CLIENTE: [" + Global.cCte_Id.trim() + "]/[" + Global.cCte_De.toUpperCase().trim() + "]/[" + Global.decimalformat(Global.fCte_Por, 5, 2).trim() + "]", iTotChars, ' ') + "\n";
         Global.save_in_textfile(Global.cFileRepPathDestF, cText, true);
 
         cText = "FECHA :" + cDateMysql + "\n";
@@ -571,6 +571,7 @@ public class print_data extends AppCompatActivity {
 
                 fValue = this.oData6.getDouble(this.oData6.getColumnIndex("op_tot_tec"));
                 cPrnLn1 = "SERV. TEC.:" + Global.decimalformat(fValue, 10, 2) + "\n";
+
                 fValue = this.oData6.getDouble(this.oData6.getColumnIndex("op_tot_brutoloc"));
                 cPrnLn2 = "BRUTO CTE.:" + Global.decimalformat(fValue, 10, 2) + "\n";
                 cPrnLn = Global.rightPad(cPrnLn1, (iTotChars / 2), " ") + Global.rightPad(cPrnLn2, (iTotChars / 2), " ") + "\n";

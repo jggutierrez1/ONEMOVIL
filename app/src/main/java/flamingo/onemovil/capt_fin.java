@@ -617,11 +617,10 @@ public class capt_fin extends AppCompatActivity {
 
                     Global.qry_cte_info(Global.cCte_Id);
                     String cpCte_Porc = Global.decimalformat(Global.fCte_Por, 5, 2).trim();
-
+                    //----------------------------CALCULO DE BRUTOS-------------------------------------------------//
                     cSql_Ln = "" +
                             "UPDATE operacion SET " +
-                            "    op_tot_brutoloc = ROUND( (CASE WHEN (" + cpCte_Porc + "<100) THEN (op_tot_tot * (op_cporc_Loc/100)) ELSE 000000000000.00 END),2) " +
-                            //"    op_tot_brutoloc = ROUND( (CASE WHEN (" + cCte_Porc + "==100.00) THEN 000000000000.00 ELSE (op_tot_tot * (op_cporc_Loc/100)) END),2) " +
+                            "    op_tot_brutoloc = ROUND( (CASE WHEN (" + cpCte_Porc + "<100) THEN (op_tot_tot * (" + cpCte_Porc + "/100)) ELSE 000000000000.00 END),2) " +
                             "WHERE (op_emp_id = '" + Global.cEmp_Id + "') " +
                             "AND   (id_device = '" + Global.cid_device + "') " +
                             "AND   (cte_id    = '" + Global.cCte_Id + "') " +
@@ -632,13 +631,14 @@ public class capt_fin extends AppCompatActivity {
                     cSql_Ln = "" +
                             "UPDATE operacion SET " +
                             "   op_tot_brutoemp = ROUND( (CASE WHEN  (" + cpCte_Porc + "<100) THEN (op_tot_tot - op_tot_brutoloc) ELSE (op_tot_tot) END),2) " +
-                            //"   op_tot_brutoemp = ROUND( (CASE WHEN  (" + cCte_Porc + "==100.00) THEN (op_tot_tot) ELSE (op_tot_tot - op_tot_brutoloc) END),2) " +
                             "WHERE (op_emp_id = '" + Global.cEmp_Id + "') " +
                             "AND   (id_device = '" + Global.cid_device + "') " +
                             "AND   (cte_id    = '" + Global.cCte_Id + "') " +
                             "AND   (IFNULL(op_baja_prod,0)=0);";
                     Global.logLargeString(cSql_Ln);
                     oDb5.execSQL(cSql_Ln);
+                    //----------------------------CALCULO DE NETOS-------------------------------------------------//
+                    //dtot_nloc = (dtot_devo + dtot_otro + dtot_cred + dtot_bloc);
 
                     cSql_Ln = "" +
                             "UPDATE operacion SET " +
@@ -649,6 +649,7 @@ public class capt_fin extends AppCompatActivity {
                             "AND   (IFNULL(op_baja_prod,0)=0);";
                     Global.logLargeString(cSql_Ln);
                     oDb5.execSQL(cSql_Ln);
+                    //dtot_nemp = (dtot_timb + dtot_impm + dtot__jcj + dtot_tecn + dtot_bemp);
 
                     cSql_Ln = "" +
                             "UPDATE operacion SET " +
