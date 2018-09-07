@@ -157,8 +157,9 @@ public class Global {
     public static Intent oPictureActionIntent = null;
     public static SQLiteDatabase oGen_Db;
     public static Cursor oGen_Cursor;
-    public static String SERVER_URL = "http://190.140.2.84";
-    public static String[] SERVER_URL_LIST = {"http://186.75.183.220", "http://186.75.183.221", "http://190.140.2.84"};
+    public static String SERVER_URL = "http://186.75.183.220";
+    public static String[] SERVER_URL_LIST = {"http://192.168.3.80", "http://186.75.183.220", "http://201.218.103.202"};
+    //public static String[] SERVER_URL_LIST = {"http://186.75.183.220","http://192.168.3.80",  "http://201.218.103.202"};
     public static int SERVER_ITEM_LIST = -1;
     public static String SERVER_URL_FLES = SERVER_URL + "/flam/UploadToServer.php";
     public static String SERVER_DIR_IMGS = SERVER_URL + "/flam/images/";
@@ -1861,6 +1862,7 @@ public class Global {
 
     public static boolean Check_Ip_Disp() {
         String cHost = "";
+        Global.SERVER_ITEM_LIST = -1;
         for (int i = 0; i < 3; i++) {
             cHost = Global.SERVER_URL_LIST[i];
             if (Global.checkIfURLExists(cHost)) {
@@ -1870,8 +1872,6 @@ public class Global {
                 Global.SERVER_DIR_IMGS = Global.SERVER_URL + "/flam/images/";
 
                 i = 3;
-            } else {
-                Global.SERVER_ITEM_LIST = -1;
             }
         }
         if (Global.SERVER_ITEM_LIST < 0)

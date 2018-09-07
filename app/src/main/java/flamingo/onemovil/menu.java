@@ -644,7 +644,9 @@ public class menu extends AppCompatActivity {
                         } while (oCur_snd.moveToNext());
 
                         // SendEmail_v2("johnn.movil@gmail.com", Global.cFileLogPathDest);
-                        Global.Gmail_SendEmail(oThis, "johnn.movil@gmail.com;mcentenario12@gmail.com", "Envío de colecta desde tablet[" + Global.cid_device + "]", cSendDet, "");
+
+                        //Global.Gmail_SendEmail(oThis, "johnn.movil@gmail.com;mcentenario12@gmail.com", "Envío de colecta desde tablet[" + Global.cid_device + "]", cSendDet, "");
+
                         cSendDet = "";
                         Global.showSimpleOKAlertDialog(oThis, "AVISO IMPORTANTE[1]", "PROCESO DE ENVIO FINALIZADO. [" + iReg_Cnt + "] PROCESDOS");
                     }
