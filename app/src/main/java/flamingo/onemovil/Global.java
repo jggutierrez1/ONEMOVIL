@@ -583,10 +583,10 @@ public class Global {
                     try {
                         switch (cursor.getType(i)) {
                             case Cursor.FIELD_TYPE_BLOB:
-                                rowObject.put(colName, cursor.getBlob(i).toString());
+                                rowObject.put(colName, cursor.getBlob(i).toString().trim());
                                 break;
                             case Cursor.FIELD_TYPE_FLOAT:
-                                cFloatValue = String.format(Locale.US, "%12.2f", cursor.getDouble(i));
+                                cFloatValue = String.format(Locale.US, "%12.2f", cursor.getDouble(i)).trim();
                                 rowObject.put(colName, cFloatValue);
                                 break;
                             case Cursor.FIELD_TYPE_INTEGER:
@@ -596,7 +596,7 @@ public class Global {
                                 rowObject.put(colName, null);
                                 break;
                             case Cursor.FIELD_TYPE_STRING: {
-                                String sValue1 = cursor.getString(i);
+                                String sValue1 = cursor.getString(i).trim();
                                 String sValue2 = sValue1.trim().replaceAll(" ", "^");
                                 rowObject.put(colName, sValue2);
                             }
@@ -630,10 +630,10 @@ public class Global {
                     try {
                         switch (crs.getType(i)) {
                             case Cursor.FIELD_TYPE_BLOB:
-                                row.put(colName, crs.getBlob(i).toString());
+                                row.put(colName, crs.getBlob(i).toString().trim());
                                 break;
                             case Cursor.FIELD_TYPE_FLOAT:
-                                cFloatValue = String.format(Locale.US, "%12.2f", crs.getDouble(i));
+                                cFloatValue = String.format(Locale.US, "%12.2f", crs.getDouble(i)).trim() ;
                                 row.put(colName, cFloatValue);
                                 break;
                             case Cursor.FIELD_TYPE_INTEGER:
@@ -643,7 +643,7 @@ public class Global {
                                 row.put(colName, null);
                                 break;
                             case Cursor.FIELD_TYPE_STRING: {
-                                String sValue1 = crs.getString(i);
+                                String sValue1 = crs.getString(i).trim();
                                 String sValue2 = sValue1.trim().replaceAll(" ", "^");
                                 row.put(colName, sValue2);
                             }
@@ -695,26 +695,30 @@ public class Global {
     }
 
     public static String getJsonResults2_V2(String cSql_Ln1, String cSql_Ln2, String cTableName1, String cTableName2) {
-        JSONArray resultSet01 = new JSONArray();
-        JSONArray resultSet02 = new JSONArray();
-        JSONObject resultSetFN = new JSONObject();
+        JSONArray  oJsonArr01 = new JSONArray();
+        JSONArray  oJsonArr02 = new JSONArray();
+        JSONObject oJsonObjFN = new JSONObject();
 
-        resultSet01 = getJsonResults(cSql_Ln1);
-        resultSet02 = getJsonResults(cSql_Ln2);
-
+        oJsonArr01 = getJsonResults(cSql_Ln1);
+        oJsonArr02 = getJsonResults(cSql_Ln2);
+        cSql_Ln1="";
+        cSql_Ln2="";
         try {
-            resultSetFN.put(cTableName1, resultSet01);
-            resultSetFN.put(cTableName1 + "_regs", resultSet01.length());
-            Global.tot_maq_envio1 = resultSet01.length();
-            resultSetFN.put(cTableName2, resultSet02);
-            resultSetFN.put(cTableName2 + "_regs", resultSet02.length());
-            Global.tot_maq_envio2 = resultSet02.length();
+            oJsonObjFN.put(cTableName2, oJsonArr02);
+            oJsonObjFN.put(cTableName2 + "_regs", oJsonArr02.length());
+            Global.tot_maq_envio2 = oJsonArr02.length();
 
-            Global.logLargeString(resultSetFN.toString());
+            oJsonObjFN.put(cTableName1, oJsonArr01);
+            oJsonObjFN.put(cTableName1 + "_regs", oJsonArr01.length());
+            Global.tot_maq_envio1 = oJsonArr01.length();
+
+            Global.logLargeString(oJsonObjFN.toString());
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
         }
-        return resultSetFN.toString();
+        oJsonArr01=null;
+        oJsonArr02=null;
+        return oJsonObjFN.toString();
     }
 
     public static void logLargeString(String str) {
@@ -779,13 +783,13 @@ public class Global {
                                     if (oGen_Cursor.getString(iIdx) == null)
                                         cStr_Values += "\"" + "0" + "\"";
                                     else
-                                        cStr_Values += "\"" + Integer.valueOf(oGen_Cursor.getString(iIdx)).toString() + "\"";
+                                        cStr_Values += "\"" + Integer.valueOf(oGen_Cursor.getString(iIdx)).toString().trim() + "\"";
                                     break;
                                 case Cursor.FIELD_TYPE_FLOAT:
                                     if (oGen_Cursor.getString(iIdx) == null)
                                         cStr_Values += "\"" + "0.00" + "\"";
                                     else
-                                        cStr_Values += "\"" + Double.valueOf(oGen_Cursor.getString(iIdx)).toString() + "\"";
+                                        cStr_Values += "\"" + Double.valueOf(oGen_Cursor.getString(iIdx)).toString().trim() + "\"";
                                     break;
                                 case Cursor.FIELD_TYPE_STRING:
                                     if (oGen_Cursor.getString(iIdx) == null)
@@ -872,6 +876,7 @@ public class Global {
             return 0;
         } else {
             try {
+                Global.Check_Ip_Disp();
                 FileInputStream fileInputStream = new FileInputStream(selectedFile);
                 URL url = new URL(Global.SERVER_URL_FLES);
                 connection = (HttpURLConnection) url.openConnection();
@@ -1217,6 +1222,8 @@ public class Global {
     }
 
     public static String Rem_Query_Result(String cDatabase, String Sql_Cmd, int All_rows, String FieldResult) {
+        Global.Check_Ip_Disp();
+
         String cParsString = "";
         cParsString += "database=" + cDatabase;
         cParsString += "&sql=" + Sql_Cmd;
@@ -1900,6 +1907,35 @@ public class Global {
         try {
             //BufferedWriter for performance, true to set append to file flag
             BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+            buf.append(text);
+            buf.newLine();
+            buf.close();
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+    public static void SaveFile(String cPathFileName, String text, boolean bDelete, boolean bAppend) {
+        File oFile = new File(cPathFileName);
+
+        if (bDelete == true) {
+            if (oFile.exists()) {
+                oFile.delete();
+            }
+        }
+
+        if (!oFile.exists()) {
+            try {
+                oFile.createNewFile();
+            } catch (IOException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+        try {
+            //BufferedWriter for performance, true to set append to file flag
+            BufferedWriter buf = new BufferedWriter(new FileWriter(oFile, bAppend));
             buf.append(text);
             buf.newLine();
             buf.close();

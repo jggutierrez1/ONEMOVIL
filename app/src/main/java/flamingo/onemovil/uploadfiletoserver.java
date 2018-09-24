@@ -184,6 +184,7 @@ public class uploadfiletoserver extends AppCompatActivity implements View.OnClic
             });
             return 0;
         } else {
+            Global.Check_Ip_Disp();
             try {
                 FileInputStream fileInputStream = new FileInputStream(selectedFile);
                 URL url = new URL(Global.SERVER_URL);
