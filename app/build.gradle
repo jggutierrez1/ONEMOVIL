@@ -8,7 +8,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 26
         versionCode 2
-        versionName "2.3"
+        versionName "2.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -34,8 +34,8 @@ dependencies {
     implementation 'io.requery:sqlite-android:3.24.0'
     implementation "android.arch.persistence.room:testing:1.0.0-beta2"
     implementation files('libs/ini4j-0.5.4.jar')
-    implementation 'com.sun.mail:android-mail:1.6.0'
-    implementation 'com.sun.mail:android-activation:1.6.0'
+    //implementation 'com.sun.mail:android-mail:1.6.0'
+    //implementation 'com.sun.mail:android-activation:1.6.0'
     //implementation 'com.google.api-client:google-api-client:1.20.0'
     //implementation 'com.google.api-client:google-api-client-android:1.20.0'
     //implementation 'com.google.api-client:google-api-client-gson:1.20.0'

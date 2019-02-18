@@ -95,19 +95,6 @@ import java.util.Properties;
 import java.util.Random;
 import java.util.StringTokenizer;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.Multipart;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.internet.MimeMultipart;
 import javax.net.ssl.HttpsURLConnection;
 
 import static android.content.ContentValues.TAG;
@@ -157,9 +144,10 @@ public class Global {
     public static Intent oPictureActionIntent = null;
     public static SQLiteDatabase oGen_Db;
     public static Cursor oGen_Cursor;
-    public static String SERVER_URL = "http://186.75.183.220";
-    public static String[] SERVER_URL_LIST = {"http://192.168.3.80", "http://186.75.183.220", "http://201.218.103.202"};
-    //public static String[] SERVER_URL_LIST = {"http://186.75.183.220","http://192.168.3.80",  "http://201.218.103.202"};
+    //public static String SERVER_URL = "http://186.75.183.220";
+    public static String SERVER_URL = "http://192.168.2.196";
+    //public static String[] SERVER_URL_LIST = {"http://192.168.3.80", "http://186.75.183.220", "http://201.218.103.202"};
+    public static String[] SERVER_URL_LIST = {"http://192.168.2.196"};
     public static int SERVER_ITEM_LIST = -1;
     public static String SERVER_URL_FLES = SERVER_URL + "/flam/UploadToServer.php";
     public static String SERVER_DIR_IMGS = SERVER_URL + "/flam/images/";
@@ -633,7 +621,7 @@ public class Global {
                                 row.put(colName, crs.getBlob(i).toString().trim());
                                 break;
                             case Cursor.FIELD_TYPE_FLOAT:
-                                cFloatValue = String.format(Locale.US, "%12.2f", crs.getDouble(i)).trim() ;
+                                cFloatValue = String.format(Locale.US, "%12.2f", crs.getDouble(i)).trim();
                                 row.put(colName, cFloatValue);
                                 break;
                             case Cursor.FIELD_TYPE_INTEGER:
@@ -695,14 +683,14 @@ public class Global {
     }
 
     public static String getJsonResults2_V2(String cSql_Ln1, String cSql_Ln2, String cTableName1, String cTableName2) {
-        JSONArray  oJsonArr01 = new JSONArray();
-        JSONArray  oJsonArr02 = new JSONArray();
+        JSONArray oJsonArr01 = new JSONArray();
+        JSONArray oJsonArr02 = new JSONArray();
         JSONObject oJsonObjFN = new JSONObject();
 
         oJsonArr01 = getJsonResults(cSql_Ln1);
         oJsonArr02 = getJsonResults(cSql_Ln2);
-        cSql_Ln1="";
-        cSql_Ln2="";
+        cSql_Ln1 = "";
+        cSql_Ln2 = "";
         try {
             oJsonObjFN.put(cTableName2, oJsonArr02);
             oJsonObjFN.put(cTableName2 + "_regs", oJsonArr02.length());
@@ -716,8 +704,8 @@ public class Global {
         } catch (Exception e) {
             Log.d(TAG, e.getMessage());
         }
-        oJsonArr01=null;
-        oJsonArr02=null;
+        oJsonArr01 = null;
+        oJsonArr02 = null;
         return oJsonObjFN.toString();
     }
 
@@ -1268,7 +1256,7 @@ public class Global {
         return bResult;
     }
 
-    public static void Create_Sql_Tables(Boolean bDropTables, Boolean bDropColects) {
+    public static void Create_Sql_Tables_v1(Boolean bDropTables, Boolean bDropColects) {
         String cSql_Ln = "";
 
         if (bDropTables == true) {
@@ -1673,7 +1661,7 @@ public class Global {
         Global.oGen_Db.execSQL(cSql_Ln);
     }
 
-    public static void Create_Sql_Tables_Emp() {
+    public static void Create_Sql_Tables_Emp_v1() {
         String cSql_Ln = "";
         // ---------------------------------EMPRESA----------------------------------------------------------------//
         cSql_Ln = "";
@@ -1705,6 +1693,501 @@ public class Global {
         cSql_Ln += "emp_clave_metros CHAR(30) NULL DEFAULT '112233',";
         cSql_Ln += "emp_clave_montos CHAR(30) NULL DEFAULT '332211',";
         cSql_Ln += "CONSTRAINT empresas_PRIMARY PRIMARY KEY (emp_id))";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS emp_inactivo ON empresas ('emp_inactivo')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS emp_descripcion ON empresas ('emp_descripcion')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+        // ----------------------------------FIN EMPRESAS---------------------------------------------------//
+
+    }
+
+
+    public static void Create_Sql_Tables(Boolean bDropTables, Boolean bDropColects) {
+        String cSql_Ln = "";
+
+        if (bDropTables == true) {
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS dispositivos");
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS empresas");
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS clientes");
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS denominaciones");
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS maquinastc");
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS maquinas_lnk");
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS municipios");
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS rutas");
+        }
+
+        if (bDropColects == true) {
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS operacion");
+            Global.oGen_Db.execSQL("DROP TABLE IF EXISTS operaciong");
+        }
+
+        cSql_Ln = "";
+        cSql_Ln += "CREATE TABLE IF NOT EXISTS dispositivos (";
+        cSql_Ln += "id              INTEGER NOT NULL,";
+        cSql_Ln += "serial          VARCHAR(50) NOT NULL DEFAULT '',";
+        cSql_Ln += "clave_install   VARCHAR(30) NULL DEFAULT 'FLAM111118',";
+        cSql_Ln += "fecha_pacceso   DATETIME NULL DEFAULT NULL,";
+        cSql_Ln += "fecha_uacces    DATETIME NULL DEFAULT NULL,";
+        cSql_Ln += "dbname          VARCHAR(30) NULL DEFAULT 'one2009_1',";
+        cSql_Ln += "corre_ant       INT(10) NULL DEFAULT 0,";
+        cSql_Ln += "corre_act       INT(10) NULL DEFAULT 0,";
+        cSql_Ln += "clave_metros    VARCHAR(30) NULL DEFAULT '6545465465465546',";
+        cSql_Ln += "clave_montos    VARCHAR(30) NULL DEFAULT '6545465465465530',";
+        cSql_Ln += "emp_id          INT(3) NULL DEFAULT 0,";
+        cSql_Ln += "CONSTRAINT dispositivos PRIMARY KEY (id))";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "";
+        cSql_Ln += "CREATE TABLE IF NOT EXISTS clientes (";
+        cSql_Ln += "cte_autoinc     INTEGER NOT NULL,";
+        cSql_Ln += "cte_id          INTEGER NOT NULL,";
+        cSql_Ln += "mun_id          INTEGER NULL DEFAULT 1,";
+        cSql_Ln += "rut_id          INTEGER NULL DEFAULT 1,";
+        cSql_Ln += "cte_nombre_loc  CHAR(80) NULL DEFAULT '',";
+        cSql_Ln += "cte_nombre_com  CHAR(80) NULL DEFAULT '',";
+        cSql_Ln += "cte_telefono1   CHAR(25) NULL DEFAULT '',";
+        cSql_Ln += "cte_telefono2   CHAR(25) NULL DEFAULT '',";
+        cSql_Ln += "cte_Fax         CHAR(25) NULL DEFAULT '',";
+        cSql_Ln += "cte_contacto_nom    CHAR(35) NULL DEFAULT '',";
+        cSql_Ln += "cte_contacto_movil  CHAR(25) NULL DEFAULT '',";
+        cSql_Ln += "cte_contacto_movil_bbpin CHAR(12) NULL DEFAULT '',";
+        cSql_Ln += "cte_contacto_movil_email CHAR(120) NULL DEFAULT '',";
+        cSql_Ln += "cte_email       CHAR(120) NULL DEFAULT '',";
+        cSql_Ln += "cte_webpage     VARCHAR(130) NULL DEFAULT '',";
+        cSql_Ln += "cte_notas       TEXT NULL,";
+        cSql_Ln += "cte_inactivo    INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "cte_direccion   TEXT NULL, ";
+        cSql_Ln += "cte_pag_impm    INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "cte_pag_jcj     INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "cte_pag_spac    INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "cte_poc_ret     NUMERIC(12, 2) NULL DEFAULT 0,";
+        cSql_Ln += "cte_fecha_alta  DATETIME NULL ,";
+        cSql_Ln += "cte_fecha_modif DATETIME NULL ,";
+        cSql_Ln += "cte_emp_id      INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "u_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "cte_unico_emp   INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "cte_mod_metro_ant INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "cte_id_interf INTEGER NULL DEFAULT '',";
+        cSql_Ln += "CONSTRAINT clientes_PRIMARY PRIMARY KEY (cte_autoinc))";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS cte_id ON clientes('cte_id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS cte_inactivo ON clientes('cte_inactivo')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS cte_nombre_loc ON clientes('cte_nombre_loc')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS mun_id ON clientes('mun_id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS cte_nombre_com ON clientes('cte_nombre_com')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS rut_id ON clientes('rut_id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+        // --------------------------------FIN CLIENTES-----------------------------------------------------//
+
+        // -----------------------------------DENOMINACIONES------------------------------------------------//
+        cSql_Ln = "";
+        cSql_Ln += "CREATE TABLE IF NOT EXISTS denominaciones (";
+        cSql_Ln += "den_id          INTEGER NOT NULL,";
+        cSql_Ln += "den_descripcion CHAR(30) NULL DEFAULT '',";
+        cSql_Ln += "den_inactiva    INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "den_fact_e      INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "den_fact_s      INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "den_valor       NUMERIC(12, 2) NULL DEFAULT 0,";
+        cSql_Ln += "den_fecha_alta  DATETIME NULL ,";
+        cSql_Ln += "den_fecha_modif DATETIME NULL ,";
+        cSql_Ln += "u_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "CONSTRAINT denominaciones_PRIMARY PRIMARY KEY (den_id))";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS den_inactiva ON denominaciones('den_inactiva')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS den_descripcion ON denominaciones('den_descripcion')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+        // -------------------------------FIN DENOMINACIONES------------------------------------------------//
+
+        // ---------------------------------EMPRESA----------------------------------------------------------------//
+        cSql_Ln = "";
+        cSql_Ln += "CREATE TABLE IF NOT EXISTS empresas ( ";
+        cSql_Ln += "emp_autoinc     INTEGER NOT NULL,";
+        cSql_Ln += "emp_id          INTEGER NOT NULL,";
+        cSql_Ln += "emp_descripcion CHAR(85) NULL DEFAULT '',";
+        cSql_Ln += "emp_ruc         CHAR(85) NULL DEFAULT '',";
+        cSql_Ln += "emp_dv          CHAR(10) NULL DEFAULT '',";
+        cSql_Ln += "emp_abrev       CHAR(4)  NULL DEFAULT '',";
+        cSql_Ln += "emp_carpeta_reportes VARCHAR (120) NULL DEFAULT '',";
+        cSql_Ln += "emp_telefono1   CHAR(12) NULL DEFAULT '',";
+        cSql_Ln += "emp_telefono2   CHAR(12) NULL DEFAULT '',";
+        cSql_Ln += "emp_fax         CHAR(12) NULL DEFAULT '',";
+        cSql_Ln += "emp_direccion   TEXT     NULL,";
+        cSql_Ln += "emp_apartado    TEXT     NULL,";
+        cSql_Ln += "emp_email       CHAR(100) NULL DEFAULT '',";
+        cSql_Ln += "separa_mil      CHAR(1)  NULL DEFAULT ',',";
+        cSql_Ln += "separa_dec      CHAR(1)  NULL DEFAULT '.',";
+        cSql_Ln += "emp_imagen      BLOB     NULL,";
+        cSql_Ln += "emp_imagen_path VARCHAR(120) NULL DEFAULT '',";
+        cSql_Ln += "emp_inactivo    INTEGER  NULL DEFAULT 0,";
+        cSql_Ln += "emp_cargo_jcj   NUMERIC(12, 2) NULL DEFAULT 0,";
+        cSql_Ln += "emp_cargo_spac  NUMERIC(12, 2) NULL DEFAULT 0,";
+        cSql_Ln += "emp_fecha_alta  DATETIME NULL ,";
+        cSql_Ln += "emp_fecha_modif DATETIME NULL ,";
+        cSql_Ln += "emp_corre_ant   INT(10)  NULL DEFAULT '0',";
+        cSql_Ln += "emp_corre_act   INT(10)  NULL DEFAULT '0',";
+        cSql_Ln += "u_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "emp_clave_metros CHAR(30) NULL DEFAULT '112233',";
+        cSql_Ln += "emp_clave_montos CHAR(30) NULL DEFAULT '332211',";
+        cSql_Ln += "emp_clave_facturas CHAR(30) NULL DEFAULT '82878884',";
+        cSql_Ln += "CONSTRAINT empresas_PRIMARY PRIMARY KEY (emp_autoinc)) ";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS emp_id ON empresas ('emp_id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS emp_inactivo ON empresas ('emp_inactivo')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS emp_descripcion ON empresas ('emp_descripcion')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+        // ----------------------------------FIN EMPRESAS---------------------------------------------------//
+
+        // ---------------------------------MAQUINASTC------------------------------------------------------//
+        cSql_Ln = "";
+        cSql_Ln += "CREATE TABLE IF NOT EXISTS maquinastc (";
+        cSql_Ln += "maqtc_autoinc   INTEGER NOT NULL,";
+        cSql_Ln += "maqtc_id        INTEGER NOT NULL,";
+        cSql_Ln += "maqtc_cod       CHAR(12) NULL DEFAULT '',";
+        cSql_Ln += "jueg_cod        INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "prov_cod        INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "maqtc_modelo    CHAR(60) NULL DEFAULT '',";
+        cSql_Ln += "maqtc_serie     CHAR(30) NULL DEFAULT '',";
+        cSql_Ln += "maqtc_chapa     CHAR(12) NULL DEFAULT '',";
+        cSql_Ln += "maqtc_inactivo  INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "maqtc_metros    INTEGER NULL DEFAULT 1,";
+        cSql_Ln += "emp_id          INTEGER NULL DEFAULT 1,";
+        cSql_Ln += "maqtc_denom_e   INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "maqtc_tipomaq   INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "maqtc_denom_s   INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "maqtc_m1e_act   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "maqtc_m1e_ant   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "maqtc_m1s_act   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "maqtc_m1s_ant   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "maqtc_m2e_act   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "maqtc_m2e_ant   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "maqtc_m2s_act   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "maqtc_m2s_ant   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "maqtc_mfecha    DATETIME NULL ,";
+        cSql_Ln += "maqtc_mfecha_act    DATETIME NULL ,";
+        cSql_Ln += "maqtc_mfecha_ant    DATETIME NULL ,";
+        cSql_Ln += "maqtc_fact_act  CHAR(30) NULL DEFAULT '',";
+        cSql_Ln += "maqtc_fact_ant  CHAR(30) NULL DEFAULT '',";
+        cSql_Ln += "maqtc_fecha_alta    DATETIME NULL ,";
+        cSql_Ln += "maqtc_fecha_modif   DATETIME NULL ,";
+        cSql_Ln += "u_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "maqtc_sem_jcj   INTEGER NULL DEFAULT '1',";
+        cSql_Ln += "maqtc_porc_conc NUMERIC(12,2) DEFAULT 0.00,";
+        cSql_Ln += "CONSTRAINT maquinastc_PRIMARY PRIMARY KEY (maqtc_autoinc))";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS maqtc_cod ON maquinastc('maqtc_id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS maqtc_cod ON maquinastc('maqtc_cod')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS maqtc_chapa ON maquinastc('maqtc_chapa')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS maqtc_inactivo ON maquinastc('maqtc_inactivo')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+        // -----------------------------FIN MAQUINASTC------------------------------------------------------//
+
+        // ---------------------------------MAQUINAS LNK----------------------------------------------------//
+        cSql_Ln = "";
+        cSql_Ln += "CREATE TABLE IF NOT EXISTS maquinas_lnk (";
+        cSql_Ln += "MaqLnk_Id INTEGER NOT NULL,";
+        cSql_Ln += "emp_id INTEGER NULL DEFAULT 1,";
+        cSql_Ln += "cte_id INTEGER NULL DEFAULT 1,";
+        cSql_Ln += "maqtc_id INTEGER NULL DEFAULT 1,";
+        cSql_Ln += "MaqLnk_fecha_alta DATETIME NULL ,";
+        cSql_Ln += "MaqLnk_usuario_alta CHAR(20) NULL DEFAULT '' ,";
+        cSql_Ln += "MaqLnk_fecha_modif DATETIME NULL ,";
+        cSql_Ln += "MaqLnk_usuario_modif CHAR(20) NULL DEFAULT '' ,";
+        cSql_Ln += "CONSTRAINT maquinas_lnk_PRIMARY PRIMARY KEY (MaqLnk_Id))";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS emp_id ON maquinas_lnk('emp_id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS cte_id ON maquinas_lnk('cte_id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS maqtc_id ON maquinas_lnk('maqtc_id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+        // -----------------------------FIN MAQUINAS LNK----------------------------------------------------//
+
+        // ---------------------------------MUNICIPIOS  ----------------------------------------------------//
+        cSql_Ln = "";
+        cSql_Ln += "CREATE TABLE IF NOT EXISTS municipios (";
+        cSql_Ln += "mun_id INTEGER NOT NULL,";
+        cSql_Ln += "mun_inactivo INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "mun_nombre CHAR(80) NULL DEFAULT '',";
+        cSql_Ln += "mun_impuesto NUMERIC(12, 2) NULL DEFAULT 0,";
+        cSql_Ln += "mun_notas TEXT,";
+        cSql_Ln += "mun_fecha_alta DATETIME NULL ,";
+        cSql_Ln += "mun_fecha_modif DATETIME NULL ,";
+        cSql_Ln += "u_usuario_alta CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "CONSTRAINT municipios_PRIMARY PRIMARY KEY (mun_id))";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS mun_nombre ON municipios ('mun_nombre')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS mun_inactivo ON municipios ('mun_inactivo')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+        // -----------------------------FIN MUNICIPIOS  ----------------------------------------------------//
+
+        // --------------------------------- RUTAS ---------------------------------------------------------//
+        cSql_Ln = "";
+        cSql_Ln += "CREATE TABLE IF NOT EXISTS rutas (";
+        cSql_Ln += "rut_id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,";
+        cSql_Ln += "rut_inactivo INT(1) NULL DEFAULT '0',";
+        cSql_Ln += "rut_nombre CHAR(80) NULL DEFAULT '',";
+        cSql_Ln += "rut_notas LONGTEXT NULL,";
+        cSql_Ln += "rut_fecha_alta DATETIME NULL DEFAULT '2010-01-01 00:00:00',";
+        cSql_Ln += "rut_fecha_modif DATETIME NULL DEFAULT '2010-01-01 00:00:00',";
+        cSql_Ln += "u_usuario_alta VARCHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "u_usuario_modif VARCHAR(20) NULL DEFAULT 'ANONIMO')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS rut_id ON rutas ('rut_id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS rut_inactivo ON rutas ('rut_inactivo')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS rut_nombre ON rutas ('rut_nombre')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+        // -------------------------------FIN RUTAS --------------------------------------------------------//
+
+        cSql_Ln = "";
+        cSql_Ln += "CREATE TABLE IF NOT EXISTS operacion (";
+        cSql_Ln += "id_op           INTEGER NOT NULL,";
+        cSql_Ln += "MaqLnk_Id       INTEGER NOT NULL DEFAULT 0,";
+        cSql_Ln += "maqtc_id        INTEGER NOT NULL DEFAULT 0,";
+        cSql_Ln += "jueg_cod        INTEGER NOT NULL DEFAULT 0,";
+        cSql_Ln += "cte_id          INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "cte_nombre_loc  CHAR(60) NOT NULL DEFAULT '',";
+        cSql_Ln += "cte_nombre_com  CHAR(60) NOT NULL DEFAULT '',";
+        cSql_Ln += "cte_pag_jcj     INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "cte_pag_spac    INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "cte_pag_impm    INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "prov_cod        INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "maqtc_denom_e   INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "maqtc_denom_s   INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "den_valore      NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "den_valors      NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "den_fact_e      INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "den_fact_s      INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "maqtc_tipomaq   INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "op_cporc_Loc    NUMERIC(6, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_maq_proc_cons NUMERIC(6, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_serie        INTEGER NULL DEFAULT 1,";
+        cSql_Ln += "op_chapa        CHAR(12) NULL DEFAULT '',";
+        cSql_Ln += "op_fecha        DATETIME NULL,";
+        cSql_Ln += "op_nodoc        CHAR (30) NULL DEFAULT '',";
+        cSql_Ln += "op_modelo       CHAR(60) NULL DEFAULT '',";
+        cSql_Ln += "op_e_pantalla   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_ea_metroan   NUMERIC(12, 2) DEFAULT 0.000,";
+        cSql_Ln += "op_ea_metroac   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_ea_met       NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_sa_metroan   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_sa_metroac   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_sa_met       NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_eb_metroan   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_eb_metroac   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_eb_met       NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_sb_metroan   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_sb_metroac   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_sb_met       NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_s_pantalla   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_cal_colect   NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_colect   NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_colect_m NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_impmunic  NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_impjcj   NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_timbres  NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_spac     NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_porc_cons NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_tec      NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_dev      NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_otros    NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_cred     NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_cred_m   NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_cal_cred     NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_sub      NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_itbm     NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_tot      NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_brutoloc NUMERIC(6, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_brutoemp NUMERIC(6, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_netoloc  NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_netoemp  NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_observ       TEXT,";
+        cSql_Ln += "op_num_sem      INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "op_fecha_alta   DATETIME NULL,";
+        cSql_Ln += "op_fecha_modif  DATETIME NULL,";
+        cSql_Ln += "u_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "op_emp_id       INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "op_baja_prod    INTEGER(1) NOT NULL DEFAULT 0,";
+        cSql_Ln += "op_tot_colect2  NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "op_tot_cred2    NUMERIC(12, 2) NULL DEFAULT 0.00,";
+        cSql_Ln += "id_device       VARCHAR(30) NOT NULL DEFAULT 'MANUAL',";
+        cSql_Ln += "id_group        VARCHAR(30) NULL DEFAULT 0,";
+        cSql_Ln += "op_semanas_imp  INTEGER NULL DEFAULT 1,";
+        cSql_Ln += "op_image_name   CHAR(80) NULL DEFAULT NULL,";
+        cSql_Ln += "op_usermodify   INTEGER(1) NULL DEFAULT 0,";
+        cSql_Ln += "op_aplica_interf INTEGER(1) NULL DEFAULT 0,";
+        cSql_Ln += "op_aplica_num   CHAR(30) NULL DEFAULT '',";
+        cSql_Ln += "CONSTRAINT  operacion_PRIMARY PRIMARY KEY(id_op))";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS cte_id ON operacion ('cte_id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS id_device ON operacion ('id_device')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS MaqLnk_Id ON operacion ('MaqLnk_Id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS maqtc_id ON operacion ('maqtc_id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS jueg_cod ON operacion ('jueg_cod')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS prov_cod ON operacion ('prov_cod')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS op_usermodify ON operacion ('op_usermodify')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS id_group ON operacion ('id_group')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "";
+        cSql_Ln += "CREATE TABLE IF NOT EXISTS operaciong (";
+        cSql_Ln += "id_autoin       INTEGER NOT NULL,";
+        cSql_Ln += "cte_id          INTEGER unsigned DEFAULT 0,";
+        cSql_Ln += "cte_nombre_loc  CHAR(60) DEFAULT '',";
+        cSql_Ln += "cte_nombre_com  CHAR(60) DEFAULT '',";
+        cSql_Ln += "op_fecha        DATETIME NULL,";
+        cSql_Ln += "op_cal_colect   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_colect   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_impmunic NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_impjcj   NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_timbres  NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_spac     NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_porc_cons NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_tec      NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_dev      NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_otros    NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_cred     NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_cal_cred     NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_sub      NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_itbm     NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_tot      NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_brutoloc NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_brutoemp NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_netoloc  NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_tot_netoemp  NUMERIC(12, 2) DEFAULT 0.00,";
+        cSql_Ln += "op_observ       TEXT,";
+        cSql_Ln += "op_fact_global  VARCHAR(30) NULL DEFAULT '',";
+        cSql_Ln += "op_emp_id       INTEGER(1)  DEFAULT 0,";
+        cSql_Ln += "id_device       VARCHAR(30) DEFAULT 'MANUAL',";
+        cSql_Ln += "id_group        VARCHAR(30) NULL DEFAULT 0,";
+        cSql_Ln += "op_usermodify   INTEGER(1)  DEFAULT 0,";
+        cSql_Ln += "op_fecha_alta   DATETIME NULL,";
+        cSql_Ln += "op_fecha_modif  DATETIME NULL,";
+        cSql_Ln += "op_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "op_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "op_aplica_interf INTEGER(1)  DEFAULT 0,";
+        cSql_Ln += "CONSTRAINT  operaciong_PRIMARY PRIMARY KEY(id_autoin))";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS cte_id ON operaciong ('cte_id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS op_emp_id ON operaciong ('op_emp_id')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS id_device ON operaciong ('id_device')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS op_usermodify ON operaciong ('op_usermodify')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS id_group ON operaciong ('id_group')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS op_fact_global ON operaciong ('op_fact_global')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS op_aplica_interf ON operaciong ('op_aplica_interf')";
+        Global.oGen_Db.execSQL(cSql_Ln);
+    }
+
+    public static void Create_Sql_Tables_Emp() {
+        String cSql_Ln = "";
+        // ---------------------------------EMPRESA----------------------------------------------------------------//
+        cSql_Ln = "";
+        cSql_Ln += "CREATE TABLE IF NOT EXISTS empresas ( ";
+        cSql_Ln += "emp_autoinc     INTEGER NOT NULL,";
+        cSql_Ln += "emp_id          INTEGER NOT NULL,";
+        cSql_Ln += "emp_descripcion CHAR(85) NULL DEFAULT '',";
+        cSql_Ln += "emp_ruc         CHAR(85) NULL DEFAULT '',";
+        cSql_Ln += "emp_dv          CHAR(10) NULL DEFAULT '',";
+        cSql_Ln += "emp_carpeta_reportes VARCHAR (120) NULL DEFAULT '',";
+        cSql_Ln += "emp_telefono1   CHAR(12) NULL DEFAULT '',";
+        cSql_Ln += "emp_telefono2   CHAR(12) NULL DEFAULT '',";
+        cSql_Ln += "emp_fax         CHAR(12) NULL DEFAULT '',";
+        cSql_Ln += "emp_direccion   TEXT NULL,";
+        cSql_Ln += "emp_apartado    TEXT NULL,";
+        cSql_Ln += "emp_email       CHAR(100) NULL DEFAULT '',";
+        cSql_Ln += "separa_mil      CHAR(1) NULL DEFAULT ',',";
+        cSql_Ln += "separa_dec      CHAR(1) NULL DEFAULT '.',";
+        cSql_Ln += "emp_imagen      BLOB NULL,";
+        cSql_Ln += "emp_imagen_path VARCHAR(120) NULL DEFAULT '',";
+        cSql_Ln += "emp_inactivo    INTEGER NULL DEFAULT 0,";
+        cSql_Ln += "emp_cargo_jcj   NUMERIC(12, 2) NULL DEFAULT 0,";
+        cSql_Ln += "emp_cargo_spac  NUMERIC(12, 2) NULL DEFAULT 0,";
+        cSql_Ln += "emp_fecha_alta  DATETIME NULL ,";
+        cSql_Ln += "emp_fecha_modif DATETIME NULL ,";
+        cSql_Ln += "emp_corre_ant   INT(10) NULL DEFAULT '0',";
+        cSql_Ln += "emp_corre_act   INT(10) NULL DEFAULT '0',";
+        cSql_Ln += "u_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
+        cSql_Ln += "emp_clave_metros CHAR(30) NULL DEFAULT '112233',";
+        cSql_Ln += "emp_clave_montos CHAR(30) NULL DEFAULT '332211',";
+        cSql_Ln += "emp_clave_facturas CHAR(30) NULL DEFAULT '82878884',";
+        cSql_Ln += "CONSTRAINT empresas_PRIMARY PRIMARY KEY (emp_autoinc))";
+        Global.oGen_Db.execSQL(cSql_Ln);
+
+        cSql_Ln = "CREATE INDEX IF NOT EXISTS emp_id ON empresas ('emp_id')";
         Global.oGen_Db.execSQL(cSql_Ln);
 
         cSql_Ln = "CREATE INDEX IF NOT EXISTS emp_inactivo ON empresas ('emp_inactivo')";
@@ -2023,63 +2506,6 @@ public class Global {
         }
     }
 
-    public static void Gmail_SendEmail(Context othis, String sTo, String sSubject, String sBody, String cFileName) {
-
-        final String username = Global.get_device_email(othis);
-        //final String username = "johnn.movil@gmail.com";
-
-        final String password = "centenario*";
-
-        Properties props = new Properties();
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.host", "smtp.gmail.com");
-        props.put("mail.smtp.port", "587");
-
-        Session session = Session.getInstance(props,
-                new javax.mail.Authenticator() {
-                    protected PasswordAuthentication getPasswordAuthentication() {
-                        return new PasswordAuthentication(username, password);
-                    }
-                });
-        try {
-            Message message = new MimeMessage(session);
-            String sEmailSender;
-            sEmailSender = Global.get_device_email(othis);
-            message.setFrom(new InternetAddress(sEmailSender));
-
-            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(sTo));
-            message.setSubject(sSubject);
-            message.setText(sBody);
-            if (cFileName != "") {
-
-                File oFile = new File(cFileName);
-                String file = cFileName;
-                String fileName = oFile.getName();
-                oFile = null;
-
-                MimeBodyPart messageBodyPart = new MimeBodyPart();
-
-                Multipart multipart = new MimeMultipart();
-
-                messageBodyPart = new MimeBodyPart();
-                DataSource source = new FileDataSource(file);
-                messageBodyPart.setDataHandler(new DataHandler(source));
-                messageBodyPart.setFileName(cFileName);
-                multipart.addBodyPart(messageBodyPart);
-
-                message.setContent(multipart);
-            }
-
-            Transport.send(message);
-
-            System.out.println("Done");
-
-        } catch (MessagingException e) {
-            System.out.println(e.toString());
-        }
-    }
-
     private static String getFileExtension(File file) {
         String fileName = file.getName();
         if (fileName.lastIndexOf(".") != -1 && fileName.lastIndexOf(".") != 0)
@@ -2201,6 +2627,31 @@ public class Global {
             } while (oGen_Cursor.moveToNext());
             oGen_Cursor.close();
         }
+    }
+
+    public static Integer StrToInt(String sValue) {
+        return Integer.parseInt(sValue);
+    }
+
+    public static String IntToStr(Integer iValue) {
+        return Integer.toString(iValue).trim();
+    }
+
+    public static String FloatToStr(Double dValue) {
+        return Double.toString(dValue).trim();
+    }
+
+    public static String FloatToStrFormat(Double dValue, Integer iDigits, Integer iDecimals) {
+        return Global.decimalformat(dValue, iDigits, iDecimals).trim();
+    }
+
+    public static Double StrToFloat(String sValue) {
+        return Double.parseDouble(sValue);
+    }
+
+    public static Double StrToFloatFormat(String sValue, Integer iDecimals) {
+        Double dValue = Global.round(Double.parseDouble(sValue), iDecimals);
+        return dValue;
     }
 
 }
