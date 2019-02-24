@@ -144,10 +144,8 @@ public class Global {
     public static Intent oPictureActionIntent = null;
     public static SQLiteDatabase oGen_Db;
     public static Cursor oGen_Cursor;
-    //public static String SERVER_URL = "http://186.75.183.220";
-    public static String SERVER_URL = "http://192.168.2.196";
-    //public static String[] SERVER_URL_LIST = {"http://192.168.3.80", "http://186.75.183.220", "http://201.218.103.202"};
-    public static String[] SERVER_URL_LIST = {"http://192.168.2.196"};
+    public static String SERVER_URL = "http://186.75.183.220";
+    public static String[] SERVER_URL_LIST = {"http://192.168.3.80", "http://186.75.183.220", "http://201.218.103.202"};
     public static int SERVER_ITEM_LIST = -1;
     public static String SERVER_URL_FLES = SERVER_URL + "/flam/UploadToServer.php";
     public static String SERVER_DIR_IMGS = SERVER_URL + "/flam/images/";
@@ -1896,8 +1894,9 @@ public class Global {
         cSql_Ln += "maqtc_fecha_modif   DATETIME NULL ,";
         cSql_Ln += "u_usuario_alta  CHAR(20) NULL DEFAULT 'ANONIMO',";
         cSql_Ln += "u_usuario_modif CHAR(20) NULL DEFAULT 'ANONIMO',";
-        cSql_Ln += "maqtc_sem_jcj   INTEGER NULL DEFAULT '1',";
+        cSql_Ln += "maqtc_sem_jcj   INTEGER NULL DEFAULT 1,";
         cSql_Ln += "maqtc_porc_conc NUMERIC(12,2) DEFAULT 0.00,";
+        cSql_Ln += "maqtc_porc_colecta INTEGER NULL DEFAULT 0,";
         cSql_Ln += "CONSTRAINT maquinastc_PRIMARY PRIMARY KEY (maqtc_autoinc))";
         Global.oGen_Db.execSQL(cSql_Ln);
 

@@ -53,10 +53,10 @@ import java.util.Random;
 public class capt_fin extends AppCompatActivity {
     private final static int REQUEST_GET_PASS = 6;
     private Button obtn_print_maq, obtn_totfin_hide, obtn_totfin_save, obtn_totfin_canc, obtn_totfin_unlock;
-    private EditText oOp_tot_cole, oOp_tot_timb, oOp_tot_impm, oOp_tot_jcj, oOp_tot_tenc, oOp_tot_devo, oOp_tot_otro,
+    private EditText oOp_tot_cole, oOp_tot_timb, oOp_tot_impm, oOp_tot_jcj, oOp_tot_cons, oOp_tot_tenc, oOp_tot_devo, oOp_tot_otro,
             oOp_tot_cred, oOp_tot_subt, oOp_tot_impu, oOp_tot_tota, oOp_tot_bloc, oOp_tot_bemp, oOp_tot_nloc, oOp_tot_nemp,
             ototfin_notas, oOp_fact_global;
-    private TextView olab_cte, olOp_tot_cole, olOp_tot_cred, olop_tot_jcj, oapf_device;
+    private TextView olab_cte, olOp_tot_cole, olOp_tot_cred, olOp_tot_jcj, oapf_device;
     private SQLiteDatabase oDb5;
     private Cursor oData5;
     private double fPorc_Loc = 0.00;
@@ -78,7 +78,7 @@ public class capt_fin extends AppCompatActivity {
         this.olab_cte = (TextView) findViewById(R.id.capf_lab_cte);
         this.olOp_tot_cole = (TextView) findViewById(R.id.lop_tot_cole);
         this.olOp_tot_cred = (TextView) findViewById(R.id.lop_tot_cred);
-        this.olop_tot_jcj = (TextView) findViewById(R.id.lop_tot_jcj);
+        this.olOp_tot_jcj = (TextView) findViewById(R.id.lop_tot_jcj);
         this.oapf_device = (TextView) findViewById(R.id.apf_device);
 
         this.obtn_totfin_hide = (Button) findViewById(R.id.btn_totfin_hide);
@@ -90,6 +90,8 @@ public class capt_fin extends AppCompatActivity {
         this.oOp_tot_timb = (EditText) findViewById(R.id.op_tot_timb);
         this.oOp_tot_impm = (EditText) findViewById(R.id.op_tot_impm);
         this.oOp_tot_jcj = (EditText) findViewById(R.id.op_tot_jcj);
+        this.oOp_tot_cons = (EditText) findViewById(R.id.op_tot_cons);
+
         this.oOp_tot_tenc = (EditText) findViewById(R.id.op_tot_tecn);
         this.oOp_tot_devo = (EditText) findViewById(R.id.op_tot_devo);
         this.oOp_tot_otro = (EditText) findViewById(R.id.op_tot_otro);
@@ -153,11 +155,21 @@ public class capt_fin extends AppCompatActivity {
             }
         });
 
+
         this.oOp_tot_jcj.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus) {
                     oOp_tot_jcj.setText(oOp_tot_jcj.getText().toString().isEmpty() ? "0" : oOp_tot_jcj.getText().toString());
+                }
+            }
+        });
+
+        this.oOp_tot_cons.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    oOp_tot_cons.setText(oOp_tot_cons.getText().toString().isEmpty() ? "0" : oOp_tot_cons.getText().toString());
                 }
             }
         });
@@ -261,6 +273,20 @@ public class capt_fin extends AppCompatActivity {
         });
 
         this.oOp_tot_jcj.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                Calc_Sub_Tot();
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+        });
+
+        this.oOp_tot_cons.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
                 Calc_Sub_Tot();
@@ -384,12 +410,14 @@ public class capt_fin extends AppCompatActivity {
                 }
 
                 int iRegs_Cnt = 0;
+                int iId_Group = 0;
                 String cSql_Ln = "";
 
                 Double dtot_cole = 0.00;
                 Double dtot_timb = 0.00;
                 Double dtot_impm = 0.00;
                 Double dtot__jcj = 0.00;
+                Double dtot_cons = 0.00;
                 Double dtot_tecn = 0.00;
                 Double dtot_cred = 0.00;
                 Double dtot_otro = 0.00;
@@ -407,6 +435,7 @@ public class capt_fin extends AppCompatActivity {
                 String ctot_timb = "0.00";
                 String ctot_impm = "0.00";
                 String ctot__jcj = "0.00";
+                String ctot_cons = "0.00";
                 String ctot_tecn = "0.00";
                 String ctot_cred = "0.00";
                 String ctot_otro = "0.00";
@@ -419,47 +448,47 @@ public class capt_fin extends AppCompatActivity {
                 String ctot_nloc = "0.00";
                 String ctot_nemp = "0.00";
 
-                int iId_Group = 0;
+                dtot_cole = Global.StrToFloat(oOp_tot_cole.getText().toString());
+                dtot_timb = Global.StrToFloat(oOp_tot_timb.getText().toString());
+                dtot_impm = Global.StrToFloat(oOp_tot_impm.getText().toString());
+                dtot__jcj = Global.StrToFloat(oOp_tot_jcj.getText().toString());
+                dtot_cons = Global.StrToFloat(oOp_tot_cons.getText().toString());
+                dtot_tecn = Global.StrToFloat(oOp_tot_tenc.getText().toString());
+                dtot_devo = Global.StrToFloat(oOp_tot_devo.getText().toString());
+                dtot_otro = Global.StrToFloat(oOp_tot_otro.getText().toString());
+                dtot_cred = Global.StrToFloat(oOp_tot_cred.getText().toString());
+                dSub_tota = Global.StrToFloat(oOp_tot_subt.getText().toString());
+                dtot_impu = Global.StrToFloat(oOp_tot_impu.getText().toString());
+                dtot_tota = Global.StrToFloat(oOp_tot_tota.getText().toString());
+                //-------------------------------------------------------------------------------------------------------//
+                dtot_bloc = Global.StrToFloat(oOp_tot_bloc.getText().toString());
+                dtot_bemp = Global.StrToFloat(oOp_tot_bemp.getText().toString());
+                //-------------------------------------------------------------------------------------------------------//
+                dtot_nloc = Global.StrToFloat(oOp_tot_nloc.getText().toString());
+                dtot_nemp = Global.StrToFloat(oOp_tot_nemp.getText().toString());
 
-                dtot_cole = Double.valueOf(oOp_tot_cole.getText().toString()).doubleValue();
-                dtot_timb = Double.valueOf(oOp_tot_timb.getText().toString()).doubleValue();
-                dtot_impm = Double.valueOf(oOp_tot_impm.getText().toString()).doubleValue();
-                dtot__jcj = Double.valueOf(oOp_tot_jcj.getText().toString()).doubleValue();
-                dtot_tecn = Double.valueOf(oOp_tot_tenc.getText().toString()).doubleValue();
-                dtot_devo = Double.valueOf(oOp_tot_devo.getText().toString()).doubleValue();
-                dtot_otro = Double.valueOf(oOp_tot_otro.getText().toString()).doubleValue();
-                dtot_cred = Double.valueOf(oOp_tot_cred.getText().toString()).doubleValue();
-                dSub_tota = Double.valueOf(oOp_tot_subt.getText().toString()).doubleValue();
-                dtot_impu = Double.valueOf(oOp_tot_impu.getText().toString()).doubleValue();
-                dtot_tota = Double.valueOf(oOp_tot_tota.getText().toString()).doubleValue();
-                //-------------------------------------------------------------------------------------------------------//
-                dtot_bloc = Double.valueOf(oOp_tot_bloc.getText().toString()).doubleValue();
-                dtot_bemp = Double.valueOf(oOp_tot_bemp.getText().toString()).doubleValue();
-                //-------------------------------------------------------------------------------------------------------//
-                dtot_nloc = Double.valueOf(oOp_tot_nloc.getText().toString()).doubleValue();
-                dtot_nemp = Double.valueOf(oOp_tot_nemp.getText().toString()).doubleValue();
+                //dtot_nemp = Double.valueOf(oOp_tot_nemp.getText().toString()).doubleValue();
 
-
-                ctot_cole = String.format("%.2f", dtot_cole);
-                ctot_timb = String.format("%.2f", dtot_timb);
-                ctot_impm = String.format("%.2f", dtot_impm);
-                ctot__jcj = String.format("%.2f", dtot__jcj);
-                ctot_tecn = String.format("%.2f", dtot_tecn);
-                ctot_devo = String.format("%.2f", dtot_devo);
-                ctot_otro = String.format("%.2f", dtot_otro);
-                ctot_cred = String.format("%.2f", dtot_cred);
-                cSub_tota = String.format("%.2f", dSub_tota);
-                ctot_impu = String.format("%.2f", dtot_impu);
-                ctot_tota = String.format("%.2f", dtot_tota);
+                ctot_cole = Global.FloatToStrFormat(dtot_cole, 12, 2);
+                ctot_timb = Global.FloatToStrFormat(dtot_timb, 12, 2);
+                ctot_impm = Global.FloatToStrFormat(dtot_impm, 12, 2);
+                ctot__jcj = Global.FloatToStrFormat(dtot__jcj, 12, 2);
+                ctot_cons = Global.FloatToStrFormat(dtot_cons, 12, 2);
+                ctot_tecn = Global.FloatToStrFormat(dtot_tecn, 12, 2);
+                ctot_devo = Global.FloatToStrFormat(dtot_devo, 12, 2);
+                ctot_otro = Global.FloatToStrFormat(dtot_otro, 12, 2);
+                ctot_cred = Global.FloatToStrFormat(dtot_cred, 12, 2);
+                cSub_tota = Global.FloatToStrFormat(dSub_tota, 12, 2);
+                ctot_impu = Global.FloatToStrFormat(dtot_impu, 12, 2);
+                ctot_tota = Global.FloatToStrFormat(dtot_tota, 12, 2);
                 //-------------------------------------------------------------------------------------------------------//
-                ctot_bloc = String.format("%.2f", dtot_bloc);
-                ctot_bemp = String.format("%.2f", dtot_bemp);
+                ctot_bloc = Global.FloatToStrFormat(dtot_bloc, 12, 2);
+                ctot_bemp = Global.FloatToStrFormat(dtot_bemp, 12, 2);
                 //-------------------------------------------------------------------------------------------------------//
-                ctot_nloc = String.format("%.2f", dtot_nloc);
-                ctot_nemp = String.format("%.2f", dtot_nemp);
+                ctot_nloc = Global.FloatToStrFormat(dtot_nloc, 12, 2);
+                ctot_nemp = Global.FloatToStrFormat(dtot_nemp, 12, 2);
 
                 Global.Genobj = new JSONObject();
-
                 try {
                     Global.Genobj.put("tot_cole", dtot_cole);
                     Global.Genobj.put("tot_timb", dtot_timb);
@@ -486,9 +515,9 @@ public class capt_fin extends AppCompatActivity {
                         "SELECT " +
                         "   COUNT(op_chapa) AS cnt " +
                         "FROM operacion " +
-                        "WHERE (op_emp_id = '" + Global.cEmp_Id + "') " +
-                        "AND   (id_device = '" + Global.cid_device + "') " +
-                        "AND   (cte_id    = '" + Global.cCte_Id + "') " +
+                        "WHERE (op_emp_id ='" + Global.cEmp_Id + "') " +
+                        "AND   (id_device ='" + Global.cid_device + "') " +
+                        "AND   (cte_id    ='" + Global.cCte_Id + "') " +
                         "AND   (IFNULL(op_baja_prod,0)=0);";
 
                 oData5 = oDb5.rawQuery(cSql_Ln, null);
@@ -530,6 +559,8 @@ public class capt_fin extends AppCompatActivity {
                 cSql_Ln += " op_tot_sub      = 0.00,";
                 cSql_Ln += " op_tot_itbm     = 0.00,";
                 cSql_Ln += " op_tot_tot      = 0.00,";
+                cSql_Ln += " op_maq_proc_cons= 0.00,";
+                cSql_Ln += " op_tot_porc_cons= 0.00,";
                 //cSql_Ln += " op_nodoc        ='" + cNumDoc + "',";
                 cSql_Ln += " op_nodoc        ='" + cOp_fact_global.trim() + "'||'-'|| trim(op_chapa),";
                 cSql_Ln += " op_fecha        ='" + cDateMysql + "',";
@@ -537,9 +568,9 @@ public class capt_fin extends AppCompatActivity {
                 cSql_Ln += " op_fecha_modif  ='" + cDateMysql + "', ";
                 cSql_Ln += " op_usermodify   = 1, ";
                 cSql_Ln += " id_group        ='" + Integer.toString(iId_Group) + "' ";
-                cSql_Ln += "WHERE (op_emp_id = '" + Global.cEmp_Id + "') ";
-                cSql_Ln += "AND   (id_device = '" + Global.cid_device + "') ";
-                cSql_Ln += "AND   (cte_id    = '" + Global.cCte_Id + "') ";
+                cSql_Ln += "WHERE (op_emp_id ='" + Global.cEmp_Id + "') ";
+                cSql_Ln += "AND   (id_device ='" + Global.cid_device + "') ";
+                cSql_Ln += "AND   (cte_id    ='" + Global.cCte_Id + "') ";
                 cSql_Ln += "AND   (IFNULL(op_baja_prod,0)=1);";
                 Global.logLargeString(cSql_Ln);
                 oDb5.execSQL(cSql_Ln);
@@ -560,7 +591,7 @@ public class capt_fin extends AppCompatActivity {
                     else
                         cSql_Ln += " op_tot_impmunic=ROUND(" + ctot_impm + "/" + cRegs_Cnt + ",2), ";
 
-                    cSql_Ln += " op_tot_impjcj  =(IFNULL(op_semanas_imp,1)*37.50), ";
+                    cSql_Ln += " op_tot_impjcj   =(IFNULL(op_semanas_imp,1)*37.50), ";
 
                     if (dtot_tecn == 0.00)
                         cSql_Ln += " op_tot_tec     =0.00, ";
@@ -587,9 +618,9 @@ public class capt_fin extends AppCompatActivity {
                     cSql_Ln += " op_fecha_modif ='" + cDateMysql + "', ";
                     cSql_Ln += " op_usermodify  =1, ";
                     cSql_Ln += " id_group        ='" + Integer.toString(iId_Group) + "' ";
-                    cSql_Ln += "WHERE (op_emp_id = '" + Global.cEmp_Id + "') ";
-                    cSql_Ln += "AND   (id_device = '" + Global.cid_device + "') ";
-                    cSql_Ln += "AND   (cte_id    = '" + Global.cCte_Id + "') ";
+                    cSql_Ln += "WHERE (op_emp_id = " + Global.cEmp_Id + "') ";
+                    cSql_Ln += "AND   (id_device ='" + Global.cid_device + "') ";
+                    cSql_Ln += "AND   (cte_id    ='" + Global.cCte_Id + "') ";
                     cSql_Ln += "AND   (IFNULL(op_baja_prod,0)=0);";
                     Global.logLargeString(cSql_Ln);
                     oDb5.execSQL(cSql_Ln);
@@ -598,9 +629,9 @@ public class capt_fin extends AppCompatActivity {
                     cSql_Ln += "UPDATE operacion SET ";
                     cSql_Ln += " op_tot_sub     =ROUND(op_tot_colect - (op_tot_timbres + op_tot_impmunic + op_tot_impjcj + op_tot_tec) - (op_tot_dev + op_tot_otros + op_tot_cred),2),";
                     cSql_Ln += " op_tot_itbm    = 0.00 ";
-                    cSql_Ln += "WHERE (op_emp_id = '" + Global.cEmp_Id + "') ";
-                    cSql_Ln += "AND   (id_device = '" + Global.cid_device + "') ";
-                    cSql_Ln += "AND   (cte_id    = '" + Global.cCte_Id + "') ";
+                    cSql_Ln += "WHERE (op_emp_id ='" + Global.cEmp_Id + "') ";
+                    cSql_Ln += "AND   (id_device ='" + Global.cid_device + "') ";
+                    cSql_Ln += "AND   (cte_id    ='" + Global.cCte_Id + "') ";
                     cSql_Ln += "AND   (IFNULL(op_baja_prod,0)=0);";
                     Global.logLargeString(cSql_Ln);
                     oDb5.execSQL(cSql_Ln);
@@ -608,9 +639,9 @@ public class capt_fin extends AppCompatActivity {
                     cSql_Ln = "";
                     cSql_Ln += "UPDATE operacion SET ";
                     cSql_Ln += " op_tot_tot     = ROUND(op_tot_sub - op_tot_itbm,2) ";
-                    cSql_Ln += "WHERE (op_emp_id = '" + Global.cEmp_Id + "') ";
-                    cSql_Ln += "AND   (id_device = '" + Global.cid_device + "') ";
-                    cSql_Ln += "AND   (cte_id    = '" + Global.cCte_Id + "') ";
+                    cSql_Ln += "WHERE (op_emp_id ='" + Global.cEmp_Id + "') ";
+                    cSql_Ln += "AND   (id_device ='" + Global.cid_device + "') ";
+                    cSql_Ln += "AND   (cte_id    ='" + Global.cCte_Id + "') ";
                     cSql_Ln += "AND   (IFNULL(op_baja_prod,0)=0);";
                     Global.logLargeString(cSql_Ln);
                     oDb5.execSQL(cSql_Ln);
@@ -621,9 +652,9 @@ public class capt_fin extends AppCompatActivity {
                     cSql_Ln = "" +
                             "UPDATE operacion SET " +
                             "    op_tot_brutoloc = ROUND( (CASE WHEN (" + cpCte_Porc + "<100) THEN (op_tot_tot * (" + cpCte_Porc + "/100)) ELSE 000000000000.00 END),2) " +
-                            "WHERE (op_emp_id = '" + Global.cEmp_Id + "') " +
-                            "AND   (id_device = '" + Global.cid_device + "') " +
-                            "AND   (cte_id    = '" + Global.cCte_Id + "') " +
+                            "WHERE (op_emp_id ='" + Global.cEmp_Id + "') " +
+                            "AND   (id_device ='" + Global.cid_device + "') " +
+                            "AND   (cte_id    ='" + Global.cCte_Id + "') " +
                             "AND   (IFNULL(op_baja_prod,0)=0);";
                     Global.logLargeString(cSql_Ln);
                     oDb5.execSQL(cSql_Ln);
@@ -631,9 +662,9 @@ public class capt_fin extends AppCompatActivity {
                     cSql_Ln = "" +
                             "UPDATE operacion SET " +
                             "   op_tot_brutoemp = ROUND( (CASE WHEN  (" + cpCte_Porc + "<100) THEN (op_tot_tot - op_tot_brutoloc) ELSE (op_tot_tot) END),2) " +
-                            "WHERE (op_emp_id = '" + Global.cEmp_Id + "') " +
-                            "AND   (id_device = '" + Global.cid_device + "') " +
-                            "AND   (cte_id    = '" + Global.cCte_Id + "') " +
+                            "WHERE (op_emp_id ='" + Global.cEmp_Id + "') " +
+                            "AND   (id_device ='" + Global.cid_device + "') " +
+                            "AND   (cte_id    ='" + Global.cCte_Id + "') " +
                             "AND   (IFNULL(op_baja_prod,0)=0);";
                     Global.logLargeString(cSql_Ln);
                     oDb5.execSQL(cSql_Ln);
@@ -643,9 +674,9 @@ public class capt_fin extends AppCompatActivity {
                     cSql_Ln = "" +
                             "UPDATE operacion SET " +
                             "   op_tot_netoloc	 = ROUND(op_tot_dev + op_tot_otros + op_tot_cred + op_tot_brutoloc,2) " +
-                            "WHERE (op_emp_id = '" + Global.cEmp_Id + "') " +
-                            "AND   (id_device = '" + Global.cid_device + "') " +
-                            "AND   (cte_id    = '" + Global.cCte_Id + "') " +
+                            "WHERE (op_emp_id ='" + Global.cEmp_Id + "') " +
+                            "AND   (id_device ='" + Global.cid_device + "') " +
+                            "AND   (cte_id    ='" + Global.cCte_Id + "') " +
                             "AND   (IFNULL(op_baja_prod,0)=0);";
                     Global.logLargeString(cSql_Ln);
                     oDb5.execSQL(cSql_Ln);
@@ -665,9 +696,9 @@ public class capt_fin extends AppCompatActivity {
                 cSql_Ln = "";
                 cSql_Ln += "" +
                         "DELETE FROM operaciong " +
-                        "WHERE  (op_emp_id = '" + Global.cEmp_Id + "') " +
-                        "AND 	(id_device = '" + Global.cid_device + "') " +
-                        "AND 	(cte_id    = '" + Global.cCte_Id + "'); ";
+                        "WHERE  (op_emp_id ='" + Global.cEmp_Id + "') " +
+                        "AND 	(id_device ='" + Global.cid_device + "') " +
+                        "AND 	(cte_id    ='" + Global.cCte_Id + "'); ";
                 Global.logLargeString(cSql_Ln);
                 oDb5.execSQL(cSql_Ln);
 
@@ -679,7 +710,7 @@ public class capt_fin extends AppCompatActivity {
                 cSql_Ln += "op_tot_impmunic ,op_tot_impjcj  ,";
                 cSql_Ln += "op_tot_timbres  ,op_tot_spac    ,";
                 cSql_Ln += "op_tot_tec      ,op_tot_dev    ,";
-                cSql_Ln += "op_tot_otros    ,";
+                cSql_Ln += "op_tot_otros    ,op_tot_porc_cons,";
                 cSql_Ln += "op_tot_cred     ,op_cal_cred    ,";
                 cSql_Ln += "op_tot_sub      ,op_tot_itbm    ,";
                 cSql_Ln += "op_tot_tot      ,";
@@ -702,6 +733,7 @@ public class capt_fin extends AppCompatActivity {
                 cSql_Ln += "'0.00',";
                 cSql_Ln += "'" + ctot_tecn + "',";
                 cSql_Ln += "'" + ctot_devo + "',";
+                cSql_Ln += "'" + ctot_otro + "',";
                 cSql_Ln += "'" + ctot_otro + "',";
                 cSql_Ln += "'" + ctot_cred + "',";
                 cSql_Ln += "'0.00',";
@@ -736,9 +768,7 @@ public class capt_fin extends AppCompatActivity {
             }
         });
 
-        this.obtn_totfin_canc.setOnClickListener(new View.OnClickListener()
-
-        {
+        this.obtn_totfin_canc.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View arg0) {
@@ -770,11 +800,13 @@ public class capt_fin extends AppCompatActivity {
                                 this.oOp_tot_cole.setEnabled(true);
                                 this.oOp_tot_cred.setEnabled(true);
                                 this.oOp_tot_jcj.setEnabled(true);
+                                this.oOp_tot_cons.setEnabled(true);
                                 break;
                             case 0:
                                 this.oOp_tot_cole.setEnabled(false);
                                 this.oOp_tot_cred.setEnabled(false);
                                 this.oOp_tot_jcj.setEnabled(false);
+                                this.oOp_tot_cons.setEnabled(false);
                                 break;
                             case 1:
                                 this.oOp_tot_cole.setEnabled(true);
@@ -791,6 +823,11 @@ public class capt_fin extends AppCompatActivity {
                                 this.oOp_tot_jcj.selectAll();
                                 this.oOp_tot_jcj.requestFocus();
                                 break;
+                            case 4:
+                                this.oOp_tot_cons.setEnabled(true);
+                                this.oOp_tot_cons.selectAll();
+                                this.oOp_tot_cons.requestFocus();
+                                break;
                         }
                         //Toast.makeText(this, "CONTRASEÑA VALIDA", Toast.LENGTH_SHORT).show();
                     } else {
@@ -803,6 +840,7 @@ public class capt_fin extends AppCompatActivity {
                             this.oOp_tot_cole.setEnabled(false);
                             this.oOp_tot_cred.setEnabled(false);
                             this.oOp_tot_jcj.setEnabled(false);
+                            this.oOp_tot_cons.setEnabled(false);
                             break;
                         case 1:
                             this.oOp_tot_cole.setEnabled(false);
@@ -813,10 +851,12 @@ public class capt_fin extends AppCompatActivity {
                         case 3:
                             this.oOp_tot_jcj.setEnabled(false);
                             break;
+                        case 4:
+                            this.oOp_tot_cons.setEnabled(false);
+                            break;
                     }
                     Toast.makeText(this, "Canceló la operación.", Toast.LENGTH_SHORT).show();
                     break;
-
             }
         }
     }
@@ -833,6 +873,9 @@ public class capt_fin extends AppCompatActivity {
 
         this.oOp_tot_jcj.setText("0.00");
         this.oOp_tot_jcj.setEnabled(false);
+
+        this.oOp_tot_cons.setText("0.00");
+        this.oOp_tot_cons.setEnabled(false);
 
         this.oOp_tot_tenc.setText("0.00");
         this.oOp_tot_tenc.setEnabled(true);
@@ -877,11 +920,12 @@ public class capt_fin extends AppCompatActivity {
         cSql_Ln += "SELECT ";
         cSql_Ln += "    SUM(op_tot_colect) AS op_tot_colect, ";
         cSql_Ln += "    SUM(op_tot_cred) AS op_tot_cred, ";
-        cSql_Ln += "    SUM(op_semanas_imp)*37.50 AS op_tot_jcj ";
+        cSql_Ln += "    SUM(op_semanas_imp)*37.50 AS op_tot_jcj, ";
+        cSql_Ln += "    SUM(op_tot_porc_cons) AS op_tot_porc_cons ";
         cSql_Ln += "FROM operacion ";
-        cSql_Ln += "WHERE (op_emp_id = '" + Global.cEmp_Id + "') ";
-        cSql_Ln += "AND   (id_device = '" + Global.cid_device + "') ";
-        cSql_Ln += "AND   (cte_id    = '" + Global.cCte_Id + "') ";
+        cSql_Ln += "WHERE (op_emp_id ='" + Global.cEmp_Id + "') ";
+        cSql_Ln += "AND   (id_device ='" + Global.cid_device + "') ";
+        cSql_Ln += "AND   (cte_id    ='" + Global.cCte_Id + "') ";
         cSql_Ln += "AND   (IFNULL(op_baja_prod,0) =0); ";
 
         Log.e("SQL", cSql_Ln);
@@ -891,20 +935,24 @@ public class capt_fin extends AppCompatActivity {
         if ((oData5 == null) || (oData5.getCount() == 0)) {
             this.oOp_tot_cole.setText("0.00");
             this.oOp_tot_cred.setText("0.00");
+            this.oOp_tot_jcj.setText("0.00");
+            this.oOp_tot_cons.setText("0.00");
         } else {
 
             Double ftotfin_bruto = oData5.getDouble(oData5.getColumnIndex("op_tot_colect"));
             Double ftotfin_prem = oData5.getDouble(oData5.getColumnIndex("op_tot_cred"));
-            Double dtot_jcj = oData5.getDouble(oData5.getColumnIndex("op_tot_jcj"));
+            Double dtot_imp_jcj = oData5.getDouble(oData5.getColumnIndex("op_tot_jcj"));
+            Double dtot_consecion = oData5.getDouble(oData5.getColumnIndex("op_tot_jcj"));
 
-            String ctotfin_bruto = String.format("%.2f", ftotfin_bruto);
-            String ctotfin_prem = String.format("%.2f", ftotfin_prem);
-            String ctot_jcj = String.format("%.2f", dtot_jcj);
-
+            String ctotfin_bruto = Global.FloatToStrFormat(ftotfin_bruto, 12, 2);
+            String ctotfin_prem = Global.FloatToStrFormat(ftotfin_prem, 12, 2);
+            String ctot_imp_jcj = Global.FloatToStrFormat(dtot_imp_jcj, 12, 2);
+            String ctot_consecion = Global.FloatToStrFormat(dtot_consecion, 12, 2);
 
             this.oOp_tot_cole.setText(ctotfin_bruto);
             this.oOp_tot_cred.setText(ctotfin_prem);
-            this.oOp_tot_jcj.setText(ctot_jcj);
+            this.oOp_tot_jcj.setText(ctot_imp_jcj);
+            this.oOp_tot_cons.setText(ctot_consecion);
         }
         oData5.close();
     }
@@ -928,6 +976,11 @@ public class capt_fin extends AppCompatActivity {
         if (oOp_tot_jcj.getText().toString().length() == 0) {
             oOp_tot_jcj.setError(null);
             oOp_tot_jcj.setText("0.00");
+        }
+
+        if (oOp_tot_cons.getText().toString().length() == 0) {
+            oOp_tot_cons.setError(null);
+            oOp_tot_cons.setText("0.00");
         }
 
         if (oOp_tot_tenc.getText().toString().length() == 0) {
@@ -1037,6 +1090,7 @@ public class capt_fin extends AppCompatActivity {
         Double dtot_timb = 0.00;
         Double dtot_impm = 0.00;
         Double dtot__jcj = 0.00;
+        Double dtot_cons = 0.00;
         Double dtot_tecn = 0.00;
         Double dtot_cred = 0.00;
         Double dtot_otro = 0.00;
@@ -1048,11 +1102,15 @@ public class capt_fin extends AppCompatActivity {
         Double dtot_bemp = 0.00;
         Double dtot_nloc = 0.00;
         Double dtot_nemp = 0.00;
+        Double dtot_sum1 = 0.00;
+        Double dtot_Imp0 = 0.00;
+        Double dtot_sum2 = 0.00;
 
         String stot_cole = (this.oOp_tot_cole.getText().toString().isEmpty() ? "0" : this.oOp_tot_cole.getText().toString());
         String stot_timb = (this.oOp_tot_timb.getText().toString().isEmpty() ? "0" : this.oOp_tot_timb.getText().toString());
         String stot_impm = (this.oOp_tot_impm.getText().toString().isEmpty() ? "0" : this.oOp_tot_impm.getText().toString());
         String stot__jcj = (this.oOp_tot_jcj.getText().toString().isEmpty() ? "0" : this.oOp_tot_jcj.getText().toString());
+        String stot_cons = (this.oOp_tot_cons.getText().toString().isEmpty() ? "0" : this.oOp_tot_cons.getText().toString());
         String stot_tecn = (this.oOp_tot_tenc.getText().toString().isEmpty() ? "0" : this.oOp_tot_tenc.getText().toString());
         String stot_cred = (this.oOp_tot_cred.getText().toString().isEmpty() ? "0" : this.oOp_tot_cred.getText().toString());
         String stot_devo = (this.oOp_tot_devo.getText().toString().isEmpty() ? "0" : this.oOp_tot_devo.getText().toString());
@@ -1066,19 +1124,21 @@ public class capt_fin extends AppCompatActivity {
         String ctot_nemp = "";
 
         //-------------------------------------------------------------------------------------------------------//
-        dtot_cole = Double.valueOf(stot_cole).doubleValue();
-        dtot_timb = Double.valueOf(stot_timb).doubleValue();
-        dtot_impm = Double.valueOf(stot_impm).doubleValue();
-        dtot__jcj = Double.valueOf(stot__jcj).doubleValue();
-        dtot_tecn = Double.valueOf(stot_tecn).doubleValue();
+        dtot_cole = Global.StrToFloat(stot_cole);
+        dtot_timb = Global.StrToFloat(stot_timb);
+        dtot_impm = Global.StrToFloat(stot_impm);
+        dtot__jcj = Global.StrToFloat(stot__jcj);
+        dtot_cons = Global.StrToFloat(stot_cons);
+        dtot_tecn = Global.StrToFloat(stot_tecn);
 
-        Double dtot_sum1 = (dtot_timb + dtot_impm + dtot__jcj + dtot_tecn);
+        dtot_Imp0 = (dtot_timb + dtot_impm + dtot__jcj + dtot_cons);
+
+        dtot_cred = Global.StrToFloat(stot_cred);
+        dtot_devo = Global.StrToFloat(stot_devo);
+        dtot_otro = Global.StrToFloat(stot_otro);
+        dtot_sum2 = (dtot_devo + dtot_otro + dtot_cred);
+        dtot_sum1 = (dtot_Imp0 + dtot_tecn);
         //-------------------------------------------------------------------------------------------------------//
-        dtot_cred = Double.valueOf(stot_cred).doubleValue();
-        dtot_devo = Double.valueOf(stot_devo).doubleValue();
-        dtot_otro = Double.valueOf(stot_otro).doubleValue();
-
-        Double dtot_sum2 = (dtot_devo + dtot_otro + dtot_cred);
         //-------------------------------------------------------------------------------------------------------//
         //-------------------------------------------------------------------------------------------------------//
         dSub_tota = (dtot_cole - dtot_sum1 - dtot_sum2);
@@ -1114,10 +1174,11 @@ public class capt_fin extends AppCompatActivity {
             this.oOp_tot_bloc.setText(ctot_bloc);
             this.oOp_tot_bemp.setText(ctot_bemp);
         }
+
         dtot_nloc = (dtot_devo + dtot_otro + dtot_cred + dtot_bloc);
         ctot_nloc = String.format("%.2f", dtot_nloc);
 
-        dtot_nemp = (dtot_timb + dtot_impm + dtot__jcj + dtot_tecn + dtot_bemp);
+        dtot_nemp = (dtot_Imp0 + dtot_tecn + dtot_bemp);
         ctot_nemp = String.format("%.2f", dtot_nemp);
 
         this.oOp_tot_nloc.setText(ctot_nloc);

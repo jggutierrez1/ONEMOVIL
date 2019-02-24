@@ -230,6 +230,37 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/olayout_cons"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="0"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/lop_tot_cons"
+                    style="@style/Widget.AppCompat.TextView.SpinnerItem"
+                    android:layout_width="133dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="CONCESIONARIO MAQ.:"
+                    android:textSize="23dp" />
+
+                <EditText
+                    android:id="@+id/op_tot_cons"
+                    android:layout_width="105dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:enabled="true"
+                    android:inputType="numberSigned|numberDecimal"
+                    android:selectAllOnFocus="true"
+                    android:text="0.00"
+                    android:textSize="23dp"
+                    tools:layout_editor_absoluteX="182dp"
+                    tools:layout_editor_absoluteY="147dp" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:id="@+id/olayout_serv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

@@ -89,14 +89,14 @@ public class capt_data extends AppCompatActivity {
     private String cSqlLn = "";
     private String op_chapa, op_modelo, op_serie, maqlnk_id, cte_nombre_loc, cte_nombre_com,
             maqtc_denom_e, maqtc_denom_s;
-    private double op_colect, op_cred, op_cal_colect, op_cal_cred, op_cporc_loc, Op_tot_impjcj, Op_tot_impmunic, den_valore, den_valors, op_pporc_con;
+    private double op_tot_porc_cons, op_cporc_loc, op_maq_proc_cons, op_colect, op_cred, op_cal_colect, op_cal_cred, Op_tot_impjcj, Op_tot_impmunic, den_valore, den_valors;
     private int op_emp_id, den_fact_e, den_fact_s, maqtc_tipomaq, op_semanas_imp;
     private double Op_ea_metroac, Op_ea_metroan, Op_sa_metroac, Op_sa_metroan;
     private boolean bFoundMach;
     private int cte_pag_jcj, cte_pag_spac, cte_pag_impm, Denom_Ent_Fac, Denom_Sal_Fac, cte_mod_metro_ant;
     private int iDenom_Ent_Id, iDenom_Sal_Id;
     private int op_jueg_cod = 0, op_prov_cod = 0, op_maqtc_id = 0;
-    private double fDenom_Ent_Val, fDenom_Sal_Val, Porc_Loc;
+    private double fDenom_Ent_Val, fDenom_Sal_Val;
     //private double ftot_cole, ftot_prem;
     private double iMetro_EntDif, iMetroA_EntDif, iMetroB_EntDif, iMetro_SalDif, iMetroA_SalDif, iMetroB_SalDif;
     private Context oThis = this;
@@ -656,11 +656,12 @@ public class capt_data extends AppCompatActivity {
                 }
                 Global.qry_cte_info(Global.cCte_Id);
 
+                op_tot_porc_cons = Global.round(((dtot_cole + dtot_cole_m) - (Op_tot_impmunic2 + Op_tot_impjcj2)) * (op_maq_proc_cons / 100), 2);
+
                 cSql_Ln = "";
                 cSql_Ln += "INSERT INTO operacion ( ";
                 cSql_Ln += "cte_id,";
                 cSql_Ln += "maqtc_id,jueg_cod,prov_cod,op_maq_proc_cons,";
-                cSql_Ln += "op_tot_porc_cons,";
                 cSql_Ln += "cte_nombre_loc, cte_nombre_com, op_cporc_loc,";
                 cSql_Ln += "cte_pag_jcj, cte_pag_spac, cte_pag_impm,";
                 cSql_Ln += "maqtc_denom_e, maqtc_denom_s,";
@@ -677,7 +678,7 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "op_cal_colect,op_tot_colect,op_tot_colect_m,";
                 cSql_Ln += "op_cal_cred  ,op_tot_cred  ,op_tot_cred_m,";
                 cSql_Ln += "op_fecha_alta,op_fecha_modif,";
-                cSql_Ln += "op_tot_impmunic,op_tot_impjcj,";
+                cSql_Ln += "op_tot_impmunic,op_tot_impjcj,op_tot_porc_cons,";
                 cSql_Ln += "op_emp_id,id_device,";
                 cSql_Ln += "op_semanas_imp,op_nodoc,";
                 cSql_Ln += "op_baja_prod, op_observ, op_image_name) VALUES (";
@@ -685,11 +686,10 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "'" + Global.IntToStr(op_maqtc_id) + "',";
                 cSql_Ln += "'" + Global.IntToStr(op_jueg_cod) + "',";
                 cSql_Ln += "'" + Global.IntToStr(op_prov_cod) + "',";
-                cSql_Ln += "'" + Global.decimalformat(op_pporc_con, 5, 2).trim() + "',";
-                cSql_Ln += "'0.00',";
+                cSql_Ln += "'" + Global.decimalformat(op_maq_proc_cons, 5, 2).trim() + "',";
                 cSql_Ln += "'" + cte_nombre_loc + "',";
                 cSql_Ln += "'" + cte_nombre_com + "',";
-                cSql_Ln += "'" + Global.decimalformat(Global.fCte_Por, 5, 2).trim() + "',";
+                cSql_Ln += "'" + Global.decimalformat(op_cporc_loc, 5, 2).trim() + "',";
                 cSql_Ln += "'" + cte_pag_jcj + "',";
                 cSql_Ln += "'" + cte_pag_spac + "',";
                 cSql_Ln += "'" + cte_pag_impm + "',";
@@ -733,9 +733,9 @@ public class capt_data extends AppCompatActivity {
                 cSql_Ln += "'" + String.format("%.2f", dtot_cred_m) + "',";
                 cSql_Ln += "'" + cNow2 + "',";
                 cSql_Ln += "'" + cNow2 + "',";
-                cSql_Ln += "'" + Op_tot_impmunic2 + "',";
-                cSql_Ln += "'" + Op_tot_impjcj2 + "',";
-
+                cSql_Ln += "'" + Global.FloatToStrFormat(Op_tot_impmunic2, 12, 2) + "',";
+                cSql_Ln += "'" + Global.FloatToStrFormat(Op_tot_impjcj2, 12, 2) + "',";
+                cSql_Ln += "'" + Global.FloatToStrFormat(op_tot_porc_cons, 12, 2) + "',";
                 cSql_Ln += "'" + op_emp_id + "',";
                 cSql_Ln += "'" + Global.cid_device + "',";
                 cSql_Ln += "'" + op_semanas_imp + "',";
@@ -1230,6 +1230,8 @@ public class capt_data extends AppCompatActivity {
         cSqlLn += "  maquinastc.maqtc_m2s_act, ";
         cSqlLn += "  maquinastc.maqtc_m2s_ant, ";
         cSqlLn += "  maquinastc.maqtc_m1s_act, ";
+        cSqlLn += "  maquinastc.maqtc_porc_colecta, ";
+        cSqlLn += "  maquinastc.maqtc_serie, ";
         cSqlLn += "  IFNULL(maquinastc.maqtc_sem_jcj,1) AS maqtc_sem_jcj, ";
         cSqlLn += "  maquinas_lnk.MaqLnk_Id, ";
         cSqlLn += "  clientes.cte_id, ";
@@ -1376,14 +1378,28 @@ public class capt_data extends AppCompatActivity {
     private void MaquinaValid(Boolean bIsNew) {
         data4.moveToFirst();
         op_serie = "0";
+        String cMaqID = "";
+        String cEtiq_Consesion = "";
+        String cSerieMaq = "";
 
-        //this.lab_cte.setText("CLIENTE: " + data4.getString(data.getColumnIndex("cte_nombre_loc")));
-        //this.lab_cha.setText("CHAPA  : " + data4.getString(data.getColumnIndex("maqtc_chapa")));
-        Global.qry_cte_info(Global.cCte_Id);
-        String cPorc = Global.decimalformat(Global.fCte_Por, 5, 2).trim();
+        //Global.qry_cte_info(Global.cCte_Id);
+        //Global.fCte_Por = data4.getDouble(data4.getColumnIndex("cte_poc_ret"));
 
-        this.lab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]/[" + cPorc + "]");
-        this.lab_cha.setText("CHAPA  : [" + Global.cMaq_Id + "]/[" + Global.cMaq_De + "]");
+        op_cporc_loc = data4.getDouble(data4.getColumnIndex("cte_poc_ret"));
+        cSerieMaq = data4.getString(data4.getColumnIndex("maqtc_serie"));
+        if
+        ((data4.getInt(data4.getColumnIndex("maqtc_porc_colecta")) == 0) || (data4.getString(data4.getColumnIndex("maqtc_porc_colecta")) == "null")) {
+            op_maq_proc_cons = 0.00;
+            cEtiq_Consesion = "";
+        } else {
+
+            op_maq_proc_cons = data4.getDouble(data4.getColumnIndex("maqtc_porc_conc"));
+            cEtiq_Consesion = "|" + Global.FloatToStrFormat(op_maq_proc_cons, 6, 2) + "%";
+        }
+        cMaqID = data4.getString(data4.getColumnIndex("maqtc_id"));
+
+        this.lab_cte.setText("CLIENTE: [" + Global.cCte_Id.trim() + "|" + Global.cCte_De.trim() + "|" + Global.FloatToStrFormat(op_cporc_loc, 6, 2) + "%]");
+        this.lab_cha.setText("MAQUINA: [" + cMaqID.trim() + "|" + Global.cMaq_De.trim() + "|" + Global.cMaq_Id.trim() + cEtiq_Consesion + "]/[SERIE:" + cSerieMaq + "]");
 
         op_chapa = data4.getString(data4.getColumnIndex("maqtc_chapa"));
 
@@ -1425,11 +1441,12 @@ public class capt_data extends AppCompatActivity {
 
         this.Mask_Tetros();
 
+/*
         if (data4.getDouble(data4.getColumnIndex("cte_poc_ret")) == 0)
-            Porc_Loc = 1;
+            this.fPorc_Loc = 1;
         else
-            Porc_Loc = data4.getDouble(data4.getColumnIndex("cte_poc_ret"));
-
+            this.fPorc_Loc = data4.getDouble(data4.getColumnIndex("cte_poc_ret"));
+*/
         op_modelo = data4.getString(data4.getColumnIndex("maqtc_modelo"));
         cte_nombre_loc = data4.getString(data4.getColumnIndex("cte_nombre_loc"));
         cte_nombre_com = data4.getString(data4.getColumnIndex("cte_nombre_com"));
@@ -1439,8 +1456,7 @@ public class capt_data extends AppCompatActivity {
         cte_mod_metro_ant = data4.getInt(data4.getColumnIndex("cte_mod_metro_ant"));
 
         cte_pag_impm = data4.getInt(data4.getColumnIndex("cte_pag_impm"));
-        op_cporc_loc = data4.getDouble(data4.getColumnIndex("cte_poc_ret"));
-        op_pporc_con = data4.getDouble(data4.getColumnIndex("maqtc_porc_conc"));
+        //op_maq_proc_cons = data4.getDouble(data4.getColumnIndex("maqtc_porc_conc"));
         op_jueg_cod = data4.getInt(data4.getColumnIndex("jueg_cod"));
         op_prov_cod = data4.getInt(data4.getColumnIndex("prov_cod"));
         op_maqtc_id = data4.getInt(data4.getColumnIndex("maqtc_id"));
@@ -1451,6 +1467,7 @@ public class capt_data extends AppCompatActivity {
         den_fact_s = data4.getInt(data4.getColumnIndex("den_fact_s"));
         den_valore = data4.getDouble(data4.getColumnIndex("den_valore"));
         den_valors = data4.getDouble(data4.getColumnIndex("den_valors"));
+        op_tot_porc_cons = 0.00;
 
         this.oSemanas.setText(data4.getString(data4.getColumnIndex("maqtc_sem_jcj")));
 
@@ -1768,6 +1785,4 @@ public class capt_data extends AppCompatActivity {
             this.sa_act.setEnabled(true);
         }
     }
-
-
 }
