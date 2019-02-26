@@ -363,9 +363,7 @@ public class menu extends AppCompatActivity {
 
         });
 
-        btn_ccol.setOnClickListener(new View.OnClickListener()
-
-        {
+        btn_ccol.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -384,9 +382,7 @@ public class menu extends AppCompatActivity {
             }
         });
 
-        btn_ccol.setOnClickListener(new View.OnClickListener()
-
-        {
+        btn_ccol.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -405,9 +401,7 @@ public class menu extends AppCompatActivity {
             }
         });
 
-        btn_send.setOnClickListener(new View.OnClickListener()
-
-        {
+        btn_send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Send_Data();
@@ -415,9 +409,7 @@ public class menu extends AppCompatActivity {
 
         });
 
-        btn_exit.setOnClickListener(new View.OnClickListener()
-
-        {
+        btn_exit.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -752,130 +744,135 @@ public class menu extends AppCompatActivity {
                     cSuc__Abr = oCur_snd.getString(oCur_snd.getColumnIndex("emp_abrev"));
                     cCte__id = oCur_snd.getString(oCur_snd.getColumnIndex("cte_id"));
                     cCte__Nam = oCur_snd.getString(oCur_snd.getColumnIndex("cte_nombre_loc"));
-
                     //-------------------------------RECOPILA REGISTRO DE CABECERA OPERACION----------------------------------------------//
                     cSql_LnOp = "" +
                             "SELECT " +
-                            "IFNULL(cte_id         ,' ')  AS cte_id, " +
-                            "IFNULL(cte_nombre_loc ,' ')  AS cte_nombre_loc, " +
-                            "IFNULL(cte_nombre_com ,' ')  AS cte_nombre_com, " +
-                            "IFNULL(op_cporc_Loc   ,0.00) AS op_cporc_Loc  , " +
-                            "IFNULL(cte_pag_jcj    ,0)    AS cte_pag_jcj   , " +
-                            "IFNULL(cte_pag_spac   ,0)    AS cte_pag_spac  , " +
-                            "IFNULL(cte_pag_impm   ,0)    AS cte_pag_impm  , " +
-                            "IFNULL(maqtc_denom_e  ,0)    AS maqtc_denom_e , " +
-                            "IFNULL(maqtc_denom_s  ,0)    AS maqtc_denom_s , " +
-                            "IFNULL(den_valore     ,0.00) AS den_valore    , " +
-                            "IFNULL(den_valors     ,0.00) AS den_valors    , " +
-                            "IFNULL(den_fact_e     ,0)    AS den_fact_e    , " +
-                            "IFNULL(den_fact_s     ,0)    AS den_fact_s    , " +
-                            "IFNULL(MaqLnk_Id      ,0)    AS MaqLnk_Id     , " +
-                            "IFNULL(maqtc_tipomaq  ,0)    AS maqtc_tipomaq , " +
-                            "IFNULL(op_serie       ,0)    AS op_serie      , " +
-                            "IFNULL(op_chapa       ,' ')  AS op_chapa      , " +
-                            "IFNULL(op_modelo      ,' ')  AS op_modelo     , " +
-                            "IFNULL(op_fecha       ,date('now')) AS op_fecha    , " +
-                            "IFNULL(op_e_pantalla  ,0.00)    AS op_e_pantalla , " +
-                            "IFNULL(op_ea_metroan  ,0.00)    AS op_ea_metroan , " +
-                            "IFNULL(op_ea_metroac  ,0.00)    AS op_ea_metroac , " +
-                            "IFNULL(op_ea_met      ,0.00)    AS op_ea_met     , " +
-                            "IFNULL(op_sa_metroan  ,0.00)    AS op_sa_metroan , " +
-                            "IFNULL(op_sa_metroac  ,0.00)    AS op_sa_metroac , " +
-                            "IFNULL(op_sa_met      ,0.00)    AS op_sa_met     , " +
-                            "IFNULL(op_eb_metroan  ,0.00)    AS op_eb_metroan , " +
-                            "IFNULL(op_eb_metroac  ,0.00)    AS op_eb_metroac , " +
-                            "IFNULL(op_eb_met      ,0.00)    AS op_eb_met     , " +
-                            "IFNULL(op_sb_metroan  ,0.00)    AS op_sb_metroan , " +
-                            "IFNULL(op_sb_metroac  ,0.00)    AS op_sb_metroac , " +
-                            "IFNULL(op_sb_met      ,0.00)    AS op_sb_met     , " +
-                            "IFNULL(op_s_pantalla  ,0.00)    AS op_s_pantalla , " +
-                            "IFNULL(op_cal_colect  ,0.00) AS op_cal_colect , " +
-                            "IFNULL(op_tot_colect  ,0.00) AS op_tot_colect , " +
-                            "IFNULL(op_tot_colect_m,0.00) AS op_tot_colect_m, " +
-                            "IFNULL(op_cal_cred    ,0.00) AS op_cal_cred   , " +
-                            "IFNULL(op_tot_cred    ,0.00) AS op_tot_cred   , " +
-                            "IFNULL(op_tot_cred_m  ,0.00) AS op_tot_cred_m , " +
-                            "IFNULL(op_tot_brutoloc,0.00) AS op_tot_brutoloc, " +
-                            "IFNULL(op_tot_brutoemp,0.00) AS op_tot_brutoemp, " +
-                            "IFNULL(op_tot_netoloc ,0.00) AS op_tot_netoloc, " +
-                            "IFNULL(op_tot_netoemp ,0.00) AS op_tot_netoemp, " +
-                            "IFNULL(op_tot_timbres ,0.00) AS op_tot_timbres, " +
-                            "IFNULL(op_tot_impmunic,0.00) AS op_tot_impmunic, " +
-                            "IFNULL(op_tot_impjcj  ,0.00) AS op_tot_impjcj , " +
-                            "IFNULL(op_tot_spac    ,0.00) AS op_tot_spac , " +
-                            "IFNULL(op_tot_tec     ,0.00) AS op_tot_tec    , " +
-                            "IFNULL(op_tot_dev     ,0.00) AS op_tot_dev    , " +
-                            "IFNULL(op_tot_otros   ,0.00) AS op_tot_otros  , " +
-                            "IFNULL(op_tot_sub     ,0.00) AS op_tot_sub    , " +
-                            "IFNULL(op_tot_itbm    ,0.00) AS op_tot_itbm   , " +
-                            "IFNULL(op_tot_tot     ,0.00) AS op_tot_tot    , " +
-                            "IFNULL(op_fecha_alta  ,date('now')) AS op_fecha_alta, " +
-                            "IFNULL(op_fecha_modif ,date('now')) AS op_fecha_modif, " +
-                            "IFNULL(u_usuario_alta ,'tablet')    AS u_usuario_alta, " +
-                            "IFNULL(u_usuario_modif,'tablet')    AS u_usuario_modif, " +
-                            "IFNULL(op_emp_id,0)          AS op_emp_id     , " +
-                            "IFNULL(id_device,' ')        AS id_device     , " +
-                            "IFNULL(op_semanas_imp,1)     AS op_semanas_imp, " +
-                            "IFNULL(op_nodoc,' ')         AS op_nodoc      , " +
-                            "IFNULL(op_baja_prod,0)       AS op_baja_prod  , " +
-                            "IFNULL(op_image_name,' ')    AS op_image_name , " +
-                            "IFNULL(op_usermodify,0)      AS op_usermodify , " +
-                            "IFNULL(id_group,'0')         AS id_group      , " +
-                            "IFNULL(op_observ,' ')        AS op_observ        " +
+                            "IFNULL(cte_id          ,' ')  AS cte_id, " +
+                            "IFNULL(cte_nombre_loc  ,' ')  AS cte_nombre_loc, " +
+                            "IFNULL(cte_nombre_com  ,' ')  AS cte_nombre_com, " +
+                            "IFNULL(op_cporc_Loc    ,0.00) AS op_cporc_Loc  , " +
+                            "IFNULL(cte_pag_jcj     ,0)    AS cte_pag_jcj   , " +
+                            "IFNULL(cte_pag_spac    ,0)    AS cte_pag_spac  , " +
+                            "IFNULL(cte_pag_impm    ,0)    AS cte_pag_impm  , " +
+                            "IFNULL(maqtc_denom_e   ,0)    AS maqtc_denom_e , " +
+                            "IFNULL(maqtc_denom_s   ,0)    AS maqtc_denom_s , " +
+                            "IFNULL(den_valore      ,0.00) AS den_valore    , " +
+                            "IFNULL(den_valors      ,0.00) AS den_valors    , " +
+                            "IFNULL(den_fact_e      ,0)    AS den_fact_e    , " +
+                            "IFNULL(den_fact_s      ,0)    AS den_fact_s    , " +
+                            "IFNULL(maqlnk_id       ,0)    AS maqlnk_id     , " +
+                            "IFNULL(maqtc_id        ,0)    AS maqtc_id     , " +
+                            "IFNULL(jueg_cod        ,' ')  AS jueg_cod, " +
+                            "IFNULL(prov_cod        ,' ')  AS prov_cod, " +
+                            "IFNULL(maqtc_tipomaq   ,0)    AS maqtc_tipomaq , " +
+                            "IFNULL(op_maq_proc_cons,0.00) AS op_maq_proc_cons    , " +
+                            "IFNULL(op_serie        ,0)    AS op_serie      , " +
+                            "IFNULL(op_chapa        ,' ')  AS op_chapa      , " +
+                            "IFNULL(op_modelo       ,' ')  AS op_modelo     , " +
+                            "IFNULL(op_fecha        ,date('now')) AS op_fecha    , " +
+                            "IFNULL(op_e_pantalla   ,0.00) AS op_e_pantalla , " +
+                            "IFNULL(op_ea_metroan   ,0.00) AS op_ea_metroan , " +
+                            "IFNULL(op_ea_metroac   ,0.00) AS op_ea_metroac , " +
+                            "IFNULL(op_ea_met       ,0.00) AS op_ea_met     , " +
+                            "IFNULL(op_sa_metroan   ,0.00) AS op_sa_metroan , " +
+                            "IFNULL(op_sa_metroac   ,0.00) AS op_sa_metroac , " +
+                            "IFNULL(op_sa_met       ,0.00) AS op_sa_met     , " +
+                            "IFNULL(op_eb_metroan   ,0.00) AS op_eb_metroan , " +
+                            "IFNULL(op_eb_metroac   ,0.00) AS op_eb_metroac , " +
+                            "IFNULL(op_eb_met       ,0.00) AS op_eb_met     , " +
+                            "IFNULL(op_sb_metroan   ,0.00) AS op_sb_metroan , " +
+                            "IFNULL(op_sb_metroac   ,0.00) AS op_sb_metroac , " +
+                            "IFNULL(op_sb_met       ,0.00) AS op_sb_met     , " +
+                            "IFNULL(op_s_pantalla   ,0.00) AS op_s_pantalla , " +
+                            "IFNULL(op_cal_colect   ,0.00) AS op_cal_colect , " +
+                            "IFNULL(op_tot_colect   ,0.00) AS op_tot_colect , " +
+                            "IFNULL(op_tot_colect_m ,0.00) AS op_tot_colect_m, " +
+                            "IFNULL(op_cal_cred     ,0.00) AS op_cal_cred   , " +
+                            "IFNULL(op_tot_cred     ,0.00) AS op_tot_cred   , " +
+                            "IFNULL(op_tot_cred_m   ,0.00) AS op_tot_cred_m , " +
+                            "IFNULL(op_tot_brutoloc ,0.00) AS op_tot_brutoloc, " +
+                            "IFNULL(op_tot_brutoemp ,0.00) AS op_tot_brutoemp, " +
+                            "IFNULL(op_tot_netoloc  ,0.00) AS op_tot_netoloc, " +
+                            "IFNULL(op_tot_netoemp  ,0.00) AS op_tot_netoemp, " +
+                            "IFNULL(op_tot_timbres  ,0.00) AS op_tot_timbres, " +
+                            "IFNULL(op_tot_impmunic ,0.00) AS op_tot_impmunic, " +
+                            "IFNULL(op_tot_impjcj   ,0.00) AS op_tot_impjcj , " +
+                            "IFNULL(op_tot_porc_cons,0.00) AS op_tot_porc_cons , " +
+                            "IFNULL(op_tot_spac     ,0.00) AS op_tot_spac , " +
+                            "IFNULL(op_tot_tec      ,0.00) AS op_tot_tec    , " +
+                            "IFNULL(op_tot_dev      ,0.00) AS op_tot_dev    , " +
+                            "IFNULL(op_tot_otros    ,0.00) AS op_tot_otros  , " +
+                            "IFNULL(op_tot_sub      ,0.00) AS op_tot_sub    , " +
+                            "IFNULL(op_tot_itbm     ,0.00) AS op_tot_itbm   , " +
+                            "IFNULL(op_tot_tot      ,0.00) AS op_tot_tot    , " +
+                            "IFNULL(op_fecha_alta   ,date('now')) AS op_fecha_alta, " +
+                            "IFNULL(op_fecha_modif  ,date('now')) AS op_fecha_modif, " +
+                            "IFNULL(u_usuario_alta  ,'tablet')    AS u_usuario_alta, " +
+                            "IFNULL(u_usuario_modif ,'tablet')    AS u_usuario_modif, " +
+                            "IFNULL(op_emp_id       ,0)    AS op_emp_id     , " +
+                            "IFNULL(id_device       ,' ')  AS id_device     , " +
+                            "IFNULL(op_semanas_imp  ,1  )  AS op_semanas_imp, " +
+                            "IFNULL(op_nodoc        ,' ')  AS op_nodoc      , " +
+                            "IFNULL(op_baja_prod    ,0  )  AS op_baja_prod  , " +
+                            "IFNULL(op_image_name   ,' ')  AS op_image_name , " +
+                            "IFNULL(op_usermodify   ,0  )  AS op_usermodify , " +
+                            "IFNULL(id_group        ,'0')  AS id_group      , " +
+                            "IFNULL(op_observ       ,' ')  AS op_observ        " +
                             "FROM operacion " +
-                            "WHERE id_device   ='" + Global.cid_device + "' " +
-                            "AND  op_emp_id    ='" + cSuc__id + "' " +
-                            "AND  cte_id       ='" + cCte__id + "' " +
-                            "AND  op_usermodify='1' ";
+                            "WHERE (id_device    ='" + Global.cid_device + "') " +
+                            "AND   (op_emp_id    ='" + cSuc__id + "') " +
+                            "AND   (cte_id       ='" + cCte__id + "') " +
+                            "AND   (op_usermodify='1') ";
 
                     //	op_e_pantalla,op_s_pantalla,op_num_sem,op_tot_colect2,op_tot_cred2
 
                     //-------------------------------RECOPILA REGISTRO DE DETALLE DE OPERACION----------------------------------------------//
                     cSql_LnPo = "" +
                             "SELECT " +
-                            "IFNULL(cte_id         ,' ')  AS cte_id, " +
-                            "IFNULL(cte_nombre_loc ,' ')  AS cte_nombre_loc, " +
-                            "IFNULL(cte_nombre_com ,' ')  AS cte_nombre_com, " +
-                            "IFNULL(op_fecha       ,date('now')) AS op_fecha, " +
-                            "IFNULL(op_fact_global ,' ') AS op_fact_global, " +
-                            "IFNULL(op_cal_colect  ,0.00) AS op_cal_colect , " +
-                            "IFNULL(op_tot_colect  ,0.00) AS op_tot_colect , " +
-                            "IFNULL(op_cal_cred    ,0.00) AS op_cal_cred   , " +
-                            "IFNULL(op_tot_cred    ,0.00) AS op_tot_cred   , " +
-                            "IFNULL(op_tot_brutoloc,0.00) AS op_tot_brutoloc, " +
-                            "IFNULL(op_tot_brutoemp,0.00) AS op_tot_brutoemp, " +
-                            "IFNULL(op_tot_netoloc ,0.00) AS op_tot_netoloc, " +
-                            "IFNULL(op_tot_netoemp ,0.00) AS op_tot_netoemp, " +
-                            "IFNULL(op_tot_timbres ,0.00) AS op_tot_timbres, " +
-                            "IFNULL(op_tot_spac    ,0.00) AS op_tot_spac, " +
-                            "IFNULL(op_tot_impmunic,0.00) AS op_tot_impmunic, " +
-                            "IFNULL(op_tot_impjcj  ,0.00) AS op_tot_impjcj , " +
-                            "IFNULL(op_tot_tec     ,0.00) AS op_tot_tec    , " +
-                            "IFNULL(op_tot_dev     ,0.00) AS op_tot_dev    , " +
-                            "IFNULL(op_tot_otros   ,0.00) AS op_tot_otros  , " +
-                            "IFNULL(op_tot_sub     ,0.00) AS op_tot_sub    , " +
-                            "IFNULL(op_tot_itbm    ,0.00) AS op_tot_itbm   , " +
-                            "IFNULL(op_tot_tot     ,0.00) AS op_tot_tot    , " +
-                            "IFNULL(op_fecha_alta ,date('now')) AS op_fecha_alta, " +
-                            "IFNULL(op_fecha_modif,date('now')) AS op_fecha_modif, " +
-                            "IFNULL(op_emp_id,0)          AS op_emp_id     , " +
-                            "IFNULL(id_device,' ')        AS id_device     , " +
-                            "IFNULL(id_group,'0')         AS id_group      , " +
-                            "IFNULL(op_usermodify,0)      AS op_usermodify , " +
-                            "IFNULL(op_usuario_alta,'TABLET')  AS op_usuario_alta , " +
+                            "IFNULL(cte_id          ,' ')  AS cte_id, " +
+                            "IFNULL(cte_nombre_loc  ,' ')  AS cte_nombre_loc, " +
+                            "IFNULL(cte_nombre_com  ,' ')  AS cte_nombre_com, " +
+                            "IFNULL(op_fecha        ,date('now')) AS op_fecha, " +
+                            "IFNULL(op_fact_global  ,' ')  AS op_fact_global, " +
+                            "IFNULL(op_cal_colect   ,0.00) AS op_cal_colect , " +
+                            "IFNULL(op_tot_colect   ,0.00) AS op_tot_colect , " +
+                            "IFNULL(op_cal_cred     ,0.00) AS op_cal_cred   , " +
+                            "IFNULL(op_tot_cred     ,0.00) AS op_tot_cred   , " +
+                            "IFNULL(op_tot_brutoloc ,0.00) AS op_tot_brutoloc, " +
+                            "IFNULL(op_tot_brutoemp ,0.00) AS op_tot_brutoemp, " +
+                            "IFNULL(op_tot_netoloc  ,0.00) AS op_tot_netoloc, " +
+                            "IFNULL(op_tot_netoemp  ,0.00) AS op_tot_netoemp, " +
+                            "IFNULL(op_tot_timbres  ,0.00) AS op_tot_timbres, " +
+                            "IFNULL(op_tot_spac     ,0.00) AS op_tot_spac, " +
+                            "IFNULL(op_tot_impmunic ,0.00) AS op_tot_impmunic, " +
+                            "IFNULL(op_tot_impjcj   ,0.00) AS op_tot_impjcj , " +
+                            "IFNULL(op_tot_porc_cons,0.00) AS op_tot_porc_cons , " +
+                            "IFNULL(op_tot_tec      ,0.00) AS op_tot_tec    , " +
+                            "IFNULL(op_tot_dev      ,0.00) AS op_tot_dev    , " +
+                            "IFNULL(op_tot_otros    ,0.00) AS op_tot_otros  , " +
+                            "IFNULL(op_tot_sub      ,0.00) AS op_tot_sub    , " +
+                            "IFNULL(op_tot_itbm     ,0.00) AS op_tot_itbm   , " +
+                            "IFNULL(op_tot_tot      ,0.00) AS op_tot_tot    , " +
+                            "IFNULL(op_fecha_alta   ,date('now')) AS op_fecha_alta, " +
+                            "IFNULL(op_fecha_modif  ,date('now')) AS op_fecha_modif, " +
+                            "IFNULL(op_emp_id       ,0)    AS op_emp_id     , " +
+                            "IFNULL(id_device       ,' ')  AS id_device     , " +
+                            "IFNULL(id_group        ,'0')  AS id_group      , " +
+                            "IFNULL(op_usermodify   ,0)    AS op_usermodify , " +
+                            "IFNULL(op_usuario_alta ,'TABLET') AS op_usuario_alta , " +
                             "IFNULL(op_usuario_modif,'TABLET') AS op_usuario_modif , " +
-                            "IFNULL(op_observ,' ')        AS op_observ " +
+                            "IFNULL(op_observ       ,' ')  AS op_observ " +
                             "FROM operaciong " +
-                            "WHERE id_device   ='" + Global.cid_device + "' " +
-                            "AND  op_emp_id    ='" + cSuc__id + "' " +
-                            "AND  cte_id       ='" + cCte__id + "' " +
-                            "AND  op_usermodify='1' ";
+                            "WHERE (id_device    ='" + Global.cid_device + "') " +
+                            "AND   (op_emp_id    ='" + cSuc__id + "') " +
+                            "AND   (cte_id       ='" + cCte__id + "') " +
+                            "AND   (op_usermodify='1') ";
 
                     //------------SE CREA UN SOLO JSON CON TODA LA INFORMACION---------------
                     cJsn_StrResult = Global.getJsonResults2_V2(cSql_LnOp, cSql_LnPo, "operacion", "operaciong");
                     cSql_LnOp = "";
                     cSql_LnPo = "";
-                    cStrValue = "Procesando: Empresa->:[" + cSuc__id + "/" + cSuc__Nam + "], Cliente->:[" + cCte__id + "/" + cCte__Nam + "], Máquinas [" + String.valueOf(Global.tot_maq_envio2) + "]";
+                    cStrValue = "Procesando: Empresa->:[" + cSuc__id + "-" + cSuc__Nam + "], Cliente->:[" + cCte__id + "-" + cCte__Nam + "], Máquinas [" + String.valueOf(Global.tot_maq_envio2) + "]";
                     //Log.d("PROCESANDO REGISTRO:[" + Integer.toString(iReg_Cnt) + "]", cStrValue);
                     //Global.logLargeString(cJsn_StrResult);
                     Global.appendLog(Global.cFileLogPathDest, Global.getNow() + cStrValue + "\n", false);
@@ -931,7 +928,7 @@ public class menu extends AppCompatActivity {
                         Toast.makeText(getApplicationContext(), cStrValue + " [NO SE PUDIERON SUBIR LOS DATOS CORRECTAMENTE DE LAS FACTURAS POR MAQUINAS.].", Toast.LENGTH_SHORT).show();
                     }
                     cSql_Line = "";
-                    cJsn_StrResult="";
+                    cJsn_StrResult = "";
                 } while (oCur_snd.moveToNext());
 
                 cWebsResult = "";

@@ -113,7 +113,7 @@ public class capt_fin extends AppCompatActivity {
         Global.qry_cte_info(Global.cCte_Id);
         String cPorc = Global.decimalformat(Global.fCte_Por, 5, 2).trim();
 
-        this.olab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]/[" + Global.cCte_De + "]/[" + cPorc + "]");
+        this.olab_cte.setText("CLIENTE: [" + Global.cCte_Id + "]-[" + Global.cCte_De + "]-[" + cPorc + "%]");
         this.oapf_device.setText("ID EQUIPO:" + Global.cid_device.toUpperCase());
 
         this.Clear_Screen();
@@ -500,6 +500,7 @@ public class capt_fin extends AppCompatActivity {
                     Global.Genobj.put("tot_cred", dtot_cred);
                     Global.Genobj.put("Sub_tota", dSub_tota);
                     Global.Genobj.put("tot_impu", dtot_impu);
+                    Global.Genobj.put("tot_cons", dtot_cons);
                     Global.Genobj.put("tot_tota", dtot_tota);
                     Global.Genobj.put("tot_bloc", dtot_bloc);
                     Global.Genobj.put("tot_bemp", dtot_bemp);
@@ -618,7 +619,7 @@ public class capt_fin extends AppCompatActivity {
                     cSql_Ln += " op_fecha_modif ='" + cDateMysql + "', ";
                     cSql_Ln += " op_usermodify  =1, ";
                     cSql_Ln += " id_group        ='" + Integer.toString(iId_Group) + "' ";
-                    cSql_Ln += "WHERE (op_emp_id = " + Global.cEmp_Id + "') ";
+                    cSql_Ln += "WHERE (op_emp_id ='" + Global.cEmp_Id + "') ";
                     cSql_Ln += "AND   (id_device ='" + Global.cid_device + "') ";
                     cSql_Ln += "AND   (cte_id    ='" + Global.cCte_Id + "') ";
                     cSql_Ln += "AND   (IFNULL(op_baja_prod,0)=0);";
@@ -1142,14 +1143,14 @@ public class capt_fin extends AppCompatActivity {
         //-------------------------------------------------------------------------------------------------------//
         //-------------------------------------------------------------------------------------------------------//
         dSub_tota = (dtot_cole - dtot_sum1 - dtot_sum2);
-        cSub_tota = String.format("%.2f", dSub_tota);
+        cSub_tota = Global.FloatToStrFormat(dSub_tota, 12, 2);
         //-------------------------------------------------------------------------------------------------------//
         this.oOp_tot_subt.setText(cSub_tota);
 
         dtot_impu = Double.valueOf(this.oOp_tot_impu.getText().toString()).doubleValue();
 
         dtot_tota = dSub_tota - dtot_impu;
-        ctot_tota = String.format("%.2f", dtot_tota);
+        ctot_tota = Global.FloatToStrFormat(dtot_tota, 12, 2);
         this.oOp_tot_tota.setText(ctot_tota);
 
         //ipK_porc =( (fPorc_Loc == 0.00) ? 1.00 : fPorc_Loc);
@@ -1159,8 +1160,8 @@ public class capt_fin extends AppCompatActivity {
             dtot_bloc = 0.00;
             dtot_bemp = dtot_tota;
 
-            ctot_bloc = String.format("%.2f", dtot_bloc);
-            ctot_bemp = String.format("%.2f", dtot_bemp);
+            ctot_bloc = Global.FloatToStrFormat(dtot_bloc, 12, 2);
+            ctot_bemp = Global.FloatToStrFormat(dtot_bemp, 12, 2);
 
             this.oOp_tot_bloc.setText(ctot_bloc);
             this.oOp_tot_bemp.setText(ctot_bemp);
@@ -1168,18 +1169,18 @@ public class capt_fin extends AppCompatActivity {
             dtot_bloc = (dtot_tota * (ipK_porc / 100));
             dtot_bemp = dtot_tota - dtot_bloc;
 
-            ctot_bloc = String.format("%.2f", dtot_bloc);
-            ctot_bemp = String.format("%.2f", dtot_bemp);
+            ctot_bloc = Global.FloatToStrFormat(dtot_bloc, 12, 2);
+            ctot_bemp = Global.FloatToStrFormat(dtot_bemp, 12, 2);
 
             this.oOp_tot_bloc.setText(ctot_bloc);
             this.oOp_tot_bemp.setText(ctot_bemp);
         }
 
         dtot_nloc = (dtot_devo + dtot_otro + dtot_cred + dtot_bloc);
-        ctot_nloc = String.format("%.2f", dtot_nloc);
+        ctot_nloc = Global.FloatToStrFormat(dtot_nloc, 12, 2);
 
         dtot_nemp = (dtot_Imp0 + dtot_tecn + dtot_bemp);
-        ctot_nemp = String.format("%.2f", dtot_nemp);
+        ctot_nemp = Global.FloatToStrFormat(dtot_nemp, 12, 2);
 
         this.oOp_tot_nloc.setText(ctot_nloc);
         this.oOp_tot_nemp.setText(ctot_nemp);

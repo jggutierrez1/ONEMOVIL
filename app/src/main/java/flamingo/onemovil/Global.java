@@ -82,6 +82,7 @@ import java.net.URLEncoder;
 import java.nio.channels.FileChannel;
 import java.lang.String;
 import java.sql.ResultSetMetaData;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 
 import java.util.ArrayList;
@@ -572,8 +573,8 @@ public class Global {
                                 rowObject.put(colName, cursor.getBlob(i).toString().trim());
                                 break;
                             case Cursor.FIELD_TYPE_FLOAT:
-                                cFloatValue = String.format(Locale.US, "%12.2f", cursor.getDouble(i)).trim();
-                                rowObject.put(colName, cFloatValue);
+                                //cFloatValue = Global.FloatToStrFormat(cursor.getDouble(i),12,2);
+                                rowObject.put(colName, cursor.getDouble(i));
                                 break;
                             case Cursor.FIELD_TYPE_INTEGER:
                                 rowObject.put(colName, cursor.getLong(i));
@@ -2585,9 +2586,14 @@ public class Global {
 
     public static String decimalformat(double fValue, int iEnteros, int iDecimales) {
 
-        String cValue1 = String.format(Locale.US, "%,." + String.valueOf(iDecimales).toString().trim() + "f", fValue) + "\n";
-        String cValue2 = Global.leftPad(cValue1, iEnteros, " ");
+        DecimalFormat myFormatter = new DecimalFormat("###################0.00");
+        String sOutput = myFormatter.format(fValue);
+        String cValue2 = Global.leftPad(sOutput, iEnteros, " ");
         return cValue2;
+        //String cValue1 = String.format(Locale.US, "%,." + String.valueOf(iDecimales).toString().trim() + "f", fValue) + "\n";
+        //cValue1.trim().replace(',','');
+        //String cValue2 = Global.leftPad(cValue1, iEnteros, " ");
+        //return cValue2;
     }
 
     public static String getAppVersion(Context context) {
@@ -2637,7 +2643,12 @@ public class Global {
     }
 
     public static String FloatToStr(Double dValue) {
-        return Double.toString(dValue).trim();
+        DecimalFormat myFormatter = new DecimalFormat("###################0.00");
+        String sOutput = myFormatter.format(dValue);
+
+        //return Double.toString(dValue).trim();
+        return sOutput.trim();
+
     }
 
     public static String FloatToStrFormat(Double dValue, Integer iDigits, Integer iDecimals) {
