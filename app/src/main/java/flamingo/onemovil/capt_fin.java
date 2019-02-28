@@ -943,7 +943,7 @@ public class capt_fin extends AppCompatActivity {
             Double ftotfin_bruto = oData5.getDouble(oData5.getColumnIndex("op_tot_colect"));
             Double ftotfin_prem = oData5.getDouble(oData5.getColumnIndex("op_tot_cred"));
             Double dtot_imp_jcj = oData5.getDouble(oData5.getColumnIndex("op_tot_jcj"));
-            Double dtot_consecion = oData5.getDouble(oData5.getColumnIndex("op_tot_jcj"));
+            Double dtot_consecion = oData5.getDouble(oData5.getColumnIndex("op_tot_porc_cons"));
 
             String ctotfin_bruto = Global.FloatToStrFormat(ftotfin_bruto, 12, 2);
             String ctotfin_prem = Global.FloatToStrFormat(ftotfin_prem, 12, 2);
